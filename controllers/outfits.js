@@ -45,6 +45,17 @@ exports.update_outfit = async (req,res) => {
   }
 }
 
+exports.delete_outfit = async (req,res) => {
+  try {
+    const {outfit_id: _id} = req.params
+    const result = await Outfit.findOneAndDelete({_id})
+    res.send(result)
+    console.log(`Outfit ${_id} deleted`)
+  } catch (error) {
+    error_handling(error,res)
+  }
+}
+
 exports.upload_outfit_image = async (req,res) => {
   try {
     const {originalname: image} = req.file

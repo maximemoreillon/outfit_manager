@@ -21,6 +21,8 @@ router.route('/')
 router.route('/:outfit_id')
   .get(controller.read_outfit)
   .patch(controller.update_outfit)
+  .delete(controller.delete_outfit)
+
 
 router.route('/:outfit_id/image')
   .post(upload.single('image'), controller.upload_outfit_image)
