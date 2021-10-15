@@ -15,6 +15,7 @@ exports.real_all_outfits = async (req,res) => {
 exports.create_outfit = async (req,res) => {
   try {
     const image = req.file.originalname
+    await create_image_thumbnail(req)
     const new_outfit = new Outfit({image})
     const saved_outfit = await new_outfit.save()
     res.send(saved_outfit)

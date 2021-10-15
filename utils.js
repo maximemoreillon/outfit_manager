@@ -19,6 +19,8 @@ const create_image_thumbnail = async (req) => {
     .resize({ width: 320, fit: sharp.fit.contain, })
     .withMetadata()
     .toFile(thumbnail_path)
+
+  console.log(`Created thumbnail for image ${req.file.originalname}`)
 }
 
 
