@@ -8,6 +8,7 @@ const db = require('./db.js')
 const outfit_router = require('./routes/outfits.js')
 const garment_router = require('./routes/garments.js')
 const auth = require('@moreillon/express_identification_middleware')
+const {uploads_directory} = require('./config.js')
 
 dotenv.config()
 
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
       db: db.db,
       connected: db.get_connected(),
     },
+    uploads_directory,
   })
 })
 
