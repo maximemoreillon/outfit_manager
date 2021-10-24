@@ -8,17 +8,9 @@ const {
 } = require('../utils.js')
 
 exports.real_all_outfits = async (req,res) => {
-  const outfits = await Outfit.find({})
-  res.send(outfits)
-}
-
-exports.create_outfit = async (req,res) => {
   try {
-    const image = req.file.originalname
-    await create_image_thumbnail(req)
-    const new_outfit = new Outfit({image})
-    const saved_outfit = await new_outfit.save()
-    res.send(saved_outfit)
+    const outfits = await Outfit.find({})
+    res.send(outfits)
   } catch (error) {
     error_handling(error,res)
   }
@@ -33,6 +25,20 @@ exports.read_outfit = async (req,res) => {
     error_handling(error,res)
   }
 }
+
+exports.create_outfit = async (req,res) => {
+  try {
+    const image = req.file.originalname
+    await create_image_thumbnail(req)
+    const new_outfit = new Outfit({image})
+    const saved_outfit = await new_outfit.save()
+    res.send(saved_outfit)
+  } catch (error) {
+    error_handling(error,res)
+  }
+}
+
+
 
 exports.update_outfit = async (req,res) => {
   try {

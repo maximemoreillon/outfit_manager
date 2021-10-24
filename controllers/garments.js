@@ -8,19 +8,28 @@ const {
 } = require('../utils.js')
 
 exports.read_all_garments = async (req,res) => {
-  const garments = await Garment.find({})
-  res.send(garments)
+  try {
+    const garments = await Garment.find({})
+    res.send(garments)
+  } catch (error) {
+    error_handling(error,res)
+  }
 }
 
 exports.read_garment = async (req,res) => {
-  const {garment_id: _id} = req.params
-  const garment = await Garment.findOne({_id})
-  res.send(garment)
+  try {
+    const {garment_id: _id} = req.params
+    const garment = await Garment.findOne({_id})
+    res.send(garment)
+  } catch (error) {
+    error_handling(error,res)
+  }
 }
 
 exports.create_garment = async (req,res) => {
   try {
     const image = req.file.originalname
+    await create_image_thumbnail(req)
     const new_garment = new Garment({...req.body, image})
     const saved_garment = await new_garment.save()
     res.send(saved_garment)
