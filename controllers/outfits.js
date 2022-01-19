@@ -28,9 +28,10 @@ exports.read_outfit = async (req,res) => {
 
 exports.create_outfit = async (req,res) => {
   try {
+    const user_id = res.locals.user._id
     const image = req.file.originalname
     await create_image_thumbnail(req)
-    const new_outfit = new Outfit({image})
+    const new_outfit = new Outfit({image, user_id})
     const saved_outfit = await new_outfit.save()
     res.send(saved_outfit)
   } catch (error) {

@@ -7,9 +7,13 @@ const {
   get_thumbnail_filename,
 } = require('../utils.js')
 
+
+
+
 exports.read_all_garments = async (req,res) => {
   try {
-    const garments = await Garment.find({})
+    const user_id = res.locals.user._id
+    const garments = await Garment.find({user_id})
     res.send(garments)
   } catch (error) {
     error_handling(error,res)
@@ -18,7 +22,7 @@ exports.read_all_garments = async (req,res) => {
 
 exports.read_garment = async (req,res) => {
   try {
-    const {garment_id: _id} = req.params
+    const _id = req.params.garment_id
     const garment = await Garment.findOne({_id})
     res.send(garment)
   } catch (error) {
@@ -28,9 +32,10 @@ exports.read_garment = async (req,res) => {
 
 exports.create_garment = async (req,res) => {
   try {
+    const user_id = res.locals.user._id
     const image = req.file.originalname
     await create_image_thumbnail(req)
-    const new_garment = new Garment({...req.body, image})
+    const new_garment = new Garment({...req.body, image, user_id})
     const saved_garment = await new_garment.save()
     res.send(saved_garment)
   } catch (error) {
@@ -40,8 +45,9 @@ exports.create_garment = async (req,res) => {
 
 exports.update_garment = async (req,res) => {
   try {
-    const {garment_id: _id} = req.params
-    const result = await Garment.findOneAndUpdate({_id}, req.body)
+    const _id = req.params.garment_id
+    const properties = req.body
+    const result = await Garment.findOneAndUpdate({_id}, properties)
     res.send(result)
   } catch (error) {
     error_handling(error,res)
@@ -50,7 +56,7 @@ exports.update_garment = async (req,res) => {
 
 exports.delete_garment = async (req,res) => {
   try {
-    const {garment_id: _id} = req.params
+    const _id = req.params.garment_id
     const result = await Garment.findOneAndDelete({_id})
     res.send(result)
     console.log(`Outfit ${_id} deleted`)
@@ -61,8 +67,8 @@ exports.delete_garment = async (req,res) => {
 
 exports.upload_garment_image = async (req,res) => {
   try {
-    const {garment_id: _id} = req.params
-    const {originalname: image} = req.file
+    const _id = req.params.garment_id
+    const image = req.file.originalname
     await create_image_thumbnail(req)
     const result = await Garment.findOneAndUpdate({_id}, {image})
     res.send(result)
@@ -74,7 +80,7 @@ exports.upload_garment_image = async (req,res) => {
 }
 
 exports.read_garment_image = async (req,res) => {
-  const {garment_id: _id} = req.params
+  const _id = req.params.garment_id
   const {image} = await Garment.findOne({_id})
   const image_absolute_path = path.join(__dirname, `../${uploads_directory}`,'garments', image)
   res.sendFile(image_absolute_path)
@@ -82,7 +88,7 @@ exports.read_garment_image = async (req,res) => {
 
 exports.read_garment_thumbnail = async (req,res) => {
   try {
-    const {garment_id: _id} = req.params
+    const _id = req.params.garment_id
     const {image} = await Garment.findOne({_id})
     const thumbnail_filename = get_thumbnail_filename(image)
     const image_absolute_path = path.join(__dirname, `../${uploads_directory}`,'garments', thumbnail_filename)
