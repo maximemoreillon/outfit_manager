@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose')
 
  const outfitSchema = new Schema({
+   user_id: String,
    label: String,
    image: String,
    garments: [String]

@@ -12,9 +12,12 @@ const {uploads_directory} = require('./config.js')
 
 dotenv.config()
 
+const {
+  APP_PORT = 80,
+  IDENTIFICATION_URL,
+} = process.env
 
-const app_port = process.env.APP_PORT ?? 80
-const auth_options = { url: `${process.env.AUTHENTICATION_API_URL}/v2/whoami` }
+const auth_options = { url: IDENTIFICATION_URL }
 
 // Express configuration
 const app = express()
@@ -31,6 +34,7 @@ app.get('/', (req, res) => {
       db: db.db,
       connected: db.get_connected(),
     },
+    auth: auth_options,
     uploads_directory,
   })
 })
@@ -43,6 +47,6 @@ app.use('/garments', auth(auth_options), garment_router)
 
 
 // Start server
-app.listen(app_port, () => {
-  console.log(`Outfit manager API v${version} listening on port ${app_port}`);
+app.listen(APP_PORT, () => {
+  console.log(`Outfit manager API v${version} listening on port ${APP_PORT}`);
 })
