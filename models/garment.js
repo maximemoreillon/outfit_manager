@@ -8,6 +8,7 @@ const { Schema, model } = require('mongoose')
    color: String,
    brand: String,
    description: String,
+   comment: String,
  })
 
  const Garment = model('Garment', garmentSchema)

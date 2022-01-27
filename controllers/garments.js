@@ -48,6 +48,7 @@ exports.update_garment = async (req,res) => {
     const _id = req.params.garment_id
     const properties = req.body
     const result = await Garment.findOneAndUpdate({_id}, properties)
+    console.log(`Garment ${_id} updated`);
     res.send(result)
   } catch (error) {
     error_handling(error,res)
