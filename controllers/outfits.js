@@ -9,7 +9,9 @@ const {
 
 exports.real_all_outfits = async (req,res) => {
   try {
-    const outfits = await Outfit.find({})
+    const user_id = res.locals.user._id
+    const query = {user_id}
+    const outfits = await Outfit.find(query)
     res.send(outfits)
   } catch (error) {
     error_handling(error,res)

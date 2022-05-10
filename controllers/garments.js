@@ -13,7 +13,8 @@ const {
 exports.read_all_garments = async (req,res) => {
   try {
     const user_id = res.locals.user._id
-    const garments = await Garment.find({user_id})
+    const query = {user_id}
+    const garments = await Garment.find(query)
     res.send(garments)
   } catch (error) {
     error_handling(error,res)
