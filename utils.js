@@ -1,10 +1,6 @@
 const path = require('path')
 const sharp = require('sharp')
 
-const error_handling = (error, res) => {
-  res.status(500).send(error)
-  console.log(error)
-}
 
 const get_thumbnail_filename = (original_filename) => {
   return original_filename.replace(/(\.[\w\d_-]+)$/i, '_thumbnail$1')
@@ -24,6 +20,5 @@ const create_image_thumbnail = async (req) => {
 }
 
 
-exports.error_handling = error_handling
 exports.create_image_thumbnail = create_image_thumbnail
 exports.get_thumbnail_filename = get_thumbnail_filename

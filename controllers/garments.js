@@ -2,7 +2,6 @@ const Garment = require('../models/garment.js')
 const path = require('path')
 const {uploads_directory} = require('../config.js')
 const {
-  error_handling,
   create_image_thumbnail,
   get_thumbnail_filename,
 } = require('../utils.js')
@@ -10,28 +9,28 @@ const {
 
 
 
-exports.read_all_garments = async (req,res) => {
+exports.read_all_garments = async ( req, res, next ) => {
   try {
     const user_id = res.locals.user._id
-    const query = {user_id}
+    const query = user_id ? { user_id } : {}
     const garments = await Garment.find(query)
     res.send(garments)
   } catch (error) {
-    error_handling(error,res)
+    next(error)
   }
 }
 
-exports.read_garment = async (req,res) => {
+exports.read_garment = async ( req, res, next ) => {
   try {
     const _id = req.params.garment_id
     const garment = await Garment.findOne({_id})
     res.send(garment)
   } catch (error) {
-    error_handling(error,res)
+    next(error)
   }
 }
 
-exports.create_garment = async (req,res) => {
+exports.create_garment = async ( req, res, next ) => {
   try {
     const user_id = res.locals.user._id
     const image = req.file.originalname
@@ -40,11 +39,11 @@ exports.create_garment = async (req,res) => {
     const saved_garment = await new_garment.save()
     res.send(saved_garment)
   } catch (error) {
-    error_handling(error,res)
+    next(error)
   }
 }
 
-exports.update_garment = async (req,res) => {
+exports.update_garment = async ( req, res, next ) => {
   try {
     const _id = req.params.garment_id
     const properties = req.body
@@ -52,22 +51,22 @@ exports.update_garment = async (req,res) => {
     console.log(`Garment ${_id} updated`);
     res.send(result)
   } catch (error) {
-    error_handling(error,res)
+    next(error)
   }
 }
 
-exports.delete_garment = async (req,res) => {
+exports.delete_garment = async ( req, res, next ) => {
   try {
     const _id = req.params.garment_id
     const result = await Garment.findOneAndDelete({_id})
     res.send(result)
     console.log(`Outfit ${_id} deleted`)
   } catch (error) {
-    error_handling(error,res)
+    next(error)
   }
 }
 
-exports.upload_garment_image = async (req,res) => {
+exports.upload_garment_image = async ( req, res, next ) => {
   try {
     const _id = req.params.garment_id
     const image = req.file.originalname
@@ -76,19 +75,19 @@ exports.upload_garment_image = async (req,res) => {
     res.send(result)
     console.log(`Image of garment ${_id} uploaded`)
   } catch (error) {
-    error_handling(error,res)
+    next(error)
   }
 
 }
 
-exports.read_garment_image = async (req,res) => {
+exports.read_garment_image = async ( req, res, next ) => {
   const _id = req.params.garment_id
   const {image} = await Garment.findOne({_id})
   const image_absolute_path = path.join(__dirname, `../${uploads_directory}`,'garments', image)
   res.sendFile(image_absolute_path)
 }
 
-exports.read_garment_thumbnail = async (req,res) => {
+exports.read_garment_thumbnail = async ( req, res, next ) => {
   try {
     const _id = req.params.garment_id
     const {image} = await Garment.findOne({_id})
@@ -96,6 +95,6 @@ exports.read_garment_thumbnail = async (req,res) => {
     const image_absolute_path = path.join(__dirname, `../${uploads_directory}`,'garments', thumbnail_filename)
     res.sendFile(image_absolute_path)
   } catch (error) {
-    error_handling(error,res)
+    next(error)
   }
 }

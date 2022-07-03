@@ -4,7 +4,7 @@ const { Schema, model } = require('mongoose')
    user_id: String,
    label: String,
    image: String,
-   garments: [String]
+   garments: [{ type: Schema.Types.ObjectId, ref: 'Garment' }]
 
  })
 
