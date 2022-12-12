@@ -1,6 +1,6 @@
 stages:
-  - containerization
-  - deployment
+  - build
+  - deploy
 
 variables:
   APPLICATION_NAME: outfit-manager
@@ -16,8 +16,8 @@ services:
   - name: docker:19.03.12-dind
 
 
-containerization:
-  stage: containerization
+build:
+  stage: build
   tags:
     - dind
   before_script:
@@ -32,13 +32,13 @@ containerization:
     - docker push ${CONTAINER_IMAGE_LATEST}
 
 
-deployment:
-  stage: deployment
+deploy:
+  only:
+    - master
+  stage: deploy
   tags:
     - dind
+  before_script:
+    - kubectl config use-context moreillon_ci/moreillon_k8s_home/kubernetes-agent:home
   script:
-    - envsubst < kubernetes_manifest.yml | kubectl apply -f -
-  environment:
-    name: production
-    kubernetes:
-      namespace: ${KUBERNETES_NAMESPACE}
+    - envsubst < kubernetes_manifest.yml | kubectl apply -n ${KUBERNETES_NAMESPACE} -f -
