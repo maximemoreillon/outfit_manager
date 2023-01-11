@@ -1,5 +1,8 @@
-const dotenv = require('dotenv')
+const dotenv = require("dotenv")
+const path = require("path")
 
 dotenv.config()
 
-exports.uploads_directory = process.env.UPLOADS_DIRECTORY || 'uploads'
+const { UPLOADS_DIRECTORY = "uploads" } = process.env
+
+exports.uploads_directory = path.resolve(UPLOADS_DIRECTORY)
