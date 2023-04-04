@@ -7,14 +7,12 @@ variables:
   CONTAINER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
   CONTAINER_IMAGE_LATEST: ${CONTAINER_IMAGE}:latest
   CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}
-
-  CERTIFICATE_DOMAIN: api.outfits.home.maximemoreillon.com
+  K8S_INGRESS_HOST: api.outfits.home.maximemoreillon.com
 
 # Needed for Docker in docker build
 image: moreillon/ci-dind
 services:
   - name: docker:19.03.12-dind
-
 
 build:
   stage: build
@@ -30,7 +28,6 @@ build:
     # Pushing
     - docker push ${CONTAINER_IMAGE_TAGGED}
     - docker push ${CONTAINER_IMAGE_LATEST}
-
 
 deploy:
   only:
