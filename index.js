@@ -1,21 +1,18 @@
-// NPM modules
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const dotenv = require('dotenv')
-const {author, name: application_name, version} = require('./package.json')
-const db = require('./db.js')
-const outfit_router = require('./routes/outfits.js')
-const garment_router = require('./routes/garments.js')
-const auth = require('@moreillon/express_identification_middleware')
-const {uploads_directory} = require('./config.js')
+const express = require("express")
+require("express-async-errors")
+const bodyParser = require("body-parser")
+const cors = require("cors")
+const dotenv = require("dotenv")
+const { author, name: application_name, version } = require("./package.json")
+const db = require("./db.js")
+const outfit_router = require("./routes/outfits.js")
+const garment_router = require("./routes/garments.js")
+const auth = require("@moreillon/express_identification_middleware")
+const { uploads_directory } = require("./config.js")
 
 dotenv.config()
 
-const {
-  APP_PORT = 80,
-  IDENTIFICATION_URL,
-} = process.env
+const { APP_PORT = 80, IDENTIFICATION_URL } = process.env
 
 const auth_options = { url: IDENTIFICATION_URL }
 
@@ -24,7 +21,7 @@ const app = express()
 app.use(bodyParser.json())
 app.use(cors())
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.send({
     application_name,
     author,
@@ -39,10 +36,8 @@ app.get('/', (req, res) => {
   })
 })
 
-app.use('/outfits', auth(auth_options), outfit_router)
-app.use('/garments', auth(auth_options), garment_router)
-
-
+app.use("/outfits", auth(auth_options), outfit_router)
+app.use("/garments", auth(auth_options), garment_router)
 
 // Express error handling
 
@@ -53,10 +48,7 @@ app.use((error, req, res, next) => {
   res.status(statusCode).send(message)
 })
 
-
-
-
 // Start server
 app.listen(APP_PORT, () => {
-  console.log(`Outfit manager API v${version} listening on port ${APP_PORT}`);
+  console.log(`Outfit manager API v${version} listening on port ${APP_PORT}`)
 })
