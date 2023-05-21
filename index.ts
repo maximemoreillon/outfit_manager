@@ -1,6 +1,5 @@
 import express, { NextFunction, Request, Response} from "express"
 import "express-async-errors"
-import bodyParser from "body-parser"
 import cors from "cors"
 import dotenv from "dotenv"
 import { author, name as application_name, version } from "./package.json"
@@ -18,7 +17,7 @@ const auth_options = { url: IDENTIFICATION_URL }
 
 // Express configuration
 const app = express()
-app.use(bodyParser.json())
+app.use(express.json())
 app.use(cors())
 
 app.get("/", (req, res) => {

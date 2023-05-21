@@ -39,4 +39,4 @@ router.route('/:outfit_id/image')
 router.route('/:outfit_id/thumbnail')
   .get(read_outfit_thumbnail)
 
-export default Router
+export default router

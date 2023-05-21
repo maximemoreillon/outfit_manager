@@ -19,7 +19,6 @@ const storage = multer.diskStorage({
   filename:  (req, file, cb) => { cb(null, file.originalname) }
 })
 
-
 const upload = multer({ storage })
 
 router.route('/')
@@ -38,4 +37,4 @@ router.route('/:garment_id/image')
 router.route('/:garment_id/thumbnail')
   .get(read_garment_thumbnail)
 
-export default Router
+export default router
