@@ -1,14 +1,14 @@
-const express = require("express")
-require("express-async-errors")
-const bodyParser = require("body-parser")
-const cors = require("cors")
-const dotenv = require("dotenv")
-const { author, name: application_name, version } = require("./package.json")
-const db = require("./db.js")
-const outfit_router = require("./routes/outfits.js")
-const garment_router = require("./routes/garments.js")
-const auth = require("@moreillon/express_identification_middleware")
-const { uploads_directory } = require("./config.js")
+import express, { NextFunction, Request, Response} from "express"
+import "express-async-errors"
+import bodyParser from "body-parser"
+import cors from "cors"
+import dotenv from "dotenv"
+import { author, name as application_name, version } from "./package.json"
+import { MONGODB_URL, MONGODB_DB, get_connected as mongodb_connected} from "./db"
+import outfit_router from "./routes/outfits"
+import garment_router from "./routes/garments"
+import auth from "@moreillon/express_identification_middleware"
+import { uploads_directory } from "./config"
 
 dotenv.config()
 
@@ -27,9 +27,9 @@ app.get("/", (req, res) => {
     author,
     version,
     mongodb: {
-      url: db.url,
-      db: db.db,
-      connected: db.get_connected(),
+      url: MONGODB_URL,
+      db: MONGODB_DB,
+      connected: mongodb_connected(),
     },
     auth: auth_options,
     uploads_directory,
@@ -41,7 +41,7 @@ app.use("/garments", auth(auth_options), garment_router)
 
 // Express error handling
 
-app.use((error, req, res, next) => {
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.error(error)
   let { statusCode = 500, message = error } = error
   if (isNaN(statusCode) || statusCode > 600) statusCode = 500

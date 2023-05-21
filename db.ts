@@ -1,15 +1,12 @@
-const mongoose = require("mongoose")
-const dotenv = require("dotenv")
+import mongoose from "mongoose"
+import dotenv from "dotenv"
 
 dotenv.config()
 
-const { MONGODB_DB = "outfit_manager", MONGODB_URL = "mongodb://mongo" } =
+export const { MONGODB_DB = "outfit_manager", MONGODB_URL = "mongodb://mongo" } =
   process.env
 
-const mongodb_options = {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-}
+
 
 let mongodb_connected = false
 
@@ -17,7 +14,7 @@ const mongoose_connect = () => {
   console.log("[MongoDB] Attempting connection...")
   const connection_url = `${MONGODB_URL}/${MONGODB_DB}`
   mongoose
-    .connect(connection_url, mongodb_options)
+    .connect(connection_url)
     .then(() => {
       console.log("[Mongoose] Initial connection successful")
     })
@@ -27,6 +24,7 @@ const mongoose_connect = () => {
     })
 }
 
+// Not ideal here
 mongoose_connect()
 
 const db = mongoose.connection
@@ -39,6 +37,5 @@ db.once("open", () => {
   mongodb_connected = true
 })
 
-exports.url = MONGODB_URL
-exports.db = MONGODB_DB
-exports.get_connected = () => mongodb_connected
+
+export const get_connected = () => mongodb_connected

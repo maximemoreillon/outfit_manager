@@ -4,4 +4,4 @@ COPY . .
 RUN ls -al
 RUN npm install
 EXPOSE 80
-CMD [ "node", "index.js" ]
+CMD [ "npm", "run", "start"]
