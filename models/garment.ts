@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose')
+import { Schema, model } from 'mongoose'
 
 
  const garmentSchema = new Schema({
@@ -13,4 +13,4 @@ const { Schema, model } = require('mongoose')
 
  const Garment = model('Garment', garmentSchema)
 
- module.exports = Garment
+ export default Garment

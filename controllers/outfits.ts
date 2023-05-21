@@ -1,64 +1,70 @@
-const Outfit = require("../models/outfit.js")
-const path = require("path")
-const { uploads_directory } = require("../config.js")
-const {
+import Outfit from "../models/outfit"
+import path from "path"
+import { uploads_directory } from "../config"
+import {
   create_image_thumbnail,
   get_thumbnail_filename,
-} = require("../utils.js")
+} from "../utils"
+import { Request, Response } from 'express'
+import createHttpError from 'http-errors'
 
-exports.real_all_outfits = async (req, res) => {
+export const real_all_outfits = async (req: Request, res: Response) => {
   const user_id = res.locals.user._id
   const query = user_id ? { user_id } : {}
   const outfits = await Outfit.find(query)
   res.send(outfits)
 }
 
-exports.read_outfit = async (req, res) => {
+export const read_outfit = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
   const outfit = await Outfit.findOne({ _id }).populate("garments")
   res.send(outfit)
 }
 
-exports.create_outfit = async (req, res) => {
+export const create_outfit = async (req: Request, res: Response) => {
+  const {file} = req
+  if(!file) throw createHttpError(400, 'File not provided')
   const user_id = res.locals.user._id
-  const image = req.file.originalname
+  const image = file.originalname
   await create_image_thumbnail(req)
   const new_outfit = new Outfit({ image, user_id })
   const saved_outfit = await new_outfit.save()
   res.send(saved_outfit)
 }
 
-exports.update_outfit = async (req, res) => {
+export const update_outfit = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
   const properties = req.body
   const result = await Outfit.findOneAndUpdate({ _id }, properties)
   res.send(result)
 }
 
-exports.delete_outfit = async (req, res) => {
+export const delete_outfit = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
   const result = await Outfit.findOneAndDelete({ _id })
   res.send(result)
   console.log(`Outfit ${_id} deleted`)
 }
 
-exports.upload_outfit_image = async (req, res) => {
-  const { originalname: image } = req.file
-  const { outfit_id: _id } = req.params
+export const upload_outfit_image = async (req: Request, res: Response) => {
+  const {file, params} = req
+  if(!file) throw createHttpError(400, 'File not provided')
+  const { originalname: image } = file
+  const { outfit_id: _id } = params
   await create_image_thumbnail(req)
   const result = await Outfit.findOneAndUpdate({ _id }, { image })
   res.send(result)
   console.log(`Updated image of outfit ${_id}`)
 }
 
-exports.read_outfit_image = async (req, res) => {
+export const read_outfit_image = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
   const { image } = await Outfit.findOne({ _id })
   const image_absolute_path = path.join(uploads_directory, "outfits", image)
   res.sendFile(image_absolute_path)
 }
 
-exports.read_outfit_thumbnail = async (req, res) => {
+export const read_outfit_thumbnail = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
   const { image } = await Outfit.findOne({ _id })
   const thumbnail_filename = get_thumbnail_filename(image)

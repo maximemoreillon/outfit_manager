@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose')
+import { Schema, model } from 'mongoose'
 
  const outfitSchema = new Schema({
    user_id: String,
@@ -10,4 +10,4 @@ const { Schema, model } = require('mongoose')
 
  const Outfit = model('Outfit', outfitSchema)
 
- module.exports = Outfit
+ export default Outfit
