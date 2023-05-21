@@ -36,8 +36,10 @@ app.get("/", (req, res) => {
   })
 })
 
-app.use("/outfits", auth(auth_options), outfit_router)
-app.use("/garments", auth(auth_options), garment_router)
+// Reqauire authentication for all routes hereafter
+app.use(auth(auth_options))
+app.use("/outfits",outfit_router)
+app.use("/garments", garment_router)
 
 // Express error handling
 
