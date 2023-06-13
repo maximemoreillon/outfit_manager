@@ -1,13 +1,13 @@
 import { Schema, model } from 'mongoose'
 
- const outfitSchema = new Schema({
+ const schema = new Schema({
    user_id: String,
-   label: String,
+   label: String, // What is this for?
    image: String,
    garments: [{ type: Schema.Types.ObjectId, ref: 'Garment' }]
 
  })
 
- const Outfit = model('Outfit', outfitSchema)
+ export default model('Outfit', schema)
 
- export default Outfit
+ 

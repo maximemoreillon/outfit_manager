@@ -1,16 +1,17 @@
 import { Schema, model } from 'mongoose'
 
 
- const garmentSchema = new Schema({
+ const schema = new Schema({
    user_id: String,
    image: String,
-   label: String,
    color: String,
    brand: String,
    description: String,
    comment: String,
+   label: String, // What is this for?
+   tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }]
  })
 
- const Garment = model('Garment', garmentSchema)
+ export default model('Garment', schema)
 
- export default Garment
+
