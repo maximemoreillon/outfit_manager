@@ -1,16 +1,21 @@
 import Garment from "../models/garment"
 import path from "path"
 import { uploads_directory } from "../config"
-import {
-  create_image_thumbnail,
-  get_thumbnail_filename,
-} from "../utils"
+import { create_image_thumbnail, get_thumbnail_filename } from "../utils"
 import { Request, Response } from "express"
-import createHttpError from 'http-errors'
+import createHttpError from "http-errors"
 
-export const read_all_garments = async (req: Request, res: Response) => {
+export const read_garments = async (req: Request, res: Response) => {
   const user_id = res.locals.user._id
-  const query = user_id ? { user_id } : {}
+  const { ...filters } = req.query
+
+  const query = {
+    ...filters,
+  }
+
+  if (user_id) query[user_id] = user_id
+
+  // TODO: pagination
   const garments = await Garment.find(query)
   res.send(garments)
 }
@@ -22,8 +27,8 @@ export const read_garment = async (req: Request, res: Response) => {
 }
 
 export const create_garment = async (req: Request, res: Response) => {
-  const {file} = req
-  if(!file) throw createHttpError(400, 'File not provided')
+  const { file } = req
+  if (!file) throw createHttpError(400, "File not provided")
   const user_id = res.locals.user._id
   const image = file.originalname
   await create_image_thumbnail(req)
@@ -48,8 +53,8 @@ export const delete_garment = async (req: Request, res: Response) => {
 }
 
 export const upload_garment_image = async (req: Request, res: Response) => {
-  const {file, params} = req
-  if(!file) throw createHttpError(400, 'File not provided')
+  const { file, params } = req
+  if (!file) throw createHttpError(400, "File not provided")
   const _id = params.garment_id
   const image = file.originalname
   await create_image_thumbnail(req)
