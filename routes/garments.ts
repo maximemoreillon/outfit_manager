@@ -9,6 +9,7 @@ import {
   upload_garment_image,
   delete_garment,
   read_garment_types,
+  read_garment_brands,
 } from "../controllers/garments"
 import multer from "multer"
 import { uploads_directory } from "../config"
@@ -32,6 +33,7 @@ router
   .post(upload.single("image"), create_garment)
 
 router.route("/types").get(read_garment_types)
+router.route("/brands").get(read_garment_brands)
 
 router
   .route("/:garment_id")

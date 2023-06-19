@@ -90,4 +90,12 @@ export const read_garment_types = async (req: Request, res: Response) => {
   res.send(garment)
 }
 
+export const read_garment_brands = async (req: Request, res: Response) => {
+  const user_id = res.locals.user._id
+  const query: any = {}
+  if (user_id) query["user_id"] = user_id
+  const garment = await Garment.distinct("brand", query)
+  res.send(garment)
+}
+
 // TODO similar thing for brands
