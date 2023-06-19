@@ -13,7 +13,7 @@ export const read_garments = async (req: Request, res: Response) => {
     ...filters,
   }
 
-  if (user_id) query[user_id] = user_id
+  if (user_id) query["user_id"] = user_id
 
   // TODO: pagination
   const garments = await Garment.find(query)
@@ -81,3 +81,13 @@ export const read_garment_thumbnail = async (req: Request, res: Response) => {
   )
   res.sendFile(image_absolute_path)
 }
+
+export const read_garment_types = async (req: Request, res: Response) => {
+  const user_id = res.locals.user._id
+  const query: any = {}
+  if (user_id) query["user_id"] = user_id
+  const garment = await Garment.distinct("type", query)
+  res.send(garment)
+}
+
+// TODO similar thing for brands
