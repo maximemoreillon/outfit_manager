@@ -11,7 +11,8 @@ const schema = new Schema({
   tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
   type: String, // Temporary test
   size: String,
-  quantity: {type: Number, default: 1},
+  quantity: { type: Number, default: 1 },
+  registration_date: { type: Date, default: Date.now() },
 })
 
 export default model("Garment", schema)
