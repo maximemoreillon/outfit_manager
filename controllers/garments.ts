@@ -82,6 +82,7 @@ export const read_garment_thumbnail = async (req: Request, res: Response) => {
   res.sendFile(image_absolute_path)
 }
 
+// TODO: combine those
 export const read_garment_types = async (req: Request, res: Response) => {
   const user_id = res.locals.user._id
   const query: any = {}
@@ -98,4 +99,10 @@ export const read_garment_brands = async (req: Request, res: Response) => {
   res.send(garment)
 }
 
-// TODO similar thing for brands
+export const read_garment_colors = async (req: Request, res: Response) => {
+  const user_id = res.locals.user._id
+  const query: any = {}
+  if (user_id) query["user_id"] = user_id
+  const garment = await Garment.distinct("color", query)
+  res.send(garment)
+}
