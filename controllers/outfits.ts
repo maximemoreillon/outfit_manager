@@ -1,12 +1,9 @@
 import Outfit from "../models/outfit"
 import path from "path"
 import { uploads_directory } from "../config"
-import {
-  create_image_thumbnail,
-  get_thumbnail_filename,
-} from "../utils"
-import { Request, Response } from 'express'
-import createHttpError from 'http-errors'
+import { create_image_thumbnail, get_thumbnail_filename } from "../utils"
+import { Request, Response } from "express"
+import createHttpError from "http-errors"
 
 export const real_all_outfits = async (req: Request, res: Response) => {
   const user_id = res.locals.user._id
@@ -22,8 +19,8 @@ export const read_outfit = async (req: Request, res: Response) => {
 }
 
 export const create_outfit = async (req: Request, res: Response) => {
-  const {file} = req
-  if(!file) throw createHttpError(400, 'File not provided')
+  const { file } = req
+  if (!file) throw createHttpError(400, "File not provided")
   const user_id = res.locals.user._id
   const image = file.originalname
   await create_image_thumbnail(req)
@@ -35,26 +32,41 @@ export const create_outfit = async (req: Request, res: Response) => {
 export const update_outfit = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
   const properties = req.body
-  const result = await Outfit.findOneAndUpdate({ _id }, properties)
-  res.send(result)
+  const options = { new: true }
+  const updatedOutfit = await Outfit.findOneAndUpdate(
+    { _id },
+    properties,
+    options
+  )
+  if (!updatedOutfit) throw createHttpError(404, "Deleted not found")
+  res.send(updatedOutfit)
 }
 
 export const delete_outfit = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
-  const result = await Outfit.findOneAndDelete({ _id })
-  res.send(result)
+  const deletedOutfit = await Outfit.findOneAndDelete({ _id })
+  if (!deletedOutfit) throw createHttpError(404, "Deleted not found")
   console.log(`Outfit ${_id} deleted`)
+  res.send(deletedOutfit)
 }
 
 export const upload_outfit_image = async (req: Request, res: Response) => {
-  const {file, params} = req
-  if(!file) throw createHttpError(400, 'File not provided')
+  const { file, params } = req
+  if (!file) throw createHttpError(400, "File not provided")
   const { originalname: image } = file
   const { outfit_id: _id } = params
   await create_image_thumbnail(req)
-  const result = await Outfit.findOneAndUpdate({ _id }, { image })
-  res.send(result)
+  const options = { new: true }
+
+  const updatedOutfit = await Outfit.findOneAndUpdate(
+    { _id },
+    { image },
+    options
+  )
+  if (!updatedOutfit) throw createHttpError(404, "Deleted not found")
+
   console.log(`Updated image of outfit ${_id}`)
+  res.send(updatedOutfit)
 }
 
 export const read_outfit_image = async (req: Request, res: Response) => {

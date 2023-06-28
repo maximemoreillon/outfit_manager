@@ -40,16 +40,23 @@ export const create_garment = async (req: Request, res: Response) => {
 export const update_garment = async (req: Request, res: Response) => {
   const _id = req.params.garment_id
   const properties = req.body
-  const result = await Garment.findOneAndUpdate({ _id }, properties)
+  const options = { new: true }
+  const updatedGarment = await Garment.findOneAndUpdate(
+    { _id },
+    properties,
+    options
+  )
+  if (!updatedGarment) throw createHttpError(404, "Garment not found")
   console.log(`Garment ${_id} updated`)
-  res.send(result)
+  res.send(updatedGarment)
 }
 
 export const delete_garment = async (req: Request, res: Response) => {
   const _id = req.params.garment_id
-  const result = await Garment.findOneAndDelete({ _id })
-  res.send(result)
-  console.log(`Outfit ${_id} deleted`)
+  const deletedGarment = await Garment.findOneAndDelete({ _id })
+  if (!deletedGarment) throw createHttpError(404, "Garment not found")
+  console.log(`Garment ${_id} deleted`)
+  res.send(deletedGarment)
 }
 
 export const upload_garment_image = async (req: Request, res: Response) => {
@@ -58,9 +65,16 @@ export const upload_garment_image = async (req: Request, res: Response) => {
   const _id = params.garment_id
   const image = file.originalname
   await create_image_thumbnail(req)
-  const result = await Garment.findOneAndUpdate({ _id }, { image })
-  res.send(result)
+  const options = { new: true }
+  const updatedGarment = await Garment.findOneAndUpdate(
+    { _id },
+    { image },
+    options
+  )
+  if (!updatedGarment) throw createHttpError(404, "Garment not found")
+
   console.log(`Image of garment ${_id} uploaded`)
+  res.send(updatedGarment)
 }
 
 export const read_garment_image = async (req: Request, res: Response) => {
