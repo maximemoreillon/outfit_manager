@@ -45,7 +45,7 @@ export const update_outfit = async (req: Request, res: Response) => {
 export const delete_outfit = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
   const deletedOutfit = await Outfit.findOneAndDelete({ _id })
-  if (!deletedOutfit) throw createHttpError(404, "Deleted not found")
+  if (!deletedOutfit) throw createHttpError(404, "Outfit not found")
   console.log(`Outfit ${_id} deleted`)
   res.send(deletedOutfit)
 }
@@ -63,7 +63,7 @@ export const upload_outfit_image = async (req: Request, res: Response) => {
     { image },
     options
   )
-  if (!updatedOutfit) throw createHttpError(404, "Deleted not found")
+  if (!updatedOutfit) throw createHttpError(404, "Outfit not found")
 
   console.log(`Updated image of outfit ${_id}`)
   res.send(updatedOutfit)
@@ -71,15 +71,21 @@ export const upload_outfit_image = async (req: Request, res: Response) => {
 
 export const read_outfit_image = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
-  const { image } = await Outfit.findOne({ _id })
-  const image_absolute_path = path.join(uploads_directory, "outfits", image)
+  const outfit = await Outfit.findOne({ _id })
+  if (!outfit) throw createHttpError(404, "Outfit not found")
+  const image_absolute_path = path.join(
+    uploads_directory,
+    "outfits",
+    outfit.image
+  )
   res.sendFile(image_absolute_path)
 }
 
 export const read_outfit_thumbnail = async (req: Request, res: Response) => {
   const { outfit_id: _id } = req.params
-  const { image } = await Outfit.findOne({ _id })
-  const thumbnail_filename = get_thumbnail_filename(image)
+  const outfit = await Outfit.findOne({ _id })
+  if (!outfit) throw createHttpError(404, "Outfit not found")
+  const thumbnail_filename = get_thumbnail_filename(outfit.image)
   const image_absolute_path = path.join(
     uploads_directory,
     "outfits",
