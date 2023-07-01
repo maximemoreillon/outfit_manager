@@ -5,6 +5,17 @@ import { create_image_thumbnail, get_thumbnail_filename } from "../utils"
 import { Request, Response } from "express"
 import createHttpError from "http-errors"
 
+export const create_garment = async (req: Request, res: Response) => {
+  const { file } = req
+  if (!file) throw createHttpError(400, "File not provided")
+  const user_id = res.locals.user._id
+  const image = file.originalname
+  await create_image_thumbnail(req)
+  const new_garment = new Garment({ ...req.body, image, user_id })
+  const saved_garment = await new_garment.save()
+  res.send(saved_garment)
+}
+
 export const read_garments = async (req: Request, res: Response) => {
   const user_id = res.locals.user._id
   const { ...filters } = req.query
@@ -21,24 +32,13 @@ export const read_garments = async (req: Request, res: Response) => {
 }
 
 export const read_garment = async (req: Request, res: Response) => {
-  const _id = req.params.garment_id
+  const { _id } = req.params
   const garment = await Garment.findOne({ _id })
   res.send(garment)
 }
 
-export const create_garment = async (req: Request, res: Response) => {
-  const { file } = req
-  if (!file) throw createHttpError(400, "File not provided")
-  const user_id = res.locals.user._id
-  const image = file.originalname
-  await create_image_thumbnail(req)
-  const new_garment = new Garment({ ...req.body, image, user_id })
-  const saved_garment = await new_garment.save()
-  res.send(saved_garment)
-}
-
 export const update_garment = async (req: Request, res: Response) => {
-  const _id = req.params.garment_id
+  const { _id } = req.params
   const properties = req.body
   const options = { new: true }
   const updatedGarment = await Garment.findOneAndUpdate(
@@ -52,7 +52,7 @@ export const update_garment = async (req: Request, res: Response) => {
 }
 
 export const delete_garment = async (req: Request, res: Response) => {
-  const _id = req.params.garment_id
+  const { _id } = req.params
   const deletedGarment = await Garment.findOneAndDelete({ _id })
   if (!deletedGarment) throw createHttpError(404, "Garment not found")
   console.log(`Garment ${_id} deleted`)
@@ -78,7 +78,7 @@ export const upload_garment_image = async (req: Request, res: Response) => {
 }
 
 export const read_garment_image = async (req: Request, res: Response) => {
-  const _id = req.params.garment_id
+  const { _id } = req.params
   const garment = await Garment.findOne({ _id })
   if (!garment) throw createHttpError(404, "Garment not found")
   const image_absolute_path = path.join(
@@ -90,7 +90,7 @@ export const read_garment_image = async (req: Request, res: Response) => {
 }
 
 export const read_garment_thumbnail = async (req: Request, res: Response) => {
-  const _id = req.params.garment_id
+  const { _id } = req.params
   const garment = await Garment.findOne({ _id })
   if (!garment) throw createHttpError(404, "Garment not found")
   const thumbnail_filename = get_thumbnail_filename(garment.image)

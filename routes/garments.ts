@@ -38,16 +38,16 @@ router.route("/brands").get(read_garment_brands)
 router.route("/colors").get(read_garment_colors)
 
 router
-  .route("/:garment_id")
+  .route("/:_id")
   .get(read_garment)
   .patch(update_garment)
   .delete(delete_garment)
 
 router
-  .route("/:garment_id/image")
+  .route("/:_id/image")
   .post(upload.single("image"), upload_garment_image)
   .get(read_garment_image)
 
-router.route("/:garment_id/thumbnail").get(read_garment_thumbnail)
+router.route("/:_id/thumbnail").get(read_garment_thumbnail)
 
 export default router
