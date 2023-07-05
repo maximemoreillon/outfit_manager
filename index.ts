@@ -1,9 +1,14 @@
-import express, { NextFunction, Request, Response} from "express"
+import express, { NextFunction, Request, Response } from "express"
 import "express-async-errors"
 import cors from "cors"
 import dotenv from "dotenv"
 import { author, name as application_name, version } from "./package.json"
-import { connect as dbConnect, MONGODB_URL, MONGODB_DB, get_connected as mongodb_connected} from "./db"
+import {
+  connect as dbConnect,
+  MONGODB_URL,
+  MONGODB_DB,
+  get_connected as mongodb_connected,
+} from "./db"
 import outfit_router from "./routes/outfits"
 import garment_router from "./routes/garments"
 import auth from "@moreillon/express_identification_middleware"
@@ -38,7 +43,7 @@ app.get("/", (req, res) => {
 
 // Reqauire authentication for all routes hereafter
 app.use(auth(auth_options))
-app.use("/outfits",outfit_router)
+app.use("/outfits", outfit_router)
 app.use("/garments", garment_router)
 
 // Express error handling
@@ -50,7 +55,6 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   res.status(statusCode).send(message)
 })
 
-// Start server
 app.listen(APP_PORT, () => {
   console.log(`Outfit manager API v${version} listening on port ${APP_PORT}`)
 })

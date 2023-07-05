@@ -13,6 +13,8 @@ const schema = new Schema({
   size: String,
   quantity: { type: Number, default: 1 },
   registration_date: { type: Date, default: Date.now() },
+  rating: Number,
+  condition: { type: Number, default: 100 },
 })
 
 export default model("Garment", schema)
