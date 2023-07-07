@@ -103,6 +103,6 @@ export const read_outfits_of_garment = async (req: Request, res: Response) => {
   }
   if(user_id) query.user_id = user_id
   const outfits = await Outfit.find(query)
-  return outfits
+  res.send(outfits)
   
 }
