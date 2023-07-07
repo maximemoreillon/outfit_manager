@@ -4,6 +4,7 @@ import createHttpError from "http-errors"
 import { uploads_directory } from "../config"
 import { create_image_thumbnail, get_thumbnail_filename } from "../utils"
 import { Request, Response } from "express"
+import mongoose from "mongoose"
 
 export const create_outfit = async (req: Request, res: Response) => {
   const { file } = req
@@ -74,6 +75,7 @@ export const read_outfit_image = async (req: Request, res: Response) => {
   const { _id } = req.params
   const outfit = await Outfit.findOne({ _id })
   if (!outfit) throw createHttpError(404, "Outfit not found")
+  if(!outfit.image) throw createHttpError(500, "Outfit does not have an image")
   const image_absolute_path = path.join(
     uploads_directory,
     "outfits",
@@ -86,6 +88,7 @@ export const read_outfit_thumbnail = async (req: Request, res: Response) => {
   const { _id } = req.params
   const outfit = await Outfit.findOne({ _id })
   if (!outfit) throw createHttpError(404, "Outfit not found")
+  if(!outfit.image) throw createHttpError(500, "Outfit does not have an image")
   const thumbnail_filename = get_thumbnail_filename(outfit.image)
   const image_absolute_path = path.join(
     uploads_directory,
@@ -98,6 +101,7 @@ export const read_outfit_thumbnail = async (req: Request, res: Response) => {
 export const read_outfits_of_garment = async (req: Request, res: Response) => {
   const { _id: garment_id } = req.params
   const user_id = res.locals.user._id
+
   const query: any = {
     garments: garment_id
   }
