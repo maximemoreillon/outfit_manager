@@ -9,6 +9,8 @@ import {
   read_outfit_image,
   read_outfit_thumbnail,
 } from "../controllers/outfits"
+
+
 import multer from "multer"
 import { uploads_directory } from "../config"
 
@@ -32,6 +34,9 @@ router
   .get(read_outfit)
   .patch(update_outfit)
   .delete(delete_outfit)
+
+
+
 
 router
   .route("/:_id/image")

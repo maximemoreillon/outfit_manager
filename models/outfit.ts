@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 
  const schema = new Schema({
    user_id: String,
-   label: String, // What is this for?
+   label: String, // A.k.a name, description
    image: String,
    garments: [{ type: Schema.Types.ObjectId, ref: 'Garment' }]
 

@@ -126,3 +126,7 @@ export const read_garment_colors = async (req: Request, res: Response) => {
   const garment = await Garment.distinct("color", query)
   res.send(garment)
 }
+
+
+
+

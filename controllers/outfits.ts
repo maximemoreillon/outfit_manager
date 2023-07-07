@@ -94,3 +94,15 @@ export const read_outfit_thumbnail = async (req: Request, res: Response) => {
   )
   res.sendFile(image_absolute_path)
 }
+
+export const read_outfits_of_garment = async (req: Request, res: Response) => {
+  const { _id: garment_id } = req.params
+  const user_id = res.locals.user._id
+  const query: any = {
+    garments: garment_id
+  }
+  if(user_id) query.user_id = user_id
+  const outfits = await Outfit.find(query)
+  return outfits
+  
+}
