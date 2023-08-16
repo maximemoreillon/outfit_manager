@@ -37,6 +37,8 @@ export const read_garments = async (req: Request, res: Response) => {
 export const read_garment = async (req: Request, res: Response) => {
   const { _id } = req.params
   const garment = await Garment.findOne({ _id })
+  if (!garment) throw createHttpError(404, "Garment not found")
+
   res.send(garment)
 }
 
@@ -85,7 +87,7 @@ export const read_garment_image = async (req: Request, res: Response) => {
   const garment = await Garment.findOne({ _id })
   if (!garment) throw createHttpError(404, "Garment not found")
   if (!garment.image)
-    throw createHttpError(500, "Garment does not have an image")
+    throw createHttpError(404, "Garment does not have an image")
 
   const image_absolute_path = path.join(
     uploads_directory,
@@ -100,7 +102,7 @@ export const read_garment_thumbnail = async (req: Request, res: Response) => {
   const garment = await Garment.findOne({ _id })
   if (!garment) throw createHttpError(404, "Garment not found")
   if (!garment.image)
-    throw createHttpError(500, "Garment does not have an image")
+    throw createHttpError(404, "Garment does not have an image")
   const thumbnail_filename = get_thumbnail_filename(garment.image)
   const image_absolute_path = path.join(
     uploads_directory,
