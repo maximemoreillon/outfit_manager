@@ -1,7 +1,7 @@
 import { Router } from "express"
 import {
   create_outfit,
-  real_outfits,
+  read_outfits,
   read_outfit,
   update_outfit,
   delete_outfit,
@@ -9,7 +9,6 @@ import {
   read_outfit_image,
   read_outfit_thumbnail,
 } from "../controllers/outfits"
-
 
 import multer from "multer"
 import { uploads_directory } from "../config"
@@ -27,16 +26,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-router.route("/").get(real_outfits).post(upload.single("image"), create_outfit)
+router.route("/").get(read_outfits).post(upload.single("image"), create_outfit)
 
 router
   .route("/:_id")
   .get(read_outfit)
   .patch(update_outfit)
   .delete(delete_outfit)
-
-
-
 
 router
   .route("/:_id/image")

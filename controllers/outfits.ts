@@ -4,7 +4,6 @@ import createHttpError from "http-errors"
 import { uploads_directory } from "../config"
 import { create_image_thumbnail, get_thumbnail_filename } from "../utils"
 import { Request, Response } from "express"
-import mongoose from "mongoose"
 
 export const create_outfit = async (req: Request, res: Response) => {
   const { file } = req
@@ -12,12 +11,11 @@ export const create_outfit = async (req: Request, res: Response) => {
   const user_id = res.locals.user._id
   const image = file.originalname
   await create_image_thumbnail(req)
-  const new_outfit = new Outfit({ image, user_id })
-  const saved_outfit = await new_outfit.save()
-  res.send(saved_outfit)
+  const newOutfit = await Outfit.create({ image, user_id })
+  res.send(newOutfit)
 }
 
-export const real_outfits = async (req: Request, res: Response) => {
+export const read_outfits = async (req: Request, res: Response) => {
   const user_id = res.locals.user._id
   const query = user_id ? { user_id } : {}
   const outfits = await Outfit.find(query)
@@ -75,7 +73,7 @@ export const read_outfit_image = async (req: Request, res: Response) => {
   const { _id } = req.params
   const outfit = await Outfit.findOne({ _id })
   if (!outfit) throw createHttpError(404, "Outfit not found")
-  if(!outfit.image) throw createHttpError(500, "Outfit does not have an image")
+  if (!outfit.image) throw createHttpError(500, "Outfit does not have an image")
   const image_absolute_path = path.join(
     uploads_directory,
     "outfits",
@@ -88,7 +86,7 @@ export const read_outfit_thumbnail = async (req: Request, res: Response) => {
   const { _id } = req.params
   const outfit = await Outfit.findOne({ _id })
   if (!outfit) throw createHttpError(404, "Outfit not found")
-  if(!outfit.image) throw createHttpError(500, "Outfit does not have an image")
+  if (!outfit.image) throw createHttpError(500, "Outfit does not have an image")
   const thumbnail_filename = get_thumbnail_filename(outfit.image)
   const image_absolute_path = path.join(
     uploads_directory,
@@ -103,10 +101,9 @@ export const read_outfits_of_garment = async (req: Request, res: Response) => {
   const user_id = res.locals.user._id
 
   const query: any = {
-    garments: garment_id
+    garments: garment_id,
   }
-  if(user_id) query.user_id = user_id
+  if (user_id) query.user_id = user_id
   const outfits = await Outfit.find(query)
   res.send(outfits)
-  
 }
