@@ -6,14 +6,17 @@ import { Request, Response } from "express"
 import createHttpError from "http-errors"
 
 export const create_garment = async (req: Request, res: Response) => {
-  const { file } = req
-  if (!file) throw createHttpError(400, "File not provided")
+  const { file, body } = req
   const user_id = res.locals.user._id
-  const image = file.originalname
-  await create_image_thumbnail(req)
-  const new_garment = new Garment({ ...req.body, image, user_id })
-  const saved_garment = await new_garment.save()
-  res.send(saved_garment)
+  const newGarmentProperties = { ...body, user_id }
+
+  if (file) {
+    await create_image_thumbnail(req)
+    newGarmentProperties.image = file.originalname
+  }
+
+  const newGarment = await Garment.create(newGarmentProperties)
+  res.send(newGarment)
 }
 
 export const read_garments = async (req: Request, res: Response) => {
@@ -81,7 +84,8 @@ export const read_garment_image = async (req: Request, res: Response) => {
   const { _id } = req.params
   const garment = await Garment.findOne({ _id })
   if (!garment) throw createHttpError(404, "Garment not found")
-  if(!garment.image) throw createHttpError(500, "Garment does not have an image")
+  if (!garment.image)
+    throw createHttpError(500, "Garment does not have an image")
 
   const image_absolute_path = path.join(
     uploads_directory,
@@ -95,7 +99,8 @@ export const read_garment_thumbnail = async (req: Request, res: Response) => {
   const { _id } = req.params
   const garment = await Garment.findOne({ _id })
   if (!garment) throw createHttpError(404, "Garment not found")
-  if(!garment.image) throw createHttpError(500, "Garment does not have an image")
+  if (!garment.image)
+    throw createHttpError(500, "Garment does not have an image")
   const thumbnail_filename = get_thumbnail_filename(garment.image)
   const image_absolute_path = path.join(
     uploads_directory,
@@ -129,7 +134,3 @@ export const read_garment_colors = async (req: Request, res: Response) => {
   const garment = await Garment.distinct("color", query)
   res.send(garment)
 }
-
-
-
-
