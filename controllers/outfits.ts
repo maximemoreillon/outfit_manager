@@ -25,6 +25,7 @@ export const read_outfits = async (req: Request, res: Response) => {
 export const read_outfit = async (req: Request, res: Response) => {
   const { _id } = req.params
   const outfit = await Outfit.findOne({ _id }).populate("garments")
+  if (!outfit) throw createHttpError(404, "Outfit not found")
   res.send(outfit)
 }
 

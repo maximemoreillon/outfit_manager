@@ -38,7 +38,6 @@ export const read_garment = async (req: Request, res: Response) => {
   const { _id } = req.params
   const garment = await Garment.findOne({ _id })
   if (!garment) throw createHttpError(404, "Garment not found")
-
   res.send(garment)
 }
 
