@@ -1,3 +1,4 @@
 node_modules
 uploads_dev
 .env
+build
