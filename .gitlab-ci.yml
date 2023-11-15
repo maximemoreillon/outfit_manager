@@ -12,7 +12,7 @@ variables:
 # Needed for Docker in docker build
 image: moreillon/ci-dind
 services:
-  - name: docker:20-dind
+  - name: docker:24.0.7-dind
 
 build:
   stage: build
@@ -24,10 +24,8 @@ build:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
   script:
     - docker build -t ${CONTAINER_IMAGE} .
-    # Tagging
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_TAGGED}
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
-    # Pushing
     - docker push ${CONTAINER_IMAGE_TAGGED}
     - docker push ${CONTAINER_IMAGE_LATEST}
 
