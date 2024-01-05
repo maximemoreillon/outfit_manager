@@ -5,8 +5,7 @@ import dotenv from "dotenv"
 import { author, name as application_name, version } from "./package.json"
 import {
   connect as dbConnect,
-  MONGODB_URL,
-  MONGODB_DB,
+  redactedConnectionString as mongodbConnectionString,
   get_connected as mongodb_connected,
 } from "./db"
 import outfit_router from "./routes/outfits"
@@ -32,8 +31,7 @@ app.get("/", (req, res) => {
     author,
     version,
     mongodb: {
-      url: MONGODB_URL,
-      db: MONGODB_DB,
+      connection_string: mongodbConnectionString,
       connected: mongodb_connected(),
     },
     auth: auth_options,
