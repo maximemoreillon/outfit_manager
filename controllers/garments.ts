@@ -66,7 +66,7 @@ export const delete_garment = async (req: Request, res: Response) => {
 export const upload_garment_image = async (req: Request, res: Response) => {
   const { file, params } = req
   if (!file) throw createHttpError(400, "File not provided")
-  const _id = params.garment_id
+  const { _id } = params
   const image = file.originalname
   await create_image_thumbnail(req)
   const options = { new: true }
@@ -77,7 +77,6 @@ export const upload_garment_image = async (req: Request, res: Response) => {
   )
   if (!updatedGarment) throw createHttpError(404, "Garment not found")
 
-  console.log(`Image of garment ${_id} uploaded`)
   res.send(updatedGarment)
 }
 
