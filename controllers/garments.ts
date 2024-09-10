@@ -20,7 +20,7 @@ export const create_garment = async (req: Request, res: Response) => {
 }
 
 export const read_garments = async (req: Request, res: Response) => {
-  const user_id = res.locals.user._id
+  const user_id = res.locals.user?._id
   const { ...filters } = req.query
 
   const query = {
@@ -112,7 +112,7 @@ export const read_garment_thumbnail = async (req: Request, res: Response) => {
 
 // TODO: combine those
 export const read_garment_types = async (req: Request, res: Response) => {
-  const user_id = res.locals.user._id
+  const user_id = res.locals.user?._id
   const query: any = {}
   if (user_id) query["user_id"] = user_id
   const garment = await Garment.distinct("type", query)
@@ -120,7 +120,7 @@ export const read_garment_types = async (req: Request, res: Response) => {
 }
 
 export const read_garment_brands = async (req: Request, res: Response) => {
-  const user_id = res.locals.user._id
+  const user_id = res.locals.user?._id
   const query: any = {}
   if (user_id) query["user_id"] = user_id
   const garment = await Garment.distinct("brand", query)
@@ -128,7 +128,7 @@ export const read_garment_brands = async (req: Request, res: Response) => {
 }
 
 export const read_garment_colors = async (req: Request, res: Response) => {
-  const user_id = res.locals.user._id
+  const user_id = res.locals.user?._id
   const query: any = {}
   if (user_id) query["user_id"] = user_id
   const garment = await Garment.distinct("color", query)

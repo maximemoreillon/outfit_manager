@@ -12,12 +12,11 @@ import outfit_router from "./routes/outfits"
 import garment_router from "./routes/garments"
 import auth from "@moreillon/express_identification_middleware"
 import { uploads_directory } from "./config"
-
+import "./auth"
+import { userInfoMiddleware, OIDC_ISSUER } from "./auth"
 dotenv.config()
 
 const { APP_PORT = 80, IDENTIFICATION_URL } = process.env
-
-const auth_options = { url: IDENTIFICATION_URL }
 
 dbConnect()
 
@@ -34,13 +33,14 @@ app.get("/", (req, res) => {
       connection_string: mongodbConnectionString,
       connected: mongodb_connected(),
     },
-    auth: auth_options,
     uploads_directory,
+    auth: {},
   })
 })
 
 // Reqauire authentication for all routes hereafter
-app.use(auth(auth_options))
+if (IDENTIFICATION_URL) app.use(auth({ url: IDENTIFICATION_URL }))
+if (OIDC_ISSUER) app.use(userInfoMiddleware)
 app.use("/outfits", outfit_router)
 app.use("/garments", garment_router)
 
