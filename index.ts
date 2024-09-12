@@ -12,11 +12,15 @@ import outfit_router from "./routes/outfits"
 import garment_router from "./routes/garments"
 import auth from "@moreillon/express_identification_middleware"
 import { uploads_directory } from "./config"
-import "./auth"
-import { userInfoMiddleware, OIDC_ISSUER } from "./auth"
+import { userInfoMiddleware } from "@moreillon/express-oidc"
 dotenv.config()
 
-const { APP_PORT = 80, IDENTIFICATION_URL } = process.env
+const {
+  APP_PORT = 80,
+  IDENTIFICATION_URL,
+  OIDC_ISSUER,
+  OIDC_CLIENT_ID,
+} = process.env
 
 dbConnect()
 
@@ -38,9 +42,20 @@ app.get("/", (req, res) => {
   })
 })
 
-// Reqauire authentication for all routes hereafter
-if (IDENTIFICATION_URL) app.use(auth({ url: IDENTIFICATION_URL }))
-if (OIDC_ISSUER) app.use(userInfoMiddleware)
+// Require authentication for all routes hereafter
+if (OIDC_ISSUER) {
+  console.log(`Using OIDC authentication with authority ${OIDC_ISSUER}`)
+  app.use(
+    userInfoMiddleware({
+      authority: OIDC_ISSUER,
+      client_id: OIDC_CLIENT_ID,
+    })
+  )
+} else if (IDENTIFICATION_URL) {
+  console.log(`Using Legacy authentication with url ${IDENTIFICATION_URL}`)
+  app.use(auth({ url: IDENTIFICATION_URL }))
+}
+
 app.use("/outfits", outfit_router)
 app.use("/garments", garment_router)
 
