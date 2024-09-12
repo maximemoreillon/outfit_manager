@@ -20,6 +20,7 @@ const {
   IDENTIFICATION_URL,
   OIDC_ISSUER,
   OIDC_CLIENT_ID,
+  OIDC_CLIENT_SECRET,
 } = process.env
 
 dbConnect()
@@ -49,6 +50,7 @@ if (OIDC_ISSUER) {
     userInfoMiddleware({
       authority: OIDC_ISSUER,
       client_id: OIDC_CLIENT_ID,
+      client_secret: OIDC_CLIENT_SECRET,
     })
   )
 } else if (IDENTIFICATION_URL) {
@@ -69,5 +71,5 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 })
 
 app.listen(APP_PORT, () => {
-  console.log(`Outfit manager API v${version} listening on port ${APP_PORT}`)
+  console.log(`[Express] listening on port ${APP_PORT}`)
 })
