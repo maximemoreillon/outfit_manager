@@ -32,6 +32,8 @@ spec:
           envFrom:
             - secretRef:
                 name: environment-variables
+            - secretRef:
+                name: auth0-env
           volumeMounts:
             - mountPath: "/usr/src/app/uploads"
               name: ${APPLICATION_NAME}

@@ -15,9 +15,8 @@ import {
 import outfit_router from "./routes/outfits"
 import garment_router from "./routes/garments"
 import { uploads_directory } from "./config"
-import { authMiddleware } from "./auth"
 
-import { APP_PORT } from "./config"
+import { APP_PORT, IDENTIFICATION_URL, OIDC_JWKS_URI } from "./config"
 
 dbConnect()
 
@@ -35,6 +34,10 @@ app.get("/", (req, res) => {
       connected: mongodb_connected(),
     },
     uploads_directory,
+    auth: {
+      IDENTIFICATION_URL,
+      OIDC_JWKS_URI,
+    },
   })
 })
 
