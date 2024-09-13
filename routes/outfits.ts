@@ -44,4 +44,6 @@ router
 
 router.route("/:_id/image").post(upload.single("image"), upload_outfit_image)
 
+router.route("/:_id/thumbnail").get(read_outfit_thumbnail)
+
 export default router

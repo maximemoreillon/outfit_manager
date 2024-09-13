@@ -16,7 +16,7 @@ export const create_outfit = async (req: Request, res: Response) => {
 }
 
 export const read_outfits = async (req: Request, res: Response) => {
-  const user_id = res.locals.user._id
+  const user_id = res.locals.user?._id
   const query = user_id ? { user_id } : {}
   const outfits = await Outfit.find(query)
   res.send(outfits)

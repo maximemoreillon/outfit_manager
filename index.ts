@@ -15,8 +15,8 @@ import {
 import outfit_router from "./routes/outfits"
 import garment_router from "./routes/garments"
 import { uploads_directory } from "./config"
+import { authMiddleware } from "./auth"
 
-import session from "express-session"
 import { APP_PORT } from "./config"
 
 dbConnect()
@@ -24,13 +24,7 @@ dbConnect()
 const app = express()
 app.use(express.json())
 app.use(cors())
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
-  })
-)
+
 app.get("/", (req, res) => {
   res.send({
     application_name,
