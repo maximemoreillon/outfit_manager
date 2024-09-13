@@ -30,8 +30,8 @@ spec:
           ports:
             - containerPort: 80
           envFrom:
-            - secretRef:
-                name: environment-variables
+            # - secretRef:
+            #     name: environment-variables
             - secretRef:
                 name: auth0-env
           volumeMounts:
