@@ -12,6 +12,7 @@ import {
 
 import multer from "multer"
 import { uploads_directory } from "../config"
+import { authMiddleware } from "../auth"
 
 const router = Router()
 
@@ -26,6 +27,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
+// Unprotected routes
+router.route("/:_id/image").get(read_outfit_image)
+router.route("/:_id/thumbnail").get(read_outfit_thumbnail)
+
+// Protected routes
+router.use(authMiddleware)
+
 router.route("/").get(read_outfits).post(upload.single("image"), create_outfit)
 
 router
@@ -34,11 +42,6 @@ router
   .patch(update_outfit)
   .delete(delete_outfit)
 
-router
-  .route("/:_id/image")
-  .post(upload.single("image"), upload_outfit_image)
-  .get(read_outfit_image)
-
-router.route("/:_id/thumbnail").get(read_outfit_thumbnail)
+router.route("/:_id/image").post(upload.single("image"), upload_outfit_image)
 
 export default router
