@@ -12,11 +12,10 @@ import {
   read_garment_brands,
   read_garment_colors,
 } from "../controllers/garments"
-import {
-  read_outfits_of_garment
-} from '../controllers/outfits'
+import { read_outfits_of_garment } from "../controllers/outfits"
 import multer from "multer"
 import { uploads_directory } from "../config"
+import { authMiddleware } from "../auth"
 
 const router = Router()
 
@@ -31,6 +30,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
+// Unprotected routes
+router.route("/:_id/image").get(read_garment_image)
+router.route("/:_id/thumbnail").get(read_garment_thumbnail)
+
+// Protected routes
+router.use(authMiddleware)
 router
   .route("/")
   .get(read_garments)
@@ -40,23 +45,13 @@ router.route("/types").get(read_garment_types)
 router.route("/brands").get(read_garment_brands)
 router.route("/colors").get(read_garment_colors)
 
-
 router
   .route("/:_id")
   .get(read_garment)
   .patch(update_garment)
   .delete(delete_garment)
 
-  
-router
-.route("/:_id/outfits")
-.get(read_outfits_of_garment)
-
-router
-  .route("/:_id/image")
-  .post(upload.single("image"), upload_garment_image)
-  .get(read_garment_image)
-
-router.route("/:_id/thumbnail").get(read_garment_thumbnail)
+router.route("/:_id/outfits").get(read_outfits_of_garment)
+router.route("/:_id/image").post(upload.single("image"), upload_garment_image)
 
 export default router
