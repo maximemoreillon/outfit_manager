@@ -4,10 +4,11 @@ import { uploads_directory } from "../config"
 import { create_image_thumbnail, get_thumbnail_filename } from "../utils"
 import { Request, Response } from "express"
 import createHttpError from "http-errors"
+import { getUserId } from "../auth"
 
 export const create_garment = async (req: Request, res: Response) => {
   const { file, body } = req
-  const user_id = res.locals.user._id
+  const user_id = getUserId(req, res)
   const newGarmentProperties = { ...body, user_id }
 
   if (file) {
@@ -20,7 +21,8 @@ export const create_garment = async (req: Request, res: Response) => {
 }
 
 export const read_garments = async (req: Request, res: Response) => {
-  const user_id = res.locals.user?._id
+  const user_id = getUserId(req, res)
+
   const { ...filters } = req.query
 
   const query = {
@@ -112,7 +114,7 @@ export const read_garment_thumbnail = async (req: Request, res: Response) => {
 
 // TODO: combine those
 export const read_garment_types = async (req: Request, res: Response) => {
-  const user_id = res.locals.user?._id
+  const user_id = getUserId(req, res)
   const query: any = {}
   if (user_id) query["user_id"] = user_id
   const garment = await Garment.distinct("type", query)
@@ -120,7 +122,7 @@ export const read_garment_types = async (req: Request, res: Response) => {
 }
 
 export const read_garment_brands = async (req: Request, res: Response) => {
-  const user_id = res.locals.user?._id
+  const user_id = getUserId(req, res)
   const query: any = {}
   if (user_id) query["user_id"] = user_id
   const garment = await Garment.distinct("brand", query)
@@ -128,7 +130,7 @@ export const read_garment_brands = async (req: Request, res: Response) => {
 }
 
 export const read_garment_colors = async (req: Request, res: Response) => {
-  const user_id = res.locals.user?._id
+  const user_id = getUserId(req, res)
   const query: any = {}
   if (user_id) query["user_id"] = user_id
   const garment = await Garment.distinct("color", query)

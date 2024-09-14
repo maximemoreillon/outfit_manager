@@ -4,11 +4,12 @@ import createHttpError from "http-errors"
 import { uploads_directory } from "../config"
 import { create_image_thumbnail, get_thumbnail_filename } from "../utils"
 import { Request, Response } from "express"
+import { getUserId } from "../auth"
 
 export const create_outfit = async (req: Request, res: Response) => {
   const { file } = req
   if (!file) throw createHttpError(400, "File not provided")
-  const user_id = res.locals.user._id
+  const user_id = getUserId(req, res)
   const image = file.originalname
   await create_image_thumbnail(req)
   const newOutfit = await Outfit.create({ image, user_id })
@@ -16,7 +17,7 @@ export const create_outfit = async (req: Request, res: Response) => {
 }
 
 export const read_outfits = async (req: Request, res: Response) => {
-  const user_id = res.locals.user?._id
+  const user_id = getUserId(req, res)
   const query = user_id ? { user_id } : {}
   const outfits = await Outfit.find(query)
   res.send(outfits)
@@ -99,7 +100,7 @@ export const read_outfit_thumbnail = async (req: Request, res: Response) => {
 
 export const read_outfits_of_garment = async (req: Request, res: Response) => {
   const { _id: garment_id } = req.params
-  const user_id = res.locals.user._id
+  const user_id = getUserId(req, res)
 
   const query: any = {
     garments: garment_id,
