@@ -27,8 +27,6 @@ spec:
       containers:
         - name: ${APPLICATION_NAME}
           image: ${CONTAINER_IMAGE_TAGGED}
-          ports:
-            - containerPort: 80
           envFrom:
             - secretRef:
                 name: environment-variables
