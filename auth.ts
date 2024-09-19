@@ -23,8 +23,6 @@ if (OIDC_JWKS_URI) {
 }
 
 export const getUserId = (req: Request, res: Response) => {
-  return (
-    res.locals.user?._id ?? (req.user as any)?.legacy_id
-    // ?? (req.user as any)?.sub
-  )
+  const user: any = res.locals.user ?? req.user
+  return user._id ?? user.legacy_id ?? user.sub
 }
