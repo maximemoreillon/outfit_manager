@@ -2,17 +2,15 @@
 
 import { garmentsTable } from "@/db/schema";
 import { db } from "../db";
-import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 
-export async function createGarment(formData: FormData) {
-  const name = formData.get("name");
-  if (!name) throw "Missing name";
-  if (typeof name !== "string") throw "Invalid name";
+export async function createGarment(properties: any) {
+  const [newGarment] = await db
+    .insert(garmentsTable)
+    .values(properties)
+    .returning();
 
-  const [{ id }] = await db.insert(garmentsTable).values({ name }).returning();
-
-  return redirect(`/garments/${id}`);
+  return newGarment;
 }
 
 export async function readGarments() {
@@ -26,4 +24,12 @@ export async function readGarment(id: number) {
     .from(garmentsTable)
     .where(eq(garmentsTable.id, id));
   return result;
+}
+
+export async function updateGarment(id: number, values: any) {
+  const [result] = await db
+    .update(garmentsTable)
+    .set(values)
+    .where(eq(garmentsTable.id, Number(id)))
+    .returning();
 }

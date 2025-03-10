@@ -1,5 +1,8 @@
+import GarmentEditForm from "@/components/garmentEditForm";
 import ImageUploadForm from "@/components/imageUploadForm";
-import { readGarment } from "@/lib/garments";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { readGarment, updateGarment } from "@/lib/garments";
 import Link from "next/link";
 
 export default async function Garment({
@@ -16,16 +19,21 @@ export default async function Garment({
       </div>
       {garment && (
         <div>
-          <div>{garment.name}</div>
+          <h2 className="text-3xl my-4">{garment.name}</h2>
 
-          <div>
-            <ImageUploadForm garmentId={Number(id)} />
-          </div>
+          <div className="flex gap-2">
+            <div>
+              <div>
+                {garment?.image && (
+                  <img src={`/garments/${id}/image`} alt={garment.name} />
+                )}
+              </div>
+            </div>
+            <div>
+              <GarmentEditForm garment={garment} />
 
-          <div>
-            {garment?.image && (
-              <img src={`/garments/${id}/image`} alt={garment.name} />
-            )}
+              <ImageUploadForm garment={garment} />
+            </div>
           </div>
         </div>
       )}
