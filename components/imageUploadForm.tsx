@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { garmentsTable } from "@/db/schema";
 
 // TODO: refine
 const formSchema = z.object({
@@ -23,7 +24,8 @@ const formSchema = z.object({
 });
 
 type Props = {
-  garment: any;
+  garment: typeof garmentsTable.$inferSelect;
+  // onUpdate: Function;
 };
 
 export default function ImageUploadForm(props: Props) {
@@ -35,9 +37,10 @@ export default function ImageUploadForm(props: Props) {
   });
 
   async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
-    const [image] = imageFileList;
-    console.log(image);
-    await uploadImage(props.garment.id, image);
+    const [imageFile] = imageFileList;
+    const { image: imageKey } = await uploadImage(props.garment.id, imageFile);
+
+    // props.onUpdate(imageKey);
   }
 
   return (

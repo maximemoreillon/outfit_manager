@@ -4,7 +4,9 @@ import { garmentsTable } from "@/db/schema";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
 
-export async function createGarment(properties: any) {
+export async function createGarment(
+  properties: typeof garmentsTable.$inferInsert
+) {
   const [newGarment] = await db
     .insert(garmentsTable)
     .values(properties)
@@ -26,7 +28,10 @@ export async function readGarment(id: number) {
   return result;
 }
 
-export async function updateGarment(id: number, values: any) {
+export async function updateGarment(
+  id: number,
+  values: typeof garmentsTable.$inferInsert
+) {
   const [result] = await db
     .update(garmentsTable)
     .set(values)

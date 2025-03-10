@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { updateGarment } from "@/lib/garments";
+import { garmentsTable } from "@/db/schema";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -26,14 +27,14 @@ const formSchema = z.object({
   quantity: z.coerce.number(),
 });
 
-type Props = { garment: any };
+type Props = { garment: typeof garmentsTable.$inferSelect };
 
 export default function GarmentEditForm(props: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: props.garment.name,
-      description: props.garment.descriptio || "Description",
+      description: props.garment.description || "Description",
       quantity: props.garment.quantity,
     },
   });

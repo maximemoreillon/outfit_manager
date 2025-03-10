@@ -26,7 +26,11 @@ export default function GarmentPreviewCard(props: Props) {
         <CardDescription>{props.garment.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <img src={`/garments/${props.garment.id}/image`} alt="" />
+        {props.garment.image ? (
+          <img src={`/images/${props.garment.image}`} alt="" />
+        ) : (
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png" />
+        )}
       </CardContent>
       <CardFooter>
         <Link href={`/garments/${props.garment.id}`}>See</Link>

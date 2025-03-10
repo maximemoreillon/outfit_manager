@@ -13,8 +13,12 @@ export async function uploadImage(id: number, image: File) {
   // TODO: sharp for thumbnails
   await s3Client.putObject(S3_BUCKET, key, Buffer.from(buffer));
 
-  await db
+  // TODO: figure out if this is the right place
+  const [garment] = await db
     .update(garmentsTable)
     .set({ image: key })
-    .where(eq(garmentsTable.id, Number(id)));
+    .where(eq(garmentsTable.id, Number(id)))
+    .returning();
+
+  return garment;
 }
