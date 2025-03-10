@@ -25,7 +25,7 @@ export default async function Garment({
             <div>
               <div>
                 {garment?.image && (
-                  <img src={`/garments/${id}/image`} alt={garment.name} />
+                  <img src={`/images/${garment.image}`} alt={garment.name} />
                 )}
               </div>
             </div>
