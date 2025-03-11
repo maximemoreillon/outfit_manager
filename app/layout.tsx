@@ -34,10 +34,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <header>
-            <h1 className="text-3xl my-4">Wardrobe manager</h1>
+          <header className="p-4 border-b">
+            <h1 className="text-3xl ">Wardrobe manager</h1>
           </header>
-          <main className="ma-2">{children}</main>
+          <main className="px-4 my-4 mx-auto w-full max-w-4xl">{children}</main>
         </ThemeProvider>
       </body>
     </html>

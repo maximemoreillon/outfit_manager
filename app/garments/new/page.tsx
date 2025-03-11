@@ -1,12 +1,14 @@
 import GarmentCreateForm from "@/components/garmentCreateForm";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { createGarment } from "@/lib/garments";
+
+import Link from "next/link";
 
 export default function NewGarment() {
   return (
     <div>
+      <h2 className="my-4 text-2xl">Create new garment</h2>
+      <div>
+        <Link href="/garments">Back</Link>
+      </div>
       <GarmentCreateForm />
     </div>
   );
