@@ -55,7 +55,7 @@ export default function GarmentEditForm(props: Props) {
               <FormControl>
                 <Input placeholder="My Item" {...field} />
               </FormControl>
-              <FormDescription>Name of the item</FormDescription>
+              <FormDescription>Name of the garment</FormDescription>
               <FormMessage />
             </FormItem>
           )}

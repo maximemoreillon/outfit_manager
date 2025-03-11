@@ -1,4 +1,4 @@
-import GarmentCreateForm from "@/components/garmentCreateForm";
+import GarmentCreateForm from "@/components/garments/createForm";
 
 import Link from "next/link";
 

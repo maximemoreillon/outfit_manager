@@ -1,5 +1,5 @@
-import GarmentEditForm from "@/components/garmentEditForm";
-import ImageUploadForm from "@/components/imageUploadForm";
+import GarmentEditForm from "@/components/garments/editForm";
+import ImageUploadForm from "@/components/garments/imageUploadForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { readGarment, updateGarment } from "@/lib/garments";
@@ -12,7 +12,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import DeleteGarmentButton from "@/components/garmentDeleteButton";
+import DeleteGarmentButton from "@/components/garments/deleteButton";
+import { GarmentImage } from "@/components/garments/image";
 
 export default async function Garment({
   params,
@@ -41,19 +42,10 @@ export default async function Garment({
             <DeleteGarmentButton id={garment.id} />
           </div>
 
-          <div className="flex gap-2">
-            <div>
-              <div>
-                {garment?.image && (
-                  <img src={`/images/${garment.image}`} alt={garment.name} />
-                )}
-              </div>
-            </div>
-            <div>
-              <GarmentEditForm garment={garment} />
+          <div className="grid gap-4 grid-cols-2">
+            <GarmentEditForm garment={garment} />
 
-              <ImageUploadForm garment={garment} />
-            </div>
+            <GarmentImage garment={garment} />
           </div>
         </div>
       )}

@@ -25,46 +25,44 @@ const formSchema = z.object({
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
-  // onUpdate: Function;
+  onUpdate: Function;
 };
 
 export default function ImageUploadForm(props: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   image: "",
-    // },
   });
 
   async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
     const [imageFile] = imageFileList;
     const { image: imageKey } = await uploadImage(props.garment.id, imageFile);
 
-    // props.onUpdate(imageKey);
+    props.onUpdate(imageKey);
   }
 
   return (
-    <div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="imageFileList"
-            render={() => (
-              <FormItem>
-                <FormLabel>Picture</FormLabel>
-                <FormControl>
-                  <Input {...form.register("imageFileList")} type="file" />
-                </FormControl>
-                <FormDescription>Picture of the garment</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex gap-2 items-end my-4"
+      >
+        <FormField
+          control={form.control}
+          name="imageFileList"
+          render={() => (
+            <FormItem>
+              <FormLabel>Picture</FormLabel>
+              <FormControl>
+                <Input {...form.register("imageFileList")} type="file" />
+              </FormControl>
+              {/* <FormDescription>Picture of the garment</FormDescription> */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <Button type="submit">Save item</Button>
-        </form>
-      </Form>
-    </div>
+        <Button type="submit">Upload</Button>
+      </form>
+    </Form>
   );
 }

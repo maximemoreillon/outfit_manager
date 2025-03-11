@@ -1,4 +1,4 @@
-import GarmentPreviewCard from "@/components/garmentPreviewCard";
+import GarmentPreviewCard from "@/components/garments/previewCard";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { readGarments } from "@/lib/garments";
 import Link from "next/link";
