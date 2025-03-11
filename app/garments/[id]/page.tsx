@@ -1,9 +1,6 @@
 import GarmentEditForm from "@/components/garments/editForm";
-import ImageUploadForm from "@/components/garments/imageUploadForm";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { readGarment, updateGarment } from "@/lib/garments";
-import Link from "next/link";
+
+import { readGarment } from "@/lib/garments";
 import {
   Breadcrumb,
   BreadcrumbItem,
