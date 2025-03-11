@@ -12,6 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import DeleteGarmentButton from "@/components/garmentDeleteButton";
 
 export default async function Garment({
   params,
@@ -35,7 +36,10 @@ export default async function Garment({
       </Breadcrumb>
       {garment && (
         <div>
-          <h2 className="text-3xl my-4">{garment.name}</h2>
+          <div className="flex justify-between">
+            <h2 className="text-3xl my-4">{garment.name}</h2>
+            <DeleteGarmentButton id={garment.id} />
+          </div>
 
           <div className="flex gap-2">
             <div>

@@ -37,4 +37,12 @@ export async function updateGarment(
     .set(values)
     .where(eq(garmentsTable.id, Number(id)))
     .returning();
+
+  return result;
+}
+
+export async function deleteGarment(id: number) {
+  await db.delete(garmentsTable).where(eq(garmentsTable.id, Number(id)));
+
+  return { id };
 }
