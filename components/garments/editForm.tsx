@@ -21,9 +21,8 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  description: z.string().min(2, {
-    message: "Description must be at least 2 characters.",
-  }),
+  description: z.string(),
+  comment: z.string(),
   quantity: z.coerce.number(),
 });
 
@@ -34,7 +33,8 @@ export default function GarmentEditForm(props: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: props.garment.name,
-      description: props.garment.description || "Description",
+      description: props.garment.description || "",
+      comment: props.garment.comment || "",
       quantity: props.garment.quantity,
     },
   });
@@ -53,7 +53,7 @@ export default function GarmentEditForm(props: Props) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="My Item" {...field} />
+                <Input placeholder="Grey jacket" {...field} />
               </FormControl>
               <FormDescription>Name of the garment</FormDescription>
               <FormMessage />
@@ -68,9 +68,24 @@ export default function GarmentEditForm(props: Props) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="A very special item" {...field} />
+                <Input placeholder="Slim fit" {...field} />
               </FormControl>
               <FormDescription>Description of the item</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="comment"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Comment</FormLabel>
+              <FormControl>
+                <Input placeholder="Has inner pockets" {...field} />
+              </FormControl>
+              <FormDescription>Comment about item</FormDescription>
               <FormMessage />
             </FormItem>
           )}

@@ -16,29 +16,29 @@ export async function createGarment(
 }
 
 export async function readGarments() {
-  const result = await db.select().from(garmentsTable);
-  return result;
+  const garments = await db.select().from(garmentsTable);
+  return garments;
 }
 
 export async function readGarment(id: number) {
-  const [result] = await db
+  const [garment] = await db
     .select()
     .from(garmentsTable)
     .where(eq(garmentsTable.id, id));
-  return result;
+  return garment;
 }
 
 export async function updateGarment(
   id: number,
   values: typeof garmentsTable.$inferInsert
 ) {
-  const [result] = await db
+  const [garment] = await db
     .update(garmentsTable)
     .set(values)
     .where(eq(garmentsTable.id, Number(id)))
     .returning();
 
-  return result;
+  return garment;
 }
 
 export async function deleteGarment(id: number) {
