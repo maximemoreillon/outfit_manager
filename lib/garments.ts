@@ -2,7 +2,7 @@
 
 import { garmentsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq } from "drizzle-orm";
+import { eq, count } from "drizzle-orm";
 
 export async function createGarment(
   properties: typeof garmentsTable.$inferInsert
@@ -15,9 +15,23 @@ export async function createGarment(
   return newGarment;
 }
 
-export async function readGarments() {
-  const garments = await db.select().from(garmentsTable);
-  return garments;
+export async function readGarments(queryParams: {
+  [key: string]: string | string[] | undefined;
+}) {
+  const limit = Number(queryParams.limit || "5");
+  const offset = Number(queryParams.offset || "0");
+
+  const [{ count: total }] = await db
+    .select({ count: count() })
+    .from(garmentsTable);
+
+  const garments = await db
+    .select()
+    .from(garmentsTable)
+    .offset(Number(offset))
+    .limit(Number(limit));
+
+  return { items: garments, limit, offset, total };
 }
 
 export async function readGarment(id: number) {

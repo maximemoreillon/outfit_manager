@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { uploadImage } from "@/lib/images";
+import { uploadGarmentImage } from "@/lib/images";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,7 +35,10 @@ export default function ImageUploadForm(props: Props) {
 
   async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
     const [imageFile] = imageFileList;
-    const { image: imageKey } = await uploadImage(props.garment.id, imageFile);
+    const { image: imageKey } = await uploadGarmentImage(
+      props.garment.id,
+      imageFile
+    );
 
     props.onUpdate(imageKey);
   }
