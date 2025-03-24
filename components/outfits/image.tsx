@@ -17,7 +17,7 @@ export function GarmentImage(props: Props) {
         className="w-full"
         src={
           image
-            ? `/api/images/${image}`
+            ? `/images/${image}`
             : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
         }
         alt=""

@@ -15,3 +15,12 @@ export const garmentsTable = pgTable("garments", {
   condition: integer().notNull().default(100),
   user_id: text(),
 });
+
+export const outfitsTable = pgTable("outfits", {
+  id: serial().primaryKey(),
+  name: text().notNull().default("Unnnamed outfit"),
+  description: text().default("No description"),
+  comment: text(),
+  rating: integer(),
+  user_id: text(),
+});
