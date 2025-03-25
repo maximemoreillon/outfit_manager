@@ -24,3 +24,13 @@ export const outfitsTable = pgTable("outfits", {
   rating: integer(),
   user_id: text(),
 });
+
+export const outfitGarmentsTable = pgTable("outfit_garments", {
+  id: serial().primaryKey(),
+  outfit_id: integer()
+    .notNull()
+    .references(() => outfitsTable.id),
+  garment_id: integer()
+    .notNull()
+    .references(() => garmentsTable.id),
+});
