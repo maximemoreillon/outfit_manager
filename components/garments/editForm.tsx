@@ -106,7 +106,7 @@ export default function GarmentEditForm(props: Props) {
           )}
         />
 
-        <Button type="submit">Save item</Button>
+        <Button type="submit">Save</Button>
       </form>
     </Form>
   );

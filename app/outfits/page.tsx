@@ -2,39 +2,53 @@ import OutfitPreviewCard from "@/components/outfits/previewCard";
 import ServerPagination from "@/components/serverPagination";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { auth } from "@/auth";
-import { readGarments } from "@/lib/garments";
 import Link from "next/link";
-
-export default async function Garments({
+import { readOutfits } from "@/lib/outfits";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+export default async function Outfits({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const session = await auth();
-  if (!session?.user) return null;
-
   const {
-    items: garments,
+    items: outfits,
     total,
     offset,
     limit,
-  } = await readGarments(await searchParams);
+  } = await readOutfits(await searchParams);
 
   return (
     <div>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+
+          <BreadcrumbItem>
+            <BreadcrumbLink>Garments</BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h2 className="text-2xl my-4">Outfits</h2>
       <div className="my-4">
-        <Link href="/garments/new" className={buttonVariants({})}>
+        <Link href="/outfits/new" className={buttonVariants({})}>
           New outfit
         </Link>
       </div>
-      {/* TODO: allow different viewing styles, e.g. tables */}
       <div className="grid gap-4 grid-cols-3">
-        {garments.map((garment) => (
-          <OutfitPreviewCard garment={garment} key={garment.id} />
+        {outfits.map((outfit) => (
+          <OutfitPreviewCard outfit={outfit} key={outfit.id} />
         ))}
       </div>
-
       <div className="my-4">
         <ServerPagination total={total} limit={limit} offset={offset} />
       </div>

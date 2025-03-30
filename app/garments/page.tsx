@@ -4,15 +4,20 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { auth } from "@/auth";
 import { readGarments } from "@/lib/garments";
 import Link from "next/link";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default async function Garments({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const session = await auth();
-  if (!session?.user) return null;
-
   const {
     items: garments,
     total,
@@ -22,6 +27,18 @@ export default async function Garments({
 
   return (
     <div>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+
+          <BreadcrumbItem>
+            <BreadcrumbLink>Garments</BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h2 className="text-2xl my-4">Garments</h2>
       <div className="my-4">
         <Link href="/garments/new" className={buttonVariants({})}>

@@ -18,11 +18,11 @@ import { Input } from "@/components/ui/input";
 import { createGarment } from "@/lib/garments";
 
 import { useRouter } from "next/navigation";
+import { uploadImage } from "@/lib/images";
+import { createOutfit } from "@/lib/outfits";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
+  imageFileList: z.custom<FileList>(),
 });
 
 export default function OutfitCreateForm() {
@@ -30,36 +30,38 @@ export default function OutfitCreateForm() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "New garment",
-    },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { id } = await createGarment(values);
+  async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
+    const [imageFile] = imageFileList;
+    const key = await uploadImage(imageFile);
 
-    router.push(`/garments/${id}`);
+    const { id } = await createOutfit({ image: key });
+    router.push(`/outfits/${id}`);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex gap-2 items-end my-4"
+      >
         <FormField
           control={form.control}
-          name="name"
-          render={({ field }) => (
+          name="imageFileList"
+          render={() => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Picture</FormLabel>
               <FormControl>
-                <Input placeholder="Navy blazer" {...field} />
+                <Input {...form.register("imageFileList")} type="file" />
               </FormControl>
-              <FormDescription>Name of the garment</FormDescription>
+              <FormDescription>Picture of the outfit</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit">Save item</Button>
+        <Button type="submit">Upload</Button>
       </form>
     </Form>
   );

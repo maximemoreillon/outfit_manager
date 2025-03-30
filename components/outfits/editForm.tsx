@@ -14,33 +14,27 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { updateGarment } from "@/lib/garments";
-import { garmentsTable } from "@/db/schema";
+import { updateOutfit } from "@/lib/outfits";
+import { outfitsTable } from "@/db/schema";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
   description: z.string(),
   comment: z.string(),
-  quantity: z.coerce.number(),
 });
 
-type Props = { garment: typeof garmentsTable.$inferSelect };
+type Props = { outfit: typeof outfitsTable.$inferSelect };
 
-export default function GarmentEditForm(props: Props) {
+export default function OutfitEditForm(props: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: props.garment.name,
-      description: props.garment.description || "",
-      comment: props.garment.comment || "",
-      quantity: props.garment.quantity,
+      description: props.outfit.description || "",
+      comment: props.outfit.comment || "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await updateGarment(props.garment.id, values);
+    await updateOutfit(props.outfit.id, { ...props.outfit, ...values });
   }
 
   return (
@@ -48,29 +42,14 @@ export default function GarmentEditForm(props: Props) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Grey jacket" {...field} />
-              </FormControl>
-              <FormDescription>Name of the garment</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="description"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="Slim fit" {...field} />
+                <Input placeholder="Beige dominant casual outfit" {...field} />
               </FormControl>
-              <FormDescription>Description of the item</FormDescription>
+              <FormDescription>Description of the outfit</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -83,30 +62,15 @@ export default function GarmentEditForm(props: Props) {
             <FormItem>
               <FormLabel>Comment</FormLabel>
               <FormControl>
-                <Input placeholder="Has inner pockets" {...field} />
+                <Input placeholder="Too many colors" {...field} />
               </FormControl>
-              <FormDescription>Comment about item</FormDescription>
+              <FormDescription>Comment about outfit</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Quantity</FormLabel>
-              <FormControl>
-                <Input placeholder="2" {...field} type="number" />
-              </FormControl>
-              <FormDescription>Quantity of said item</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Save item</Button>
+        <Button type="submit">Save</Button>
       </form>
     </Form>
   );

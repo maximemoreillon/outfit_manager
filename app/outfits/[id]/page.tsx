@@ -1,6 +1,6 @@
-import GarmentEditForm from "@/components/garments/editForm";
+import OutfitEditForm from "@/components/outfits/editForm";
 
-import { readGarment } from "@/lib/garments";
+import { readOutfit } from "@/lib/outfits";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,22 +9,29 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import DeleteGarmentButton from "@/components/garments/deleteButton";
-import { GarmentImage } from "@/components/garments/image";
+import DeleteOutfitButton from "@/components/outfits/deleteButton";
+import { OutfitImage } from "@/components/outfits/image";
+import AddOutfitGarments from "@/components/outfits/garments/addOutfitGarments";
+import GarmentsOfOutfit from "@/components/outfits/garments/garmentsOfOutfit";
 
-export default async function Garment({
+export default async function Outfit({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const garment = await readGarment(Number(id));
+  const outfit = await readOutfit(Number(id));
   return (
     <div>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/garments">Garments</BreadcrumbLink>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/outfits">Outfits</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -32,17 +39,21 @@ export default async function Garment({
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      {garment && (
+      {outfit && (
         <div>
           <div className="flex justify-between">
-            <h2 className="text-3xl my-4">{garment.name}</h2>
-            <DeleteGarmentButton id={garment.id} />
+            <h2 className="text-3xl my-4">{outfit.id}</h2>
+            <DeleteOutfitButton id={outfit.id} />
           </div>
 
           <div className="grid gap-4 grid-cols-2">
-            <GarmentEditForm garment={garment} />
+            <OutfitEditForm outfit={outfit} />
 
-            <GarmentImage garment={garment} />
+            <OutfitImage outfit={outfit} />
+
+            <AddOutfitGarments outfitId={outfit.id} />
+
+            <GarmentsOfOutfit />
           </div>
         </div>
       )}

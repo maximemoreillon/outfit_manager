@@ -8,26 +8,26 @@ import {
 } from "@/components/ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { garmentsTable } from "@/db/schema";
+import { outfitsTable } from "@/db/schema";
 
 type Props = {
-  garment: typeof garmentsTable.$inferSelect;
+  outfit: typeof outfitsTable.$inferSelect;
 };
 
-export default function GarmentPreviewCard(props: Props) {
+export default function OutfitPreviewCard(props: Props) {
   return (
-    <Link href={`/garments/${props.garment.id}`}>
+    <Link href={`/outfits/${props.outfit.id}`}>
       <Card>
         <CardHeader>
-          <CardTitle>{props.garment.name}</CardTitle>
-          <CardDescription>{props.garment.description}</CardDescription>
+          {/* <CardTitle>{props.outfit.name}</CardTitle> */}
+          {/* <CardDescription>{props.outfit.image}</CardDescription> */}
         </CardHeader>
         <CardContent>
           <img
             className="w-full"
             src={
-              props.garment.image
-                ? `/images/${props.garment.image}`
+              props.outfit.image
+                ? `/api/images/${props.outfit.image}`
                 : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
             }
             alt=""

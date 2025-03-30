@@ -1,18 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { deleteGarment } from "@/lib/garments";
+import { deleteOutfit } from "@/lib/outfits";
 import { useRouter } from "next/navigation";
 
 type Props = {
   id: number;
 };
 
-export default function DeleteGarmentButton(props: Props) {
+export default function DeleteOutfitButton(props: Props) {
   const router = useRouter();
   async function handleDelete() {
-    await deleteGarment(props.id);
-    router.push("/garments");
+    await deleteOutfit(props.id);
+    router.push("/outfits");
   }
   return (
     <Button variant="destructive" onClick={handleDelete}>

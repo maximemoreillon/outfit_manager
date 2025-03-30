@@ -1,15 +1,15 @@
 "use client";
 
-import { garmentsTable } from "@/db/schema";
+import { outfitsTable } from "@/db/schema";
 import { useState } from "react";
-import ImageUploadForm from "./imageUploadForm";
+import ImageUploadForm from "./imagUpdateForm";
 
 type Props = {
-  garment: typeof garmentsTable.$inferSelect;
+  outfit: typeof outfitsTable.$inferSelect;
 };
 
-export function GarmentImage(props: Props) {
-  const [image, setImage] = useState(props.garment.image);
+export function OutfitImage(props: Props) {
+  const [image, setImage] = useState(props.outfit.image);
 
   return (
     <div>
@@ -17,12 +17,12 @@ export function GarmentImage(props: Props) {
         className="w-full"
         src={
           image
-            ? `/images/${image}`
+            ? `/api/images/${image}`
             : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
         }
         alt=""
       />
-      <ImageUploadForm garment={props.garment} onUpdate={setImage} />
+      <ImageUploadForm outfit={props.outfit} onUpdate={setImage} />
     </div>
   );
 }
