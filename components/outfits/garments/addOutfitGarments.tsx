@@ -1,5 +1,3 @@
-// "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -27,25 +25,19 @@ import { Input } from "@/components/ui/input";
 import { addGarmentToOutfit } from "@/lib/outfitGarments";
 import GarmentPreviewCard from "@/components/garments/previewCard";
 import { readGarments } from "@/lib/garments";
+import GarmentSelection from "./garmentSelection";
+import { outfitsTable } from "@/db/schema";
 
 const formSchema = z.object({
   garment_id: z.number(),
 });
 
 type Props = {
-  outfitId: number;
+  outfit: typeof outfitsTable.$inferSelect;
 };
 
 export default async function AddGarmentOufits(props: Props) {
   const { items: garments, total, offset, limit } = await readGarments({});
-
-  // async function onSubmit({ garment_id }: z.infer<typeof formSchema>) {
-  //   await addGarmentToOutfit({ garment_id: 19, outfit_id: 1 });
-  // }
-
-  async function handleGarmentSelect(garment_id: number) {
-    await addGarmentToOutfit({ garment_id, outfit_id: props.outfitId });
-  }
 
   // TODO: use a table with selects
   return (
@@ -59,12 +51,8 @@ export default async function AddGarmentOufits(props: Props) {
           <DialogDescription>Adding garments to this outfit</DialogDescription>
         </DialogHeader>
         {/* Dialog body */}
-        <div className="">
-          <div className="grid gap-4 grid-cols-3">
-            {garments.map((garment) => (
-              <GarmentPreviewCard garment={garment} key={garment.id} />
-            ))}
-          </div>
+        <div className="max-h-80 overflow-y-auto">
+          <GarmentSelection outfit={props.outfit} garments={garments} />
         </div>
         {/* <DialogFooter>
           <Button type="submit">Close</Button>

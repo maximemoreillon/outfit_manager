@@ -35,7 +35,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <header className="p-4 border-b">
-            <h1 className="text-3xl ">Wardrobe manager</h1>
+            <h1 className="text-3xl ">WM</h1>
           </header>
           <main className="px-4 my-4 mx-auto w-full max-w-4xl">{children}</main>
         </ThemeProvider>

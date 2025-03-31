@@ -4,12 +4,18 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { auth } from "@/auth";
 import { readOutfitGarments } from "@/lib/outfitGarments";
 import Link from "next/link";
+import { outfitsTable } from "@/db/schema";
+import AddGarmentOufits from "./addOutfitGarments";
 
-export default async function GarmentsOfOutfit() {
+type Props = {
+  outfit: typeof outfitsTable.$inferSelect;
+};
+export default async function GarmentsOfOutfit(props: Props) {
   const { items: garments } = await readOutfitGarments(1);
 
   return (
     <div>
+      <AddGarmentOufits outfit={props.outfit} />
       {/* TODO: allow different viewing styles, e.g. tables */}
       <div className="grid gap-4 grid-cols-3">
         {garments.map((garment) => (

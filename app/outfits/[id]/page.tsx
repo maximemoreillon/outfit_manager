@@ -51,9 +51,9 @@ export default async function Outfit({
 
             <OutfitImage outfit={outfit} />
 
-            <AddOutfitGarments outfitId={outfit.id} />
-
-            <GarmentsOfOutfit />
+            <div className="col-span-2">
+              <GarmentsOfOutfit outfit={outfit} />
+            </div>
           </div>
         </div>
       )}
