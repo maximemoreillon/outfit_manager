@@ -14,7 +14,9 @@ import { garmentsTable } from "@/db/schema";
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
   selectable?: boolean;
+  removable?: boolean;
   onSelect?: Function;
+  onRemove?: Function;
 };
 
 export default function GarmentPreviewCard(props: Props) {
@@ -27,7 +29,7 @@ export default function GarmentPreviewCard(props: Props) {
       </CardHeader>
       <CardContent>
         <img
-          className="w-full"
+          className="size-32"
           src={
             props.garment.image
               ? `/api/images/${props.garment.image}`
@@ -38,7 +40,7 @@ export default function GarmentPreviewCard(props: Props) {
       </CardContent>
 
       <CardFooter>
-        {props.selectable ? (
+        {props.selectable && (
           <Button
             onClick={() => {
               if (props.onSelect) props.onSelect();
@@ -46,7 +48,20 @@ export default function GarmentPreviewCard(props: Props) {
           >
             Select
           </Button>
-        ) : (
+        )}
+
+        {props.removable && (
+          <Button
+            variant="destructive"
+            onClick={() => {
+              if (props.onRemove) props.onRemove();
+            }}
+          >
+            Remove
+          </Button>
+        )}
+
+        {!props.removable && !props.selectable && (
           <Link
             href={`/garments/${props.garment.id}`}
             className={buttonVariants({})}

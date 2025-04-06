@@ -2,25 +2,45 @@
 
 import GarmentPreviewCard from "@/components/garments/previewCard";
 import { garmentsTable, outfitsTable } from "@/db/schema";
+import { readGarments } from "@/lib/garments";
 import { addGarmentToOutfit } from "@/lib/outfitGarments";
+import { useEffect, useState } from "react";
 
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
-  garments: (typeof garmentsTable.$inferSelect)[];
+  onSelect: Function;
 };
 
 export default function GarmentSelection(props: Props) {
-  async function handleSelect(garment_id: number) {
-    await addGarmentToOutfit({ garment_id, outfit_id: props.outfit.id });
+  const [garments, setGarments] = useState<
+    (typeof garmentsTable.$inferSelect)[]
+  >([]);
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const { items } = await readGarments({});
+      setGarments(items);
+      setLoading(false);
+    })();
+  }, []);
+
+  async function handleSelect(garment: typeof garmentsTable.$inferSelect) {
+    await addGarmentToOutfit({
+      garment_id: garment.id,
+      outfit_id: props.outfit.id,
+    });
+    props.onSelect(garment);
   }
   return (
     <>
-      {props.garments.map((garment) => (
+      {garments.map((garment) => (
         <GarmentPreviewCard
           garment={garment}
           key={garment.id}
           selectable
-          onSelect={() => handleSelect(garment.id)}
+          onSelect={() => handleSelect(garment)}
         />
       ))}
     </>

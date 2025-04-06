@@ -38,6 +38,7 @@ export default async function Outfits({
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
       <h2 className="text-2xl my-4">Outfits</h2>
       <div className="my-4">
         <Link href="/outfits/new" className={buttonVariants({})}>

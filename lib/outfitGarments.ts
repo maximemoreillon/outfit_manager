@@ -2,7 +2,7 @@
 
 import { garmentsTable, outfitGarmentsTable, outfitsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, count } from "drizzle-orm";
+import { eq, count, and } from "drizzle-orm";
 
 export async function addGarmentToOutfit(
   properties: typeof outfitGarmentsTable.$inferInsert
@@ -36,5 +36,14 @@ export async function removeGarmentFromOutfit(
 ) {
   // TODO: implement
 
-  return {};
+  await db
+    .delete(outfitGarmentsTable)
+    .where(
+      and(
+        eq(outfitGarmentsTable.outfit_id, outfit_id),
+        eq(outfitGarmentsTable.garment_id, garment_id)
+      )
+    );
+
+  return { outfit_id, garment_id };
 }

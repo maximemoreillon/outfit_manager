@@ -13,6 +13,7 @@ import DeleteOutfitButton from "@/components/outfits/deleteButton";
 import { OutfitImage } from "@/components/outfits/image";
 import AddOutfitGarments from "@/components/outfits/garments/addOutfitGarments";
 import GarmentsOfOutfit from "@/components/outfits/garments/garmentsOfOutfit";
+import { readOutfitGarments } from "@/lib/outfitGarments";
 
 export default async function Outfit({
   params,
@@ -21,6 +22,7 @@ export default async function Outfit({
 }) {
   const { id } = await params;
   const outfit = await readOutfit(Number(id));
+
   return (
     <div>
       <Breadcrumb>

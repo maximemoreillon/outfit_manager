@@ -35,6 +35,7 @@ export default function GarmentCreateForm() {
     },
   });
 
+  // TODO: add loading state
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { id } = await createGarment(values);
 
