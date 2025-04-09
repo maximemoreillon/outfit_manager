@@ -2,7 +2,7 @@
 
 import { garmentsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, count } from "drizzle-orm";
+import { eq, count, ilike } from "drizzle-orm";
 
 export async function createGarment(
   properties: typeof garmentsTable.$inferInsert
@@ -15,11 +15,19 @@ export async function createGarment(
   return newGarment;
 }
 
-export async function readGarments(queryParams: {
-  [key: string]: string | string[] | undefined;
-}) {
+// TODO: make it more specific
+type ReadGarmentsParams = {
+  limit?: string;
+  offset?: string;
+  search?: string;
+};
+export async function readGarments(queryParams: ReadGarmentsParams) {
   const limit = Number(queryParams.limit || "5");
   const offset = Number(queryParams.offset || "0");
+
+  const { search } = queryParams;
+
+  // TODO: allow filtering by color, brand, etc
 
   const [{ count: total }] = await db
     .select({ count: count() })
@@ -28,6 +36,7 @@ export async function readGarments(queryParams: {
   const garments = await db
     .select()
     .from(garmentsTable)
+    .where(search ? ilike(garmentsTable.name, `%${search}%`) : undefined)
     .offset(Number(offset))
     .limit(Number(limit));
 
