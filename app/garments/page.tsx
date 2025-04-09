@@ -1,5 +1,6 @@
 "use client";
-// Needs to be a client component for interactivity
+// Needs to be a client component for interactivity (filter update)
+
 import GarmentPreviewCard from "@/components/garments/previewCard";
 import ServerPagination from "@/components/serverPagination";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -24,6 +25,7 @@ export default function Garments() {
   const router = useRouter();
   const pathname = usePathname();
 
+  // If handled server-side
   // const {
   //   items: garments,
   //   total,
@@ -32,27 +34,34 @@ export default function Garments() {
   // } = await readGarments(await searchParams);
 
   const [data, setData] = useState<any>();
-  const [isLoading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
+      console.log(searchParams);
       setLoading(true);
-      const { search }: any = searchParams;
+      const search = searchParams.get("search");
       const d = await readGarments({ search });
       setData(d);
       setLoading(false);
     })();
   }, [searchParams]);
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
+  // Is this really correct?
+  // const createQueryString = useCallback(
+  //   (name: string, value: string) => {
+  //     const params = new URLSearchParams(searchParams.toString());
+  //     params.set(name, value);
+  //     return params.toString();
+  //   },
+  //   [searchParams]
+  // );
 
-      return params.toString();
-    },
-    [searchParams]
-  );
+  function createQueryString(key: string, value: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(key, value);
+    return params.toString();
+  }
 
   // TODO: typing
   async function handleFiltersUpdate(newFilters: any) {
@@ -87,7 +96,9 @@ export default function Garments() {
       </div>
       <GarmentsFilters onUpdate={(filters) => handleFiltersUpdate(filters)} />
 
-      {data && (
+      {loading && <div>Loading...</div>}
+
+      {!loading && data && (
         <>
           <div className="grid gap-4 grid-cols-3">
             {data.items.map((garment: any) => (

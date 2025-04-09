@@ -19,13 +19,15 @@ export async function createGarment(
 type ReadGarmentsParams = {
   limit?: string;
   offset?: string;
-  search?: string;
+  search?: string | null;
 };
 export async function readGarments(queryParams: ReadGarmentsParams) {
   const limit = Number(queryParams.limit || "5");
   const offset = Number(queryParams.offset || "0");
 
   const { search } = queryParams;
+
+  console.log({ search });
 
   // TODO: allow filtering by color, brand, etc
 
