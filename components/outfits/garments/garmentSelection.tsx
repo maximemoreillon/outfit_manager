@@ -1,5 +1,6 @@
 "use client";
 
+import ClientPagination from "@/components/clientPagination";
 import GarmentsFilters from "@/components/garments/garmentsFilters";
 import GarmentPreviewCard from "@/components/garments/previewCard";
 import { garmentsTable, outfitsTable } from "@/db/schema";
@@ -13,18 +14,26 @@ type Props = {
 };
 
 export default function GarmentSelection(props: Props) {
-  const [garments, setGarments] = useState<
-    (typeof garmentsTable.$inferSelect)[]
-  >([]);
+  // TODO: infer type from readGarments
+  const [data, setData] = useState<Awaited<
+    ReturnType<typeof readGarments>
+  > | null>(null);
+  // const [garments, setGarments] = useState<
+  //   (typeof garmentsTable.$inferSelect)[]
+  // >([]);
   const [isLoading, setLoading] = useState(true);
+
+  // TODO: typing
+  async function fetchGarments(params: any) {
+    setLoading(true);
+    const d = await readGarments(params);
+    setData(d);
+    setLoading(false);
+  }
 
   useEffect(() => {
     (async () => {
-      setLoading(true);
-      // TODO: deal with pagination
-      const { items } = await readGarments({});
-      setGarments(items);
-      setLoading(false);
+      fetchGarments({});
     })();
   }, []);
 
@@ -39,24 +48,32 @@ export default function GarmentSelection(props: Props) {
   // TODO: Is this good enough?
   // TODO: typing
   function handleFiltersUpdate(filters: any) {
-    setLoading(true);
     (async () => {
-      const { items } = await readGarments(filters);
-      setGarments(items);
-      setLoading(false);
+      fetchGarments(filters);
     })();
   }
   return (
     <>
       <GarmentsFilters onUpdate={handleFiltersUpdate} />
-      {garments.map((garment) => (
-        <GarmentPreviewCard
-          garment={garment}
-          key={garment.id}
-          selectable
-          onSelect={() => handleSelect(garment)}
-        />
-      ))}
+      {data && (
+        <>
+          {data.items.map((garment) => (
+            <GarmentPreviewCard
+              garment={garment}
+              key={garment.id}
+              selectable
+              onSelect={() => handleSelect(garment)}
+            />
+          ))}
+
+          <ClientPagination
+            total={data.total}
+            limit={data.limit}
+            offset={data.offset}
+            onPageChange={fetchGarments}
+          />
+        </>
+      )}
       {/* TODO: Pagination */}
     </>
   );
