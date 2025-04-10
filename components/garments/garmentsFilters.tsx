@@ -20,40 +20,69 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 const formSchema = z.object({
   search: z.string(),
 });
 
 type Props = {
-  onUpdate: (values: z.infer<typeof formSchema>) => void;
+  // PROBLEM: all form values will be required
+  useSearchParams?: boolean;
+  onUpdate?: (values: z.infer<typeof formSchema>) => void;
 };
 
 export default function GarmentsFilters(props: Props) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // TODO: query colors, brands, etc
+
+  const defaultValues = {
+    search: "",
+  };
+
+  // Populate default values from search params
+  if (props.useSearchParams) {
+    defaultValues.search = searchParams.get("search") || "";
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      search: "",
-    },
+    defaultValues,
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    props.onUpdate(values);
+    if (props.onUpdate) props.onUpdate(values);
+    if (props.useSearchParams) {
+      const params = new URLSearchParams(searchParams.toString());
+
+      for (const [key, value] of Object.entries(values)) {
+        if (value) params.set(key, value);
+        else params.delete(key);
+      }
+
+      router.push(pathname + "?" + params.toString());
+    }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex items-end gap-4 my-4"
+      >
         <FormField
           control={form.control}
           name="search"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="grow-1">
               <FormLabel>Search</FormLabel>
               <FormControl>
                 <Input placeholder="Grey jacket" {...field} />
               </FormControl>
-              <FormDescription>Search</FormDescription>
+              {/* <FormDescription>Search</FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
