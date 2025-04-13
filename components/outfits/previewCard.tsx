@@ -18,10 +18,10 @@ export default function OutfitPreviewCard(props: Props) {
   return (
     <Link href={`/outfits/${props.outfit.id}`}>
       <Card>
-        <CardHeader>
-          {/* <CardTitle>{props.outfit.name}</CardTitle> */}
-          {/* <CardDescription>{props.outfit.image}</CardDescription> */}
-        </CardHeader>
+        {/* <CardHeader>
+          <CardTitle>{props.outfit.name}</CardTitle>
+          <CardDescription>{props.outfit.image}</CardDescription>
+        </CardHeader> */}
         <CardContent>
           <img
             className="w-full"

@@ -17,9 +17,6 @@ export default function Breadcrumbs() {
   pathnameSplit.shift();
   const pathnameLast = pathnameSplit.pop();
 
-  console.log({ pathnameLast });
-
-  // TODO: get route
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -27,15 +24,12 @@ export default function Breadcrumbs() {
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
 
-        {/* TODO: add intermediate pages here */}
         {pathnameSplit.map((p, i) => (
-          // PROBLEM: this div braks everything!
           <>
-            <BreadcrumbSeparator key={`${p}-sep`} />
-            <BreadcrumbItem>
+            <BreadcrumbSeparator key={`${i}-sep`} />
+            <BreadcrumbItem key={`${i}-link`}>
               <BreadcrumbLink
                 href={`/${pathnameSplit.slice(0, i + 1).join("/")}`}
-                key={p}
               >
                 {p}
               </BreadcrumbLink>
