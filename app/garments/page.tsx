@@ -6,15 +6,11 @@ import ServerPagination from "@/components/serverPagination";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { readGarments } from "@/lib/garments";
 import Link from "next/link";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import GarmentsFilters from "@/components/garments/garmentsFilters";
+
+import GarmentsFilters from "@/components/garments/filters";
+import GarmentsList from "@/components/garments/list";
+import GarmentsTable from "@/components/garments/table";
+import Breadcrumbs from "@/components/breadcrumbs";
 
 export default async function Garments({
   searchParams,
@@ -27,18 +23,7 @@ export default async function Garments({
 
   return (
     <div>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-
-          <BreadcrumbItem>
-            <BreadcrumbLink>Garments</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumbs />
       <h2 className="text-2xl my-4">Garments</h2>
       <div className="my-4">
         <Link href="/garments/new" className={buttonVariants({})}>
@@ -48,11 +33,13 @@ export default async function Garments({
       <GarmentsFilters useSearchParams />
 
       <>
-        <div className="grid gap-4 grid-cols-3">
+        {/* <GarmentsList garments={items}/> */}
+        <GarmentsTable garments={items} />
+        {/* <div className="grid gap-4 grid-cols-3">
           {items.map((garment: any) => (
             <GarmentPreviewCard garment={garment} key={garment.id} />
           ))}
-        </div>
+        </div> */}
 
         <div className="my-4">
           <ServerPagination total={total} limit={limit} offset={offset} />

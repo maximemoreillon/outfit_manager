@@ -1,7 +1,7 @@
 "use client";
 
 import ClientPagination from "@/components/clientPagination";
-import GarmentsFilters from "@/components/garments/garmentsFilters";
+import GarmentsFilters from "@/components/garments/filters";
 import GarmentPreviewCard from "@/components/garments/previewCard";
 import { garmentsTable, outfitsTable } from "@/db/schema";
 import { readGarments } from "@/lib/garments";

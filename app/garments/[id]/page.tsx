@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import DeleteGarmentButton from "@/components/garments/deleteButton";
 import { GarmentImage } from "@/components/garments/image";
+import Breadcrumbs from "@/components/breadcrumbs";
 
 export default async function Garment({
   params,
@@ -21,17 +22,7 @@ export default async function Garment({
   const garment = await readGarment(Number(id));
   return (
     <div>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/garments">Garments</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{id}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumbs />
       {garment && (
         <div>
           <div className="flex justify-between">

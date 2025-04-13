@@ -27,7 +27,6 @@ const formSchema = z.object({
 });
 
 type Props = {
-  // PROBLEM: all form values will be required
   useSearchParams?: boolean;
   onUpdate?: (values: z.infer<typeof formSchema>) => void;
 };
@@ -38,12 +37,11 @@ export default function GarmentsFilters(props: Props) {
   const pathname = usePathname();
 
   // TODO: query colors, brands, etc
-
   const defaultValues = {
     search: "",
   };
 
-  // Populate default values from search params
+  // Populate default values from search params if required
   if (props.useSearchParams) {
     defaultValues.search = searchParams.get("search") || "";
   }
