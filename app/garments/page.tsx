@@ -33,8 +33,8 @@ export default async function Garments({
       <GarmentsFilters useSearchParams />
 
       <>
-        {/* <GarmentsList garments={items}/> */}
-        <GarmentsTable garments={items} />
+        <GarmentsList garments={items} />
+        {/* <GarmentsTable garments={items} /> */}
         {/* <div className="grid gap-4 grid-cols-3">
           {items.map((garment: any) => (
             <GarmentPreviewCard garment={garment} key={garment.id} />

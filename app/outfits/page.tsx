@@ -4,14 +4,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { auth } from "@/auth";
 import Link from "next/link";
 import { readOutfits } from "@/lib/outfits";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+
+import Breadcrumbs from "@/components/breadcrumbs";
 export default async function Outfits({
   searchParams,
 }: {
@@ -26,18 +20,7 @@ export default async function Outfits({
 
   return (
     <div>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-
-          <BreadcrumbItem>
-            <BreadcrumbLink>Garments</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumbs />
 
       <h2 className="text-2xl my-4">Outfits</h2>
       <div className="my-4">

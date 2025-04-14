@@ -54,11 +54,11 @@ export default function AddGarmentOufits(props: Props) {
     props.onAdd(garment);
   }
 
-  function handleFiltersUpdate(filters: any) {
-    (async () => {
-      fetchGarments(filters);
-    })();
-  }
+  // function handleFiltersUpdate(filters: any) {
+  //   (async () => {
+  //     fetchGarments(filters);
+  //   })();
+  // }
 
   return (
     // Problem: would beed to make it as full-size as possible
@@ -73,13 +73,13 @@ export default function AddGarmentOufits(props: Props) {
           <DialogDescription>Add garments to this outfit</DialogDescription>
         </DialogHeader>
 
-        <GarmentsFilters onUpdate={handleFiltersUpdate} />
+        {/* TODO: filter change will invalidate pagination, which would be fine */}
+        <GarmentsFilters onUpdate={fetchGarments} />
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] ">
-          {/* TODO: use GarmentList or GarmentTable */}
           {data && (
             <>
-              <GarmentsList garments={data.items} />
-
+              <GarmentsList garments={data.items} onSelect={handleSelect} />
+              {/* TODO: page change will invalidate filters */}
               <ClientPagination
                 total={data.total}
                 limit={data.limit}

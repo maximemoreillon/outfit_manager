@@ -27,18 +27,19 @@ export async function readGarments(queryParams: ReadGarmentsParams) {
 
   const { search } = queryParams;
 
-  console.log({ search });
-
   // TODO: allow filtering by color, brand, etc
+
+  const where = search ? ilike(garmentsTable.name, `%${search}%`) : undefined;
 
   const [{ count: total }] = await db
     .select({ count: count() })
-    .from(garmentsTable);
+    .from(garmentsTable)
+    .where(where);
 
   const garments = await db
     .select()
     .from(garmentsTable)
-    .where(search ? ilike(garmentsTable.name, `%${search}%`) : undefined)
+    .where(where)
     .offset(Number(offset))
     .limit(Number(limit));
 
