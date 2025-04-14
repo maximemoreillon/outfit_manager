@@ -13,9 +13,8 @@ import { garmentsTable } from "@/db/schema";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
-  removable?: boolean;
-  onSelect?: () => void;
-  onRemove?: () => void;
+  onSelect?: (garment: typeof garmentsTable.$inferSelect) => void;
+  onRemove?: (garment: typeof garmentsTable.$inferSelect) => void;
 };
 
 export default function GarmentPreviewCard(props: Props) {
@@ -42,25 +41,25 @@ export default function GarmentPreviewCard(props: Props) {
         {props.onSelect && (
           <Button
             onClick={() => {
-              if (props.onSelect) props.onSelect();
+              if (props.onSelect) props.onSelect(props.garment);
             }}
           >
             Select
           </Button>
         )}
 
-        {props.removable && (
+        {props.onRemove && (
           <Button
             variant="destructive"
             onClick={() => {
-              if (props.onRemove) props.onRemove();
+              if (props.onRemove) props.onRemove(props.garment);
             }}
           >
             Remove
           </Button>
         )}
 
-        {!props.removable && !props.onSelect && (
+        {!props.onRemove && !props.onSelect && (
           <Link
             href={`/garments/${props.garment.id}`}
             className={buttonVariants({})}

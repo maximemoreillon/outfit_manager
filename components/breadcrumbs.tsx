@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 export default function Breadcrumbs() {
   const pathname = usePathname();
@@ -25,16 +26,16 @@ export default function Breadcrumbs() {
         </BreadcrumbItem>
 
         {pathnameSplit.map((p, i) => (
-          <>
-            <BreadcrumbSeparator key={`${i}-sep`} />
-            <BreadcrumbItem key={`${i}-link`}>
+          <React.Fragment key={i}>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
               <BreadcrumbLink
                 href={`/${pathnameSplit.slice(0, i + 1).join("/")}`}
               >
                 {p}
               </BreadcrumbLink>
             </BreadcrumbItem>
-          </>
+          </React.Fragment>
         ))}
 
         <BreadcrumbSeparator />

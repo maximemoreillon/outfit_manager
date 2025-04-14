@@ -14,9 +14,7 @@ export default function GarmentsList(props: Props) {
         <GarmentPreviewCard
           garment={garment}
           key={garment.id}
-          onSelect={() => {
-            props.onSelect ? props.onSelect(garment) : undefined;
-          }}
+          onSelect={props.onSelect ? props.onSelect : undefined}
         />
       ))}
     </div>

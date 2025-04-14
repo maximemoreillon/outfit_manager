@@ -9,14 +9,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 
 import { readGarments } from "@/lib/garments";
 import { garmentsTable, outfitsTable } from "@/db/schema";
 import { addGarmentToOutfit } from "@/lib/outfitGarments";
 import GarmentsFilters from "@/components/garments/filters";
-import GarmentPreviewCard from "@/components/garments/previewCard";
 import ClientPagination from "@/components/clientPagination";
 import GarmentsList from "@/components/garments/list";
 
@@ -26,6 +24,8 @@ type Props = {
 };
 
 export default function AddGarmentOufits(props: Props) {
+  const [fetchParams, setFetchParams] = useState({});
+
   const [data, setData] = useState<Awaited<
     ReturnType<typeof readGarments>
   > | null>(null);
@@ -33,18 +33,18 @@ export default function AddGarmentOufits(props: Props) {
   const [isLoading, setLoading] = useState(true);
 
   // TODO: typing
-  async function fetchGarments(params: any) {
+  async function fetchGarments() {
     setLoading(true);
-    const d = await readGarments(params);
+    const d = await readGarments(fetchParams);
     setData(d);
     setLoading(false);
   }
 
   useEffect(() => {
     (async () => {
-      fetchGarments({});
+      fetchGarments();
     })();
-  }, []);
+  }, [fetchParams]);
 
   async function handleSelect(garment: typeof garmentsTable.$inferSelect) {
     await addGarmentToOutfit({
@@ -53,12 +53,6 @@ export default function AddGarmentOufits(props: Props) {
     });
     props.onAdd(garment);
   }
-
-  // function handleFiltersUpdate(filters: any) {
-  //   (async () => {
-  //     fetchGarments(filters);
-  //   })();
-  // }
 
   return (
     // Problem: would beed to make it as full-size as possible
@@ -74,7 +68,7 @@ export default function AddGarmentOufits(props: Props) {
         </DialogHeader>
 
         {/* TODO: filter change will invalidate pagination, which would be fine */}
-        <GarmentsFilters onUpdate={fetchGarments} />
+        <GarmentsFilters onUpdate={setFetchParams} />
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] ">
           {data && (
             <>
@@ -84,7 +78,9 @@ export default function AddGarmentOufits(props: Props) {
                 total={data.total}
                 limit={data.limit}
                 offset={data.offset}
-                onPageChange={fetchGarments}
+                onPageChange={(newParams) => {
+                  setFetchParams({ ...fetchParams, ...newParams });
+                }}
               />
             </>
           )}
