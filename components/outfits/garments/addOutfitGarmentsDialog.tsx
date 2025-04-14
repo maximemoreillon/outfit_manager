@@ -24,6 +24,7 @@ type Props = {
 };
 
 export default function AddGarmentOufits(props: Props) {
+  // TODO: typing
   const [fetchParams, setFetchParams] = useState({});
 
   const [data, setData] = useState<Awaited<
@@ -32,7 +33,6 @@ export default function AddGarmentOufits(props: Props) {
 
   const [isLoading, setLoading] = useState(true);
 
-  // TODO: typing
   async function fetchGarments() {
     setLoading(true);
     const d = await readGarments(fetchParams);
@@ -55,25 +55,22 @@ export default function AddGarmentOufits(props: Props) {
   }
 
   return (
-    // Problem: would beed to make it as full-size as possible
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline">Add garments</Button>
       </DialogTrigger>
-      {/* Problem: alignment */}
+      {/* TODO: Fix alignment problem */}
       <DialogContent className="sm:max-w-[Npx] ">
         <DialogHeader>
           <DialogTitle>Add garments</DialogTitle>
           <DialogDescription>Add garments to this outfit</DialogDescription>
         </DialogHeader>
 
-        {/* TODO: filter change will invalidate pagination, which would be fine */}
         <GarmentsFilters onUpdate={setFetchParams} />
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] ">
           {data && (
             <>
               <GarmentsList garments={data.items} onSelect={handleSelect} />
-              {/* TODO: page change will invalidate filters */}
               <ClientPagination
                 total={data.total}
                 limit={data.limit}
