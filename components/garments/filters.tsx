@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Select,
   SelectContent,
@@ -24,6 +25,8 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 const formSchema = z.object({
   search: z.string(),
+  color: z.string(),
+  brand: z.string(),
 });
 
 type Props = {
@@ -39,6 +42,8 @@ export default function GarmentsFilters(props: Props) {
   // TODO: query colors, brands, etc
   const defaultValues = {
     search: "",
+    brand: "",
+    color: "",
   };
 
   // Populate default values from search params if required
@@ -79,6 +84,34 @@ export default function GarmentsFilters(props: Props) {
               <FormLabel>Search</FormLabel>
               <FormControl>
                 <Input placeholder="Grey jacket" {...field} />
+              </FormControl>
+              {/* <FormDescription>Search</FormDescription> */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="brand"
+          render={({ field }) => (
+            <FormItem className="grow-1">
+              <FormLabel>Search</FormLabel>
+              <FormControl>
+                {/* TODO: check if value is OK */}
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value || ""}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Brand" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null!}>Any</SelectItem>
+                    <SelectItem value="Uniqlo">Uniqlo</SelectItem>
+                    <SelectItem value="Zara">Zara</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               {/* <FormDescription>Search</FormDescription> */}
               <FormMessage />
