@@ -26,7 +26,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 const formSchema = z.object({
   search: z.string(),
   color: z.string(),
-  brand: z.string(),
+  brand: z.string().nullable(),
 });
 
 type Props = {
