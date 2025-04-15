@@ -16,7 +16,7 @@ import { garmentsTable, outfitsTable } from "@/db/schema";
 import { addGarmentToOutfit } from "@/lib/outfitGarments";
 import GarmentsFilters from "@/components/garments/filters";
 import ClientPagination from "@/components/clientPagination";
-import GarmentsList from "@/components/garments/list";
+import GarmentCards from "@/components/garments/cards";
 
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
@@ -70,7 +70,7 @@ export default function AddGarmentOufits(props: Props) {
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] ">
           {data && (
             <>
-              <GarmentsList garments={data.items} onSelect={handleSelect} />
+              <GarmentCards garments={data.items} onSelect={handleSelect} />
               <ClientPagination
                 total={data.total}
                 limit={data.limit}

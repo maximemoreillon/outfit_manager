@@ -47,3 +47,17 @@ export async function removeGarmentFromOutfit(
 
   return { outfit_id, garment_id };
 }
+
+export async function readGarmentOutfits(garment_id: number) {
+  // TODO: pagination
+  const result = await db
+    .select()
+    .from(outfitGarmentsTable)
+    .where(eq(outfitGarmentsTable.garment_id, garment_id))
+    .innerJoin(
+      outfitsTable,
+      eq(outfitGarmentsTable.outfit_id, outfitsTable.id)
+    );
+
+  return { items: result.map(({ outfits }) => outfits) };
+}

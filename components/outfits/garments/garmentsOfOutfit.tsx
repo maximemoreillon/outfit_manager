@@ -10,6 +10,7 @@ import Link from "next/link";
 import { garmentsTable, outfitsTable } from "@/db/schema";
 import AddGarmentOufits from "./addOutfitGarmentsDialog";
 import { useEffect, useState } from "react";
+import GarmentsList from "@/components/garments/list";
 
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
@@ -50,16 +51,8 @@ export default function GarmentsOfOutfit(props: Props) {
           }}
         />
       </div>
-      {/* TODO: allow different viewing styles, e.g. tables */}
-      <div className="grid gap-4 grid-cols-3">
-        {garments.map((garment) => (
-          <GarmentPreviewCard
-            garment={garment}
-            key={garment.id}
-            removable
-            onRemove={() => removeGarment(garment)}
-          />
-        ))}
+      <div>
+        <GarmentsList garments={garments} onRemove={removeGarment} />
       </div>
 
       {/* <div className="my-4">

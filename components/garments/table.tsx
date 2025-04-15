@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -9,13 +10,15 @@ import {
 } from "@/components/ui/table";
 import { garmentsTable } from "@/db/schema";
 import Link from "next/link";
-import { buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
+  onSelect?: (garment: typeof garmentsTable.$inferSelect) => void;
+  onRemove?: (garment: typeof garmentsTable.$inferSelect) => void;
 };
 
-export default async function GarmentsTable(props: Props) {
+export default function GarmentsTable(props: Props) {
   return (
     <Table>
       <TableCaption>Garments</TableCaption>
@@ -23,7 +26,7 @@ export default async function GarmentsTable(props: Props) {
         <TableRow>
           <TableHead></TableHead>
           <TableHead>Name</TableHead>
-          <TableHead>See</TableHead>
+          <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -42,12 +45,42 @@ export default async function GarmentsTable(props: Props) {
             </TableCell>
             <TableCell>{garment.name}</TableCell>
             <TableCell>
-              <Link
+              {/* <Link
                 href={`/garments/${garment.id}`}
                 className={buttonVariants({})}
               >
                 See
-              </Link>
+              </Link> */}
+
+              {props.onSelect && (
+                <Button
+                  onClick={() => {
+                    if (props.onSelect) props.onSelect(garment);
+                  }}
+                >
+                  Select
+                </Button>
+              )}
+
+              {props.onRemove && (
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    if (props.onRemove) props.onRemove(garment);
+                  }}
+                >
+                  Remove
+                </Button>
+              )}
+
+              {!props.onRemove && !props.onSelect && (
+                <Link
+                  href={`/garments/${garment.id}`}
+                  className={buttonVariants({})}
+                >
+                  See
+                </Link>
+              )}
             </TableCell>
           </TableRow>
         ))}
