@@ -25,6 +25,7 @@ const formSchema = z.object({
   comment: z.string(),
   quantity: z.coerce.number(),
   brand: z.string(),
+  type: z.string(),
 });
 
 type Props = { garment: typeof garmentsTable.$inferSelect };
@@ -34,6 +35,7 @@ export default function GarmentEditForm(props: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: props.garment.name,
+      type: props.garment.type || "",
       brand: props.garment.brand || "",
       description: props.garment.description || "",
       comment: props.garment.comment || "",
@@ -58,6 +60,21 @@ export default function GarmentEditForm(props: Props) {
                 <Input placeholder="Grey jacket" {...field} />
               </FormControl>
               <FormDescription>Name of the garment</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Type</FormLabel>
+              <FormControl>
+                <Input placeholder="Pants" {...field} />
+              </FormControl>
+              <FormDescription>Type of the garment</FormDescription>
               <FormMessage />
             </FormItem>
           )}

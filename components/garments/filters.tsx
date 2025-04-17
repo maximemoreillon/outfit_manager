@@ -22,11 +22,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { readBrands, readColors, readTypes } from "@/lib/misc";
 
 const formSchema = z.object({
   search: z.string(),
-  color: z.string(),
+  color: z.string().nullable(),
   brand: z.string().nullable(),
+  type: z.string().nullable(),
 });
 
 type Props = {
@@ -39,16 +42,34 @@ export default function GarmentsFilters(props: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // TODO: query colors, brands, etc
+  // TODO: Have a single state for all
+  const [types, setTypes] = useState<string[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [colors, setColors] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      // TODO: Have a single state for all
+      setBrands(await readBrands());
+      setColors(await readColors());
+      setTypes(await readTypes());
+    })();
+  }, []);
+
   const defaultValues = {
     search: "",
+    type: "",
     brand: "",
     color: "",
   };
 
   // Populate default values from search params if required
   if (props.useSearchParams) {
-    defaultValues.search = searchParams.get("search") || "";
+    (Object.keys(defaultValues) as Array<keyof typeof defaultValues>).forEach(
+      (k) => {
+        defaultValues[k] = searchParams.get(k) || "";
+      }
+    );
   }
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -93,27 +114,86 @@ export default function GarmentsFilters(props: Props) {
 
         <FormField
           control={form.control}
-          name="brand"
+          name="type"
           render={({ field }) => (
             <FormItem className="grow-1">
-              <FormLabel>Search</FormLabel>
+              <FormLabel>Type</FormLabel>
               <FormControl>
-                {/* TODO: check if value is OK */}
                 <Select
                   onValueChange={field.onChange}
                   value={field.value || ""}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Brand" />
+                    <SelectValue placeholder="Any" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={null!}>Any</SelectItem>
-                    <SelectItem value="Uniqlo">Uniqlo</SelectItem>
-                    <SelectItem value="Zara">Zara</SelectItem>
+                    {types.map((e, i) => (
+                      <SelectItem value={e} key={i}>
+                        {e}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormControl>
-              {/* <FormDescription>Search</FormDescription> */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="brand"
+          render={({ field }) => (
+            <FormItem className="grow-1">
+              <FormLabel>Brand</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value || ""}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Any" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null!}>Any</SelectItem>
+                    {brands.map((e, i) => (
+                      <SelectItem value={e} key={i}>
+                        {e}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="color"
+          render={({ field }) => (
+            <FormItem className="grow-1">
+              <FormLabel>Color</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value || ""}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Any" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null!}>Any</SelectItem>
+                    {colors.map((e, i) => (
+                      <SelectItem value={e} key={i}>
+                        {e}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
