@@ -37,7 +37,7 @@ export default function GarmentPreviewCard(props: Props) {
         />
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="flex gap-2">
         {props.onSelect && (
           <Button
             onClick={() => {
@@ -48,6 +48,13 @@ export default function GarmentPreviewCard(props: Props) {
           </Button>
         )}
 
+        <Link
+          href={`/garments/${props.garment.id}`}
+          className={buttonVariants({})}
+        >
+          See
+        </Link>
+
         {props.onRemove && (
           <Button
             variant="destructive"
@@ -57,15 +64,6 @@ export default function GarmentPreviewCard(props: Props) {
           >
             Remove
           </Button>
-        )}
-
-        {!props.onRemove && !props.onSelect && (
-          <Link
-            href={`/garments/${props.garment.id}`}
-            className={buttonVariants({})}
-          >
-            See
-          </Link>
         )}
       </CardFooter>
     </Card>
