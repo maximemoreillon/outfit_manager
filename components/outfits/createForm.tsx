@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { createGarment } from "@/lib/garments";
 
 import { useRouter } from "next/navigation";
-import { uploadImage } from "@/lib/images";
+import { uploadImage, uploadOutfitImage } from "@/lib/images";
 import { createOutfit } from "@/lib/outfits";
 
 const formSchema = z.object({
@@ -34,9 +34,9 @@ export default function OutfitCreateForm() {
 
   async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
     const [imageFile] = imageFileList;
-    const key = await uploadImage(imageFile);
 
-    const { id } = await createOutfit({ image: key });
+    const { id } = await createOutfit({});
+    await uploadOutfitImage(id, imageFile);
     router.push(`/outfits/${id}`);
   }
 

@@ -25,11 +25,17 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { readBrands, readColors, readTypes } from "@/lib/misc";
 
-const formSchema = z.object({
-  search: z.string(),
+// Can be
+
+const filterSchemaProperties = {
   color: z.string().nullable(),
   brand: z.string().nullable(),
   type: z.string().nullable(),
+};
+
+const formSchema = z.object({
+  search: z.string(),
+  ...filterSchemaProperties,
 });
 
 type Props = {
@@ -111,6 +117,8 @@ export default function GarmentsFilters(props: Props) {
             </FormItem>
           )}
         />
+
+        {/* TODO: probably possible to have a for loop */}
 
         <FormField
           control={form.control}

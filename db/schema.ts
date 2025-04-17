@@ -18,7 +18,7 @@ export const garmentsTable = pgTable("garments", {
 
 export const outfitsTable = pgTable("outfits", {
   id: serial().primaryKey(),
-  image: text().notNull(),
+  image: text(),
   description: text().default("No description"),
   comment: text(),
   rating: integer(),
