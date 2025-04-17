@@ -39,26 +39,29 @@ export async function readColors() {
 }
 
 export async function readFilters() {
-  const filterProperties = ["type", "brand", "color"] as const;
-  type FilterKeys = (typeof filterProperties)[number];
-  // type Output = {
-  //   [key: FilterKeys]: string[];
-  // };
+  const filters: { type: string[]; brand: string[]; color: string[] } = {
+    type: [],
+    brand: [],
+    color: [],
+  };
 
-  // TODO: typing of acc
-  const result = filterProperties.reduce(async (acc: any, prop) => {
+  // TODO: take that from above
+  // type FilterKeys = (typeof Object.keys(filters))[number];
+  type FilterKeys = "type" | "brand" | "color";
+
+  for (const prop of Object.keys(filters)) {
     const drizzleFilter = garmentsTable[prop as FilterKeys];
 
-    // TODO: maybe a single query could work?
     const result = (await db
       .selectDistinct({ [prop]: drizzleFilter })
       .from(garmentsTable)
       .where(and(isNotNull(drizzleFilter), not(eq(drizzleFilter, ""))))
       .orderBy(drizzleFilter)) as { [prop]: string }[];
 
-    acc[prop as FilterKeys] = result.map((e) => e[prop]);
-    return acc;
-  }, {});
+    filters[prop as FilterKeys] = result.map((e) => e[prop]);
+  }
 
-  return result;
+  // console.log(result);
+
+  return filters;
 }

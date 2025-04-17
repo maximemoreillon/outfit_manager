@@ -23,9 +23,9 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { readBrands, readColors, readTypes } from "@/lib/misc";
+import { readBrands, readColors, readFilters, readTypes } from "@/lib/misc";
 
-// Can be
+const filterProperties = ["type", "brand", "color"] as const;
 
 const filterSchemaProperties = {
   color: z.string().nullable(),
@@ -43,22 +43,24 @@ type Props = {
   onUpdate?: (values: z.infer<typeof formSchema>) => void;
 };
 
+type Filters = {
+  [k: string]: string[];
+};
+
 export default function GarmentsFilters(props: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  // TODO: Have a single state for all
-  const [types, setTypes] = useState<string[]>([]);
-  const [brands, setBrands] = useState<string[]>([]);
-  const [colors, setColors] = useState<string[]>([]);
+  const [filters, setFilters] = useState<Filters>({
+    type: [],
+    color: [],
+    brand: [],
+  });
 
   useEffect(() => {
     (async () => {
-      // TODO: Have a single state for all
-      setBrands(await readBrands());
-      setColors(await readColors());
-      setTypes(await readTypes());
+      setFilters(await readFilters());
     })();
   }, []);
 
@@ -101,113 +103,59 @@ export default function GarmentsFilters(props: Props) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex items-end gap-4 my-4"
+        className="flex flex-col gap-2"
       >
-        <FormField
-          control={form.control}
-          name="search"
-          render={({ field }) => (
-            <FormItem className="grow-1">
-              <FormLabel>Search</FormLabel>
-              <FormControl>
-                <Input placeholder="Grey jacket" {...field} />
-              </FormControl>
-              {/* <FormDescription>Search</FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex gap-4">
+          {filterProperties.map((f, i) => (
+            <FormField
+              key={i}
+              control={form.control}
+              name={f}
+              render={({ field }) => (
+                <FormItem className="grow-1">
+                  <FormLabel>{f}</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Any" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={null!}>Any</SelectItem>
+                        {filters[f].map((e, i) => (
+                          <SelectItem value={e} key={i}>
+                            {e}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </div>
 
-        {/* TODO: probably possible to have a for loop */}
-
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem className="grow-1">
-              <FormLabel>Type</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value || ""}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Any" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={null!}>Any</SelectItem>
-                    {types.map((e, i) => (
-                      <SelectItem value={e} key={i}>
-                        {e}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="brand"
-          render={({ field }) => (
-            <FormItem className="grow-1">
-              <FormLabel>Brand</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value || ""}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Any" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={null!}>Any</SelectItem>
-                    {brands.map((e, i) => (
-                      <SelectItem value={e} key={i}>
-                        {e}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="color"
-          render={({ field }) => (
-            <FormItem className="grow-1">
-              <FormLabel>Color</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value || ""}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Any" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={null!}>Any</SelectItem>
-                    {colors.map((e, i) => (
-                      <SelectItem value={e} key={i}>
-                        {e}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Set</Button>
+        <div className="flex gap-4 items-end">
+          <FormField
+            control={form.control}
+            name="search"
+            render={({ field }) => (
+              <FormItem className="grow-1">
+                <FormLabel>Search</FormLabel>
+                <FormControl>
+                  <Input placeholder="Grey jacket" {...field} />
+                </FormControl>
+                {/* <FormDescription>Search</FormDescription> */}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Set</Button>
+        </div>
       </form>
     </Form>
   );
