@@ -17,10 +17,6 @@ type Props = {
 };
 
 export default function GarmentsOfOutfit(props: Props) {
-  // TODO: get the outfit id from the url or props
-  // const { items: garments } = await readOutfitGarments(1);
-
-  // TODO: find how to refresh once a garment is added?
   const [garments, setGarments] = useState<
     (typeof garmentsTable.$inferSelect)[]
   >([]);
@@ -55,9 +51,7 @@ export default function GarmentsOfOutfit(props: Props) {
         <GarmentsList garments={garments} onRemove={removeGarment} />
       </div>
 
-      {/* <div className="my-4">
-        <ServerPagination total={total} limit={limit} offset={offset} />
-      </div> */}
+      {/* TODO: pagination */}
     </div>
   );
 }

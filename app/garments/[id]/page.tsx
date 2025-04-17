@@ -1,17 +1,9 @@
 import GarmentEditForm from "@/components/garments/editForm";
-
 import { readGarment } from "@/lib/garments";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import DeleteGarmentButton from "@/components/garments/deleteButton";
 import { GarmentImage } from "@/components/garments/image";
 import Breadcrumbs from "@/components/breadcrumbs";
+import OutfitsOfGarment from "@/components/garments/outfits/outfitsOfGarments";
 
 export default async function Garment({
   params,
@@ -34,6 +26,10 @@ export default async function Garment({
             <GarmentEditForm garment={garment} />
 
             <GarmentImage garment={garment} />
+
+            <div className="col-span-2">
+              <OutfitsOfGarment garment={garment} />
+            </div>
           </div>
         </div>
       )}

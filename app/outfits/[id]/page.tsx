@@ -1,19 +1,10 @@
 import OutfitEditForm from "@/components/outfits/editForm";
 
 import { readOutfit } from "@/lib/outfits";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+
 import DeleteOutfitButton from "@/components/outfits/deleteButton";
 import { OutfitImage } from "@/components/outfits/image";
-import AddOutfitGarments from "@/components/outfits/garments/addOutfitGarmentsDialog";
 import GarmentsOfOutfit from "@/components/outfits/garments/garmentsOfOutfit";
-import { readOutfitGarments } from "@/lib/outfitGarments";
 import Breadcrumbs from "@/components/breadcrumbs";
 
 export default async function Outfit({
@@ -38,8 +29,11 @@ export default async function Outfit({
           <OutfitEditForm outfit={outfit} />
 
           <OutfitImage outfit={outfit} />
+
+          <div className="col-span-full">
+            <GarmentsOfOutfit outfit={outfit} />
+          </div>
         </div>
-        <GarmentsOfOutfit outfit={outfit} />
       </div>
     </div>
   );
