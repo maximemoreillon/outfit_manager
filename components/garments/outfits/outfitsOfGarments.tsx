@@ -31,7 +31,7 @@ export default function OutfitsOfGarment(props: Props) {
       </div>
       <div className="grid gap-4 grid-cols-3">
         {outfits.map((outfit) => (
-          <OutfitPreviewCard outfit={outfit} />
+          <OutfitPreviewCard outfit={outfit} key={outfit.id} />
         ))}
       </div>
 

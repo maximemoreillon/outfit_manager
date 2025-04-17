@@ -17,7 +17,7 @@ export default async function Garment({
       <Breadcrumbs />
       {garment && (
         <div>
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <h2 className="text-3xl my-4">{garment.name}</h2>
             <DeleteGarmentButton id={garment.id} />
           </div>
