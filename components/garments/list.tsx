@@ -3,7 +3,8 @@ import { garmentsTable } from "@/db/schema";
 import { useState } from "react";
 import GarmentsTable from "./table";
 import GarmentCards from "./cards";
-import { Button } from "../ui/button";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Table, GalleryHorizontal } from "lucide-react";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
@@ -15,22 +16,22 @@ export default function GarmentsList(props: Props) {
   const [mode, setMode] = useState<"cards" | "table">("cards");
   return (
     <>
-      <div className="flex gap-2">
-        <Button
-          onClick={() => {
-            setMode("cards");
-          }}
-        >
-          Cards
-        </Button>
-        <Button
-          onClick={() => {
-            setMode("table");
-          }}
-        >
-          Table
-        </Button>
-      </div>
+      <ToggleGroup
+        className="my-4"
+        type="single"
+        value={mode}
+        onValueChange={(a: "table" | "cards") => {
+          setMode(a);
+        }}
+      >
+        <ToggleGroupItem value="table">
+          <Table />
+        </ToggleGroupItem>
+        <ToggleGroupItem value="cards">
+          <GalleryHorizontal />
+        </ToggleGroupItem>
+      </ToggleGroup>
+
       <div>
         {mode === "cards" && (
           <GarmentCards
