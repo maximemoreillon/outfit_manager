@@ -39,29 +39,45 @@ export async function readColors() {
 }
 
 export async function readFilters() {
-  const filters: { type: string[]; brand: string[]; color: string[] } = {
+  type Filters = {
+    type: string[];
+    brand: string[];
+    color: string[];
+  };
+
+  const filters: Filters = {
     type: [],
     brand: [],
     color: [],
   };
 
-  // TODO: take that from above
-  // type FilterKeys = (typeof Object.keys(filters))[number];
-  type FilterKeys = "type" | "brand" | "color";
+  const selectDistinctQuery = Object.keys(filters).reduce(
+    (acc, k) => ({
+      ...acc,
+      [k]: garmentsTable[k as keyof Filters],
+    }),
+    {}
+  );
 
-  for (const prop of Object.keys(filters)) {
-    const drizzleFilter = garmentsTable[prop as FilterKeys];
+  const result = await db
+    .selectDistinct(selectDistinctQuery)
+    .from(garmentsTable);
 
-    const result = (await db
-      .selectDistinct({ [prop]: drizzleFilter })
-      .from(garmentsTable)
-      .where(and(isNotNull(drizzleFilter), not(eq(drizzleFilter, ""))))
-      .orderBy(drizzleFilter)) as { [prop]: string }[];
+  /*
+  Result structure:
+  [
+    { type: null, brand: null, color: null },
+    { type: 'T-shirt', brand: 'H&M', color: null },
+    { type: 'Pants', brand: '', color: null },
+    { type: null, brand: 'Uniqlo', color: null }
+  ]
+  */
 
-    filters[prop as FilterKeys] = result.map((e) => e[prop]);
-  }
-
-  // console.log(result);
+  Object.keys(filters).forEach((k) => {
+    filters[k as keyof Filters] = result
+      .map((r) => (r as { [k: string]: string | null })[k])
+      .filter((e): e is Required<string> => !!e);
+  });
 
   return filters;
 }

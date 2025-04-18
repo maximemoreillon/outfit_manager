@@ -23,9 +23,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { readBrands, readColors, readFilters, readTypes } from "@/lib/misc";
-
-const filterProperties = ["type", "brand", "color"] as const;
+import { readFilters } from "@/lib/misc";
 
 const filterSchemaProperties = {
   color: z.string().nullable(),
@@ -43,20 +41,22 @@ type Props = {
   onUpdate?: (values: z.infer<typeof formSchema>) => void;
 };
 
-type Filters = {
-  [k: string]: string[];
-};
-
 export default function GarmentsFilters(props: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  const [filters, setFilters] = useState<Filters>({
+  const filtersDefaults: {
+    type: string[];
+    color: string[];
+    brand: string[];
+  } = {
     type: [],
     color: [],
     brand: [],
-  });
+  };
+
+  const [filters, setFilters] = useState(filtersDefaults);
 
   useEffect(() => {
     (async () => {
@@ -106,11 +106,11 @@ export default function GarmentsFilters(props: Props) {
         className="flex flex-col gap-2"
       >
         <div className="flex gap-4">
-          {filterProperties.map((f, i) => (
+          {Object.keys(filters).map((f, i) => (
             <FormField
               key={i}
               control={form.control}
-              name={f}
+              name={f as keyof typeof filters}
               render={({ field }) => (
                 <FormItem className="grow-1">
                   <FormLabel>{f}</FormLabel>
@@ -124,7 +124,7 @@ export default function GarmentsFilters(props: Props) {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value={null!}>Any</SelectItem>
-                        {filters[f].map((e, i) => (
+                        {filters[f as keyof typeof filters].map((e, i) => (
                           <SelectItem value={e} key={i}>
                             {e}
                           </SelectItem>
@@ -132,6 +132,7 @@ export default function GarmentsFilters(props: Props) {
                       </SelectContent>
                     </Select>
                   </FormControl>
+                  {/* <FormDescription>Search</FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
