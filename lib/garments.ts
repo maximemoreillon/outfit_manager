@@ -23,19 +23,21 @@ type ReadGarmentsParams = {
   search?: string | null;
   brand?: string | null;
   type?: string | null;
+  color?: string | null;
 };
 export async function readGarments(queryParams: ReadGarmentsParams) {
-  const limit = Number(queryParams.limit || "5");
+  const limit = Number(queryParams.limit || "10");
   const offset = Number(queryParams.offset || "0");
 
-  const { search, brand, type } = queryParams;
+  const { search, brand, type, color } = queryParams;
 
   // TODO: allow filtering by color, brand, etc
 
   const where = and(
     search ? ilike(garmentsTable.name, `%${search}%`) : undefined,
     brand ? eq(garmentsTable.brand, brand) : undefined,
-    type ? eq(garmentsTable.type, type) : undefined
+    type ? eq(garmentsTable.type, type) : undefined,
+    color ? eq(garmentsTable.color, color) : undefined
   );
 
   const [{ count: total }] = await db

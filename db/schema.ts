@@ -29,8 +29,8 @@ export const outfitGarmentsTable = pgTable("outfit_garments", {
   id: serial().primaryKey(),
   outfit_id: integer()
     .notNull()
-    .references(() => outfitsTable.id),
+    .references(() => outfitsTable.id, { onDelete: "cascade" }),
   garment_id: integer()
     .notNull()
-    .references(() => garmentsTable.id),
+    .references(() => garmentsTable.id, { onDelete: "cascade" }),
 });

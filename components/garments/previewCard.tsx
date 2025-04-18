@@ -44,14 +44,15 @@ export default function GarmentPreviewCard(props: Props) {
       <Card>
         <CardHeader>
           <CardTitle>{props.garment.name}</CardTitle>
-          <CardDescription>{props.garment.description}</CardDescription>
+          <CardDescription>{props.garment.brand}</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* TODO: Thumbnail */}
           <img
-            className="size-32"
+            className="w-full aspect-square object-cover"
             src={
               props.garment.image
-                ? `/api/images/${props.garment.image}`
+                ? `/api/images/garments/${props.garment.id}/${props.garment.image}`
                 : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
             }
             alt=""

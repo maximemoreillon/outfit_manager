@@ -59,6 +59,7 @@ export async function readFilters() {
     {}
   );
 
+  // TODO: This is probably not the right use of Distinct
   const result = await db
     .selectDistinct(selectDistinctQuery)
     .from(garmentsTable);
@@ -74,9 +75,13 @@ export async function readFilters() {
   */
 
   Object.keys(filters).forEach((k) => {
-    filters[k as keyof Filters] = result
-      .map((r) => (r as { [k: string]: string | null })[k])
-      .filter((e): e is Required<string> => !!e);
+    filters[k as keyof Filters] = [
+      ...new Set(
+        result
+          .map((r) => (r as { [k: string]: string | null })[k])
+          .filter((e): e is Required<string> => !!e)
+      ),
+    ];
   });
 
   return filters;

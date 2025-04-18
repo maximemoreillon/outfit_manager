@@ -18,7 +18,7 @@ export async function createOutfit(
 export async function readOutfits(queryParams: {
   [key: string]: string | string[] | undefined;
 }) {
-  const limit = Number(queryParams.limit || "5");
+  const limit = Number(queryParams.limit || "10");
   const offset = Number(queryParams.offset || "0");
 
   const [{ count: total }] = await db
