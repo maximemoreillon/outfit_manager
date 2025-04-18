@@ -18,13 +18,29 @@ type Props = {
   onRemove?: (garment: typeof garmentsTable.$inferSelect) => void;
 };
 
-// href={`/garments/${props.garment.id}`}
+interface WrapperProps<T> extends Props {
+  children: React.ReactNode;
+}
+
+const Wrapper = <T extends HTMLElement>({
+  children,
+  ...props
+}: WrapperProps<T>) => {
+  return (
+    <>
+      {!props.onRemove && !props.onSelect ? (
+        <Link href={`/garments/${props.garment.id}`}>{children}</Link>
+      ) : (
+        <>{children}</>
+      )}
+    </>
+  );
+};
 
 export default function GarmentPreviewCard(props: Props) {
-  const isLink = !props.onRemove && !props.onSelect;
-  const Wrapper = isLink ? Link : React.Fragment;
   return (
-    <Wrapper href={`/garments/${props.garment.id}`}>
+    // TODO: not super clean
+    <Wrapper {...props}>
       <Card>
         <CardHeader>
           <CardTitle>{props.garment.name}</CardTitle>
