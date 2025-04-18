@@ -15,6 +15,7 @@ type Props = {
   total: number;
   limit: number;
   offset: number;
+  className?: string;
 };
 export default function ServerPagination(props: Props) {
   const pageSpan = 2;

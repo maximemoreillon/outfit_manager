@@ -27,9 +27,7 @@ export default async function Garment({
 
             <GarmentImage garment={garment} />
 
-            <div className="col-span-2">
-              <OutfitsOfGarment garment={garment} />
-            </div>
+            <OutfitsOfGarment garment={garment} className="col-span-2" />
           </div>
         </div>
       )}

@@ -7,6 +7,7 @@ import OutfitPreviewCard from "@/components/outfits/previewCard";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
+  className?: string;
 };
 
 export default function OutfitsOfGarment(props: Props) {
@@ -25,7 +26,7 @@ export default function OutfitsOfGarment(props: Props) {
   }, []);
 
   return (
-    <div>
+    <div className={props.className}>
       <div className="flex justify-between my-4">
         <h3 className="my-4 text-2xl">Outfits using this garment</h3>
       </div>

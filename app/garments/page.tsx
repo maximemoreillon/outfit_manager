@@ -28,13 +28,14 @@ export default async function Garments({
       </div>
       <GarmentsFilters useSearchParams />
 
-      <>
-        <GarmentsList garments={items} />
+      <GarmentsList garments={items} />
 
-        <div className="my-4">
-          <ServerPagination total={total} limit={limit} offset={offset} />
-        </div>
-      </>
+      <ServerPagination
+        className="my-4"
+        total={total}
+        limit={limit}
+        offset={offset}
+      />
     </div>
   );
 }
