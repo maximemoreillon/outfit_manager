@@ -27,7 +27,7 @@ export default function OutfitPreviewCard(props: Props) {
             className="w-full"
             src={
               props.outfit.image
-                ? `/api/images/${props.outfit.image}`
+                ? `/api/images/outfits/${props.outfit.id}/${props.outfit.image}`
                 : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
             }
             alt=""
