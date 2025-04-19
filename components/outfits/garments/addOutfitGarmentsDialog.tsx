@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,7 +15,7 @@ import { garmentsTable, outfitsTable } from "@/db/schema";
 import { addGarmentToOutfit } from "@/lib/outfitGarments";
 import GarmentsFilters from "@/components/garments/filters";
 import ClientPagination from "@/components/clientPagination";
-import GarmentCards from "@/components/garments/cards";
+import GarmentsList from "@/components/garments/list";
 
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
@@ -60,7 +59,7 @@ export default function AddGarmentOufits(props: Props) {
         <Button variant="outline">Add garments</Button>
       </DialogTrigger>
       {/* TODO: Fix alignment problem */}
-      <DialogContent className="sm:max-w-[Npx] ">
+      <DialogContent className="sm:max-w-[Npx] max-w-5xl">
         <DialogHeader>
           <DialogTitle>Add garments</DialogTitle>
           <DialogDescription>Add garments to this outfit</DialogDescription>
@@ -70,7 +69,8 @@ export default function AddGarmentOufits(props: Props) {
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] ">
           {data && (
             <>
-              <GarmentCards garments={data.items} onSelect={handleSelect} />
+              <GarmentsList garments={data.items} onSelect={handleSelect} />
+              {/* <GarmentCards garments={data.items} onSelect={handleSelect} /> */}
               <ClientPagination
                 total={data.total}
                 limit={data.limit}

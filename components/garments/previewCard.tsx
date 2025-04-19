@@ -43,8 +43,11 @@ export default function GarmentPreviewCard(props: Props) {
     <Wrapper {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>{props.garment.name}</CardTitle>
-          <CardDescription>{props.garment.brand}</CardDescription>
+          <CardTitle className="truncate">{props.garment.name}</CardTitle>
+          <CardDescription className="flex justify-between">
+            <span>{props.garment.brand}</span>
+            <span>{props.garment.color}</span>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {/* TODO: Thumbnail */}
