@@ -52,7 +52,7 @@ export default function GarmentPreviewCard(props: Props) {
         <CardContent>
           {/* TODO: Thumbnail */}
           <img
-            className="w-full aspect-square object-cover"
+            className="w-full aspect-2/3  object-cover"
             src={
               props.garment.image
                 ? `/api/images/garments/${props.garment.id}/${props.garment.image}`

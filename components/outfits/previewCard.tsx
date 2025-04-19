@@ -24,7 +24,7 @@ export default function OutfitPreviewCard(props: Props) {
         </CardHeader> */}
         <CardContent>
           <img
-            className="w-full"
+            className="w-full aspect-2/3 object-cover"
             src={
               props.outfit.image
                 ? `/api/images/outfits/${props.outfit.id}/${props.outfit.image}`

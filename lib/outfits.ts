@@ -2,7 +2,7 @@
 
 import { outfitsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, count } from "drizzle-orm";
+import { eq, count, desc } from "drizzle-orm";
 
 export async function createOutfit(
   properties: typeof outfitsTable.$inferInsert
@@ -28,6 +28,7 @@ export async function readOutfits(queryParams: {
   const outfits = await db
     .select()
     .from(outfitsTable)
+    .orderBy(desc(outfitsTable.id))
     .offset(Number(offset))
     .limit(Number(limit));
 
