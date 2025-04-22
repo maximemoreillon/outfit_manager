@@ -8,7 +8,7 @@ export default function Login() {
         await signIn("auth0");
       }}
     >
-      <button type="submit">Signin with Auth0</button>
+      <button type="submit">Signin</button>
     </form>
   );
 }
