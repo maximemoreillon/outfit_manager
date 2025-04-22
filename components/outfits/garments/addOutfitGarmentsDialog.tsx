@@ -54,8 +54,13 @@ export default function AddGarmentOufits(props: Props) {
     toast(`${garment.name} added to outfit`);
   }
 
+  function handleOpenChange(open: boolean) {
+    // if (open) fetchGarments();
+    // if (!open) setData(null);
+  }
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline">Add garments</Button>
       </DialogTrigger>
@@ -63,10 +68,13 @@ export default function AddGarmentOufits(props: Props) {
       <DialogContent className="sm:max-w-[Npx] max-w-5xl">
         <DialogHeader>
           <DialogTitle>Add garments</DialogTitle>
-          <DialogDescription>Add garments to this outfit</DialogDescription>
+          {/* <DialogDescription>Add garments to this outfit</DialogDescription> */}
         </DialogHeader>
 
-        <GarmentsFilters onUpdate={setFetchParams} />
+        <GarmentsFilters
+          onUpdate={setFetchParams}
+          defaultValues={fetchParams}
+        />
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] ">
           {data && (
             <>

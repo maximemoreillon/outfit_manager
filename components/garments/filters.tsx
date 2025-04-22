@@ -36,9 +36,17 @@ const formSchema = z.object({
   ...filterSchemaProperties,
 });
 
+type Filters = {
+  search?: string;
+  type?: string;
+  brand?: string;
+  color?: string;
+};
+
 type Props = {
   useSearchParams?: boolean;
   onUpdate?: (values: z.infer<typeof formSchema>) => void;
+  defaultValues?: Filters;
 };
 
 export default function GarmentsFilters(props: Props) {
@@ -46,29 +54,22 @@ export default function GarmentsFilters(props: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const filtersDefaults: {
+  const [availableFilters, setAvailableFilters] = useState<{
     type: string[];
     color: string[];
     brand: string[];
-  } = {
+  }>({
     type: [],
     color: [],
     brand: [],
-  };
-
-  const [filters, setFilters] = useState(filtersDefaults);
-
-  useEffect(() => {
-    (async () => {
-      setFilters(await readFilters());
-    })();
-  }, []);
+  });
 
   const defaultValues = {
     search: "",
     type: "",
     brand: "",
     color: "",
+    ...props.defaultValues,
   };
 
   // Populate default values from search params if required
@@ -84,6 +85,12 @@ export default function GarmentsFilters(props: Props) {
     resolver: zodResolver(formSchema),
     defaultValues,
   });
+
+  useEffect(() => {
+    (async () => {
+      setAvailableFilters(await readFilters());
+    })();
+  }, []);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (props.onUpdate) props.onUpdate(values);
@@ -106,11 +113,11 @@ export default function GarmentsFilters(props: Props) {
         className="flex flex-col gap-2"
       >
         <div className="flex gap-4">
-          {Object.keys(filters).map((f) => (
+          {Object.keys(availableFilters).map((f) => (
             <FormField
               key={f}
               control={form.control}
-              name={f as keyof typeof filters}
+              name={f as keyof typeof availableFilters}
               render={({ field }) => (
                 <FormItem className="grow-1">
                   <FormLabel>{f}</FormLabel>
@@ -124,7 +131,9 @@ export default function GarmentsFilters(props: Props) {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value={null!}>Any</SelectItem>
-                        {filters[f as keyof typeof filters].map((e, i) => (
+                        {availableFilters[
+                          f as keyof typeof availableFilters
+                        ].map((e, i) => (
                           <SelectItem value={e} key={i}>
                             {e}
                           </SelectItem>
