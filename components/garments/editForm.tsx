@@ -26,6 +26,7 @@ const formSchema = z.object({
   quantity: z.coerce.number(),
   brand: z.string(),
   type: z.string(),
+  color: z.string(),
 });
 
 type Props = { garment: typeof garmentsTable.$inferSelect };
@@ -36,9 +37,11 @@ export default function GarmentEditForm(props: Props) {
     defaultValues: {
       name: props.garment.name,
       type: props.garment.type || "",
+      color: props.garment.color || "",
       brand: props.garment.brand || "",
       description: props.garment.description || "",
       comment: props.garment.comment || "",
+
       quantity: props.garment.quantity,
     },
   });
@@ -90,6 +93,21 @@ export default function GarmentEditForm(props: Props) {
                 <Input placeholder="Uniqlo" {...field} />
               </FormControl>
               <FormDescription>Brand of the garment</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="color"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Color</FormLabel>
+              <FormControl>
+                <Input placeholder="Navy" {...field} />
+              </FormControl>
+              <FormDescription>Color of the garment</FormDescription>
               <FormMessage />
             </FormItem>
           )}

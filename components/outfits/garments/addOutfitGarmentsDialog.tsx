@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-
+import { toast } from "sonner";
 import { readGarments } from "@/lib/garments";
 import { garmentsTable, outfitsTable } from "@/db/schema";
 import { addGarmentToOutfit } from "@/lib/outfitGarments";
@@ -51,6 +51,7 @@ export default function AddGarmentOufits(props: Props) {
       outfit_id: props.outfit.id,
     });
     props.onAdd(garment);
+    toast(`${garment.name} added to outfit`);
   }
 
   return (
