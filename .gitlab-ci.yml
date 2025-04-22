@@ -1,0 +1,26 @@
+stages:
+  - build
+
+  # Needed for Docker in docker build
+image: moreillon/ci-dind
+services:
+  - name: docker:24.0.7-dind
+
+variables:
+  APPLICATION_NAME: outfit-manager
+  CONTAINER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
+
+build-job:
+  stage: build
+  variables:
+    CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:next-${CI_COMMIT_TAG}
+  only:
+    - next
+  tags:
+    - dind
+  before_script:
+    - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
+  script:
+    - docker build -t ${CONTAINER_IMAGE} .
+    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_TAGGED}
+    - docker push ${CONTAINER_IMAGE_TAGGED}
