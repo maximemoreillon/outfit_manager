@@ -44,7 +44,7 @@ spec:
         - next.outfits.home.maximemoreillon.com
       secretName: outfit-manager-next-tls
   rules:
-    - host: ext.outfits.home.maximemoreillon.com
+    - host: next.outfits.home.maximemoreillon.com
       http:
         paths:
           - path: /
