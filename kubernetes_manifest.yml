@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outfit-manager-next
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: outfit-manager-next
+  template:
+    metadata:
+      labels:
+        app: outfit-manager-next
+    spec:
+      containers:
+        - name: outfit-manager-next
+          image: ${CONTAINER_IMAGE_TAGGED}
+          envFrom:
+            - secretRef:
+                name: outfit-manager-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: outfit-manager-next
+spec:
+  ports:
+    - port: 3000
+  selector:
+    app: outfit-manager-next
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: outfit-manager-next
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 5g
+    nginx/client_max_body_size: 5g
+spec:
+  tls:
+    - hosts:
+        - next.outfits.home.maximemoreillon.com
+      secretName: outfit-manager-next-tls
+  rules:
+    - host: ext.outfits.home.maximemoreillon.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: outfit-manager-next
+                port:
+                  number: 3000

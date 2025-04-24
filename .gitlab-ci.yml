@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 
   # Needed for Docker in docker build
 image: moreillon/ci-dind
@@ -9,11 +10,11 @@ services:
 variables:
   APPLICATION_NAME: outfit-manager
   CONTAINER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
+  CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:next-${CI_COMMIT_SHORT_SHA}
 
 build-job:
   stage: build
-  variables:
-    CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:next-${CI_COMMIT_SHORT_SHA}
+
   only:
     - next
   tags:
@@ -24,3 +25,14 @@ build-job:
     - docker build -t ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_TAGGED}
     - docker push ${CONTAINER_IMAGE_TAGGED}
+
+deploy-job:
+  stage: deploy
+  only:
+    - next
+  tags:
+    - dind
+  before_script:
+    - kubectl config use-context moreillon_ci/moreillon_k8s_home/kubernetes-agent:home
+  script:
+    - envsubst < kubernetes_manifest.yml | kubectl apply -n ${KUBERNETES_NAMESPACE} -f -
