@@ -11,12 +11,13 @@ type Props = {
 export default function DeleteGarmentButton(props: Props) {
   const router = useRouter();
   async function handleDelete() {
+    if (!confirm("Are you sure you want to delete this garment?")) return;
     await deleteGarment(props.id);
     router.push("/garments");
   }
   return (
     <Button variant="destructive" onClick={handleDelete}>
-      Delete item
+      Delete
     </Button>
   );
 }
