@@ -11,6 +11,7 @@ import {
 import { garmentsTable } from "@/db/schema";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
+import { thumbnailFilename } from "@/lib/config";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
@@ -37,7 +38,7 @@ export default function GarmentsTable(props: Props) {
                 className="size-32 object-contain"
                 src={
                   garment.image
-                    ? `/api/images/garments/${garment.id}/${garment.image}`
+                    ? `/api/garments/${garment.id}/thumbnail`
                     : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
                 }
                 alt=""

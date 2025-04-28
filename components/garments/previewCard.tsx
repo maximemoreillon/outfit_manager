@@ -11,6 +11,7 @@ import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { garmentsTable } from "@/db/schema";
 import React from "react";
+import { thumbnailFilename } from "@/lib/config";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
@@ -55,7 +56,7 @@ export default function GarmentPreviewCard(props: Props) {
             className="w-full aspect-2/3  object-cover"
             src={
               props.garment.image
-                ? `/api/images/garments/${props.garment.id}/${props.garment.image}`
+                ? `/api/garments/${props.garment.id}/thumbnail`
                 : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
             }
             alt=""
