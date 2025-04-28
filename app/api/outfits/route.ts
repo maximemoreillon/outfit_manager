@@ -1,7 +1,10 @@
 import { createOutfit, readOutfits } from "@/lib/outfits";
+import { type NextRequest } from "next/server";
 
-export async function GET(request: Request) {
-  const outfits = await readOutfits({});
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
+
+  const outfits = await readOutfits(Object.fromEntries(searchParams.entries()));
   return Response.json(outfits);
 }
 

@@ -1,4 +1,4 @@
-import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, unique } from "drizzle-orm/pg-core";
 
 export const garmentsTable = pgTable("garments", {
   id: serial().primaryKey(),
@@ -25,12 +25,16 @@ export const outfitsTable = pgTable("outfits", {
   user_id: text(),
 });
 
-export const outfitGarmentsTable = pgTable("outfit_garments", {
-  id: serial().primaryKey(),
-  outfit_id: integer()
-    .notNull()
-    .references(() => outfitsTable.id, { onDelete: "cascade" }),
-  garment_id: integer()
-    .notNull()
-    .references(() => garmentsTable.id, { onDelete: "cascade" }),
-});
+export const outfitGarmentsTable = pgTable(
+  "outfit_garments",
+  {
+    id: serial().primaryKey(),
+    outfit_id: integer()
+      .notNull()
+      .references(() => outfitsTable.id, { onDelete: "cascade" }),
+    garment_id: integer()
+      .notNull()
+      .references(() => garmentsTable.id, { onDelete: "cascade" }),
+  },
+  (table) => [unique().on(table.outfit_id, table.garment_id)]
+);

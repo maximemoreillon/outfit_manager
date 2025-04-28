@@ -11,7 +11,6 @@ export default auth((req) => {
     ) {
       return NextResponse.json({ message: "Auth required" }, { status: 401 });
     }
-
     if (req.nextUrl.pathname !== "/login") {
       const newUrl = new URL("/login", req.nextUrl.origin);
       return Response.redirect(newUrl);
@@ -20,7 +19,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  // matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
   matcher: ["/((?!api/auth|_next|.*\\..*).*)"],
-  // matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
