@@ -22,8 +22,8 @@ export default async function Outfits({
     <div>
       <Breadcrumbs />
 
-      <h2 className="text-2xl my-4">Outfits</h2>
-      <div className="my-4">
+      <div className="my-4 flex justify-between">
+        <h2 className="text-2xl">Outfits</h2>
         <Link href="/outfits/new" className={buttonVariants({})}>
           New outfit
         </Link>

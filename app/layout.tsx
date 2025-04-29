@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/themeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
 import { LogOut } from "lucide-react";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,13 +41,21 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <header className="flex  justify-between p-4 border-b">
-            <h1 className="text-3xl ">WM</h1>
-            {session && (
-              <a href="logout">
-                <LogOut />
-              </a>
-            )}
+          <header className="flex  justify-between px-6 py-4 border-b items-center">
+            <div className="flex items-center gap-8">
+              <h1 className="text-2xl ">Wardrobe manager</h1>
+              <nav className="flex items-center gap-4">
+                <Link href="/garments">Garments</Link>
+                <Link href="/outfits">Outfits</Link>
+              </nav>
+            </div>
+            <div>
+              {session && (
+                <a href="logout">
+                  <LogOut />
+                </a>
+              )}
+            </div>
           </header>
           <main className="px-4 my-4 mx-auto w-full max-w-5xl">{children}</main>
           <Toaster />
