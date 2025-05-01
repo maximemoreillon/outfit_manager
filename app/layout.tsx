@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
+import { Navbar } from "@/components/nabar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,7 +42,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <header className="flex  justify-between px-6 py-4 border-b items-center">
+          {/* <header className="flex  justify-between px-6 py-4 border-b items-center">
             <div className="flex items-center gap-8">
               <h1 className="text-2xl ">Wardrobe manager</h1>
               <nav className="flex items-center gap-4">
@@ -56,7 +57,8 @@ export default async function RootLayout({
                 </a>
               )}
             </div>
-          </header>
+          </header> */}
+          <Navbar />
           <main className="px-4 my-4 mx-auto w-full max-w-5xl">{children}</main>
           <Toaster />
         </ThemeProvider>
