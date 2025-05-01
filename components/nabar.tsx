@@ -18,7 +18,7 @@ export async function Navbar() {
   const session = await auth();
 
   return (
-    <header className="flex  justify-between px-6 py-4 border-b items-center">
+    <header className="flex justify-between px-6 py-4 border-b items-center">
       <div className="flex items-center gap-8">
         <h1 className="text-2xl ">Wardrobe manager</h1>
 

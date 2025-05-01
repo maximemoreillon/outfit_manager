@@ -1,7 +1,6 @@
 import OutfitPreviewCard from "@/components/outfits/previewCard";
 import ServerPagination from "@/components/serverPagination";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { auth } from "@/auth";
+import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { readOutfits } from "@/lib/outfits";
 

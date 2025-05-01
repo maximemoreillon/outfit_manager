@@ -42,7 +42,16 @@ export default function GarmentPreviewCard(props: Props) {
   return (
     // TODO: not super clean
     <Wrapper {...props}>
-      <Card>
+      <Card className="pt-0 overflow-hidden">
+        <img
+          className="w-full aspect-2/3  object-cover"
+          src={
+            props.garment.image
+              ? `/api/garments/${props.garment.id}/thumbnail`
+              : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
+          }
+          alt=""
+        />
         <CardHeader>
           <CardTitle className="truncate">{props.garment.name}</CardTitle>
           <CardDescription className="flex justify-between">
@@ -50,18 +59,7 @@ export default function GarmentPreviewCard(props: Props) {
             <span>{props.garment.color}</span>
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          {/* TODO: Thumbnail */}
-          <img
-            className="w-full aspect-2/3  object-cover"
-            src={
-              props.garment.image
-                ? `/api/garments/${props.garment.id}/thumbnail`
-                : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
-            }
-            alt=""
-          />
-        </CardContent>
+        {/* <CardContent></CardContent> */}
 
         <CardFooter className="flex gap-2">
           {(props.onSelect || props.onRemove) && (
