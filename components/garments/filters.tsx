@@ -92,6 +92,7 @@ export default function GarmentsFilters(props: Props) {
     })();
   }, []);
 
+  // TODO: have this just for search
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (props.onUpdate) props.onUpdate(values);
     if (props.useSearchParams) {

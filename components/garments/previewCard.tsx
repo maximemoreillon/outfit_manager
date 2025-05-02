@@ -59,39 +59,40 @@ export default function GarmentPreviewCard(props: Props) {
             <span>{props.garment.color}</span>
           </CardDescription>
         </CardHeader>
-        {/* <CardContent></CardContent> */}
 
-        <CardFooter className="flex gap-2">
-          {(props.onSelect || props.onRemove) && (
-            <Link
-              href={`/garments/${props.garment.id}`}
-              className={buttonVariants({})}
-            >
-              See
-            </Link>
-          )}
+        {(props.onRemove || props.onSelect) && (
+          <CardFooter className="flex gap-2">
+            {(props.onSelect || props.onRemove) && (
+              <Link
+                href={`/garments/${props.garment.id}`}
+                className={buttonVariants({})}
+              >
+                See
+              </Link>
+            )}
 
-          {props.onSelect && (
-            <Button
-              onClick={() => {
-                if (props.onSelect) props.onSelect(props.garment);
-              }}
-            >
-              Select
-            </Button>
-          )}
+            {props.onSelect && (
+              <Button
+                onClick={() => {
+                  if (props.onSelect) props.onSelect(props.garment);
+                }}
+              >
+                Select
+              </Button>
+            )}
 
-          {props.onRemove && (
-            <Button
-              variant="destructive"
-              onClick={() => {
-                if (props.onRemove) props.onRemove(props.garment);
-              }}
-            >
-              Remove
-            </Button>
-          )}
-        </CardFooter>
+            {props.onRemove && (
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  if (props.onRemove) props.onRemove(props.garment);
+                }}
+              >
+                Remove
+              </Button>
+            )}
+          </CardFooter>
+        )}
       </Card>
     </Wrapper>
   );
