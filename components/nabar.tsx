@@ -18,17 +18,17 @@ export async function Navbar() {
   const session = await auth();
 
   return (
-    <header className="flex justify-between px-6 py-4 border-b items-center">
-      <div className="flex items-center gap-8">
+    <header className="flex justify-between px-6 py-4 border-b items-baseline">
+      <div className="flex items-baseline gap-8">
         <h1 className="text-2xl ">Wardrobe manager</h1>
 
-        <nav className="hidden lg:flex items-center gap-4">
+        <nav className="hidden lg:flex gap-4">
           <Link href="/garments">Garments</Link>
           <Link href="/outfits">Outfits</Link>
         </nav>
       </div>
 
-      <div className="hidden lg:flex items-center gap-4">
+      <div className="hidden lg:flex gap-4">
         {session && (
           <a href="logout">
             <LogOut />

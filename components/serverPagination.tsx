@@ -47,7 +47,7 @@ export default function ServerPagination(props: Props) {
   }
 
   return (
-    <Pagination>
+    <Pagination className={props.className}>
       <PaginationContent>
         {getCurrentPageNumber() > 0 && (
           <PaginationItem>

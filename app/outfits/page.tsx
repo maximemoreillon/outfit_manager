@@ -5,17 +5,14 @@ import Link from "next/link";
 import { readOutfits } from "@/lib/outfits";
 
 import Breadcrumbs from "@/components/breadcrumbs";
+
 export default async function Outfits({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const {
-    items: outfits,
-    total,
-    offset,
-    limit,
-  } = await readOutfits(await searchParams);
+  const params = { ...(await searchParams), limit: "9" };
+  const { items: outfits, total, offset, limit } = await readOutfits(params);
 
   return (
     <div>

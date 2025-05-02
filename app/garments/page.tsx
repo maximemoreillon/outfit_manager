@@ -12,9 +12,9 @@ export default async function Garments({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { items, total, offset, limit } = await readGarments(
-    await searchParams
-  );
+  const params = { ...(await searchParams), limit: "9" };
+
+  const { items, total, offset, limit } = await readGarments(params);
 
   return (
     <div>
