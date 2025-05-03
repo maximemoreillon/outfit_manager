@@ -18,7 +18,8 @@ build-job:
   only:
     - next
   tags:
-    - dind
+    # - dind
+    - talos
   before_script:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
   script:
@@ -31,8 +32,9 @@ deploy-job:
   only:
     - next
   tags:
-    - dind
+    # - dind
+    - talos
   before_script:
-    - kubectl config use-context moreillon_ci/moreillon_k8s_home/kubernetes-agent:home
+    - kubectl config use-context moreillon_ci/moreillon_k8s_home/kubernetes-agent:home-talos
   script:
     - envsubst < kubernetes_manifest.yml | kubectl apply -n ${KUBERNETES_NAMESPACE} -f -
