@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { readGarments } from "@/lib/garments";
 import { garmentsTable, outfitsTable } from "@/db/schema";
 import { addGarmentToOutfit } from "@/lib/outfitGarments";
-import GarmentsFilters from "@/components/garments/filters";
+import GarmentsFilters from "@/components/garments/queryParams";
 import ClientPagination from "@/components/clientPagination";
 import GarmentsList from "@/components/garments/list";
 

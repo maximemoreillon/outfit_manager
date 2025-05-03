@@ -124,8 +124,12 @@ export default function GarmentsFilters(props: Props) {
                   <FormLabel>{f}</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={field.onChange}
                       value={field.value || ""}
+                      // Not super clan by does the job simply
+                      onValueChange={(e) => {
+                        field.onChange(e);
+                        form.handleSubmit(onSubmit)();
+                      }}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Any" />

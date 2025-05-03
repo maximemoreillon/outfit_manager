@@ -3,7 +3,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { readGarments } from "@/lib/garments";
 import Link from "next/link";
 
-import GarmentsFilters from "@/components/garments/filters";
+import GarmentsFilters from "@/components/garments/queryParams";
 import GarmentsList from "@/components/garments/list";
 import Breadcrumbs from "@/components/breadcrumbs";
 
