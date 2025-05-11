@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { updateOutfit } from "@/lib/outfits";
 import { outfitsTable } from "@/db/schema";
+import { toast } from "sonner";
+import { useState } from "react";
 
 const formSchema = z.object({
   description: z.string(),
@@ -25,6 +27,8 @@ const formSchema = z.object({
 type Props = { outfit: typeof outfitsTable.$inferSelect };
 
 export default function OutfitEditForm(props: Props) {
+  const [isSubmitting, setSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,7 +38,10 @@ export default function OutfitEditForm(props: Props) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setSubmitting(true);
     await updateOutfit(props.outfit.id, { ...props.outfit, ...values });
+    setSubmitting(false);
+    toast("Outfit saved");
   }
 
   return (
@@ -70,7 +77,9 @@ export default function OutfitEditForm(props: Props) {
           )}
         />
 
-        <Button type="submit">Save</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          Save
+        </Button>
       </form>
     </Form>
   );
