@@ -2,40 +2,39 @@ stages:
   - build
   - deploy
 
-variables:
-  APPLICATION_NAME: outfit-manager
-  CONTAINER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
-  CONTAINER_IMAGE_LATEST: ${CONTAINER_IMAGE}:latest
-  CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:${CI_COMMIT_TAG}
-  K8S_INGRESS_HOST: api.outfits.home.maximemoreillon.com
-
-# Needed for Docker in docker build
+  # Needed for Docker in docker build
 image: moreillon/ci-dind
 services:
   - name: docker:24.0.7-dind
 
-build:
+variables:
+  APPLICATION_NAME: outfit-manager
+  CONTAINER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
+  CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:next-${CI_COMMIT_SHORT_SHA}
+
+build-job:
   stage: build
+
   only:
-    - tags
+    - next
   tags:
     - dind
+    # - talos
   before_script:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
   script:
     - docker build -t ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_TAGGED}
-    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
     - docker push ${CONTAINER_IMAGE_TAGGED}
-    - docker push ${CONTAINER_IMAGE_LATEST}
 
-deploy:
-  only:
-    - tags
+deploy-job:
   stage: deploy
+  only:
+    - next
   tags:
-    - dind
+    # - dind
+    - talos
   before_script:
-    - kubectl config use-context moreillon_ci/moreillon_k8s_home/kubernetes-agent:home
+    - kubectl config use-context moreillon_ci/moreillon_k8s_home/kubernetes-agent:home-talos
   script:
     - envsubst < kubernetes_manifest.yml | kubectl apply -n ${KUBERNETES_NAMESPACE} -f -

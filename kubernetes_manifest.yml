@@ -1,77 +1,59 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ${APPLICATION_NAME}
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 50Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${APPLICATION_NAME}
+  name: outfit-manager
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ${APPLICATION_NAME}
+      app: outfit-manager
   template:
     metadata:
       labels:
-        app: ${APPLICATION_NAME}
+        app: outfit-manager
     spec:
       containers:
-        - name: ${APPLICATION_NAME}
+        - name: outfit-manager
           image: ${CONTAINER_IMAGE_TAGGED}
           envFrom:
             - secretRef:
-                name: environment-variables
-            - secretRef:
                 name: auth0-env
-          volumeMounts:
-            - mountPath: "/usr/src/app/uploads"
-              name: ${APPLICATION_NAME}
-      volumes:
-        - name: ${APPLICATION_NAME}
-          persistentVolumeClaim:
-            claimName: ${APPLICATION_NAME}
+            - secretRef:
+                name: outfit-manager-env
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ${APPLICATION_NAME}
+  name: outfit-manager
 spec:
-  type: ClusterIP
-  selector:
-    app: ${APPLICATION_NAME}
   ports:
-    - port: 80
+    - port: 3000
+      nodePort: 30030
+  selector:
+    app: outfit-manager
+  type: NodePort
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ${APPLICATION_NAME}
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/proxy-body-size: 5g
-    nginx/client_max_body_size: 5g
-spec:
-  tls:
-    - hosts:
-        - ${K8S_INGRESS_HOST}
-      secretName: ${APPLICATION_NAME}
-  rules:
-    - host: ${K8S_INGRESS_HOST}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: ${APPLICATION_NAME}
-                port:
-                  number: 80
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: outfit-manager
+#   annotations:
+#     cert-manager.io/cluster-issuer: letsencrypt
+#     nginx.ingress.kubernetes.io/proxy-body-size: 5g
+#     nginx/client_max_body_size: 5g
+# spec:
+#   tls:
+#     - hosts:
+#         - next.outfits.home.maximemoreillon.com
+#       secretName: outfit-manager-tls
+#   rules:
+#     - host: next.outfits.home.maximemoreillon.com
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: outfit-manager
+#                 port:
+#                   number: 3000
