@@ -16,7 +16,7 @@ build-job:
   stage: build
 
   only:
-    - next
+    - master
   tags:
     - dind
     # - talos
@@ -30,7 +30,7 @@ build-job:
 deploy-job:
   stage: deploy
   only:
-    - next
+    - master
   tags:
     # - dind
     - talos
