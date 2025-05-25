@@ -28,32 +28,31 @@ metadata:
 spec:
   ports:
     - port: 3000
-      nodePort: 30030
   selector:
     app: outfit-manager
-  type: NodePort
+  type: ClusterIP
 ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: outfit-manager
-#   annotations:
-#     cert-manager.io/cluster-issuer: letsencrypt
-#     nginx.ingress.kubernetes.io/proxy-body-size: 5g
-#     nginx/client_max_body_size: 5g
-# spec:
-#   tls:
-#     - hosts:
-#         - next.outfits.home.maximemoreillon.com
-#       secretName: outfit-manager-tls
-#   rules:
-#     - host: next.outfits.home.maximemoreillon.com
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: outfit-manager
-#                 port:
-#                   number: 3000
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: outfit-manager
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 5g
+    nginx/client_max_body_size: 5g
+spec:
+  tls:
+    - hosts:
+        - outfits.home.maximemoreillon.com
+      secretName: outfit-manager-tls
+  rules:
+    - host: outfits.home.maximemoreillon.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: outfit-manager
+                port:
+                  number: 3000
