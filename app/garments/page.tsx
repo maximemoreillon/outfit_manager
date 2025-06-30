@@ -6,6 +6,7 @@ import Link from "next/link";
 import GarmentsFilters from "@/components/garments/queryParams";
 import GarmentsList from "@/components/garments/list";
 import Breadcrumbs from "@/components/breadcrumbs";
+import { Plus } from "lucide-react";
 
 export default async function Garments({
   searchParams,
@@ -23,7 +24,7 @@ export default async function Garments({
       <div className="my-4 flex justify-between">
         <h2 className="text-2xl">Garments</h2>
         <Link href="/garments/new" className={buttonVariants({})}>
-          New garment
+          <Plus /> New garment
         </Link>
       </div>
       <GarmentsFilters useSearchParams />

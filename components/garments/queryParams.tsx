@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { readFilters } from "@/lib/misc";
+import { Search } from "lucide-react";
 
 const filterSchemaProperties = {
   color: z.string().nullable(),
@@ -169,7 +170,9 @@ export default function GarmentsFilters(props: Props) {
               </FormItem>
             )}
           />
-          <Button type="submit">Set</Button>
+          <Button type="submit" size="icon" className="size-8">
+            <Search />
+          </Button>
         </div>
       </form>
     </Form>

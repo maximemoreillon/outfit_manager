@@ -4,7 +4,7 @@ import { useState } from "react";
 import GarmentsTable from "./table";
 import GarmentCards from "./cards";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Table, GalleryHorizontal } from "lucide-react";
+import { List, Grid2X2 } from "lucide-react";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
@@ -25,10 +25,10 @@ export default function GarmentsList(props: Props) {
         }}
       >
         <ToggleGroupItem value="table">
-          <Table />
+          <List />
         </ToggleGroupItem>
         <ToggleGroupItem value="cards">
-          <GalleryHorizontal />
+          <Grid2X2 />
         </ToggleGroupItem>
       </ToggleGroup>
 

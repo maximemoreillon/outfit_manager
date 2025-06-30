@@ -5,6 +5,7 @@ import Link from "next/link";
 import { readOutfits } from "@/lib/outfits";
 
 import Breadcrumbs from "@/components/breadcrumbs";
+import { Plus } from "lucide-react";
 
 export default async function Outfits({
   searchParams,
@@ -21,7 +22,7 @@ export default async function Outfits({
       <div className="my-4 flex justify-between">
         <h2 className="text-2xl">Outfits</h2>
         <Link href="/outfits/new" className={buttonVariants({})}>
-          New outfit
+          <Plus /> New outfit
         </Link>
       </div>
       <div className="grid gap-4 grid-cols-3">
