@@ -24,7 +24,7 @@ export default async function Garments({
       <div className="my-4 flex justify-between">
         <h2 className="text-2xl">Garments</h2>
         <Link href="/garments/new" className={buttonVariants({})}>
-          <Plus /> New garment
+          <Plus /> New
         </Link>
       </div>
       <GarmentsFilters useSearchParams />

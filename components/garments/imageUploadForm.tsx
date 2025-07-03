@@ -17,6 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { garmentsTable } from "@/db/schema";
+import { useState } from "react";
+import { Upload } from "lucide-react";
 
 // TODO: refine
 const formSchema = z.object({
@@ -29,11 +31,13 @@ type Props = {
 };
 
 export default function ImageUploadForm(props: Props) {
+  const [uploading, setUploading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
+    setUploading(true);
     const [imageFile] = imageFileList;
     const { image: imageKey } = await uploadGarmentImage(
       props.garment.id,
@@ -41,6 +45,7 @@ export default function ImageUploadForm(props: Props) {
     );
 
     props.onUpdate(imageKey);
+    setUploading(false);
   }
 
   return (
@@ -53,7 +58,7 @@ export default function ImageUploadForm(props: Props) {
           control={form.control}
           name="imageFileList"
           render={() => (
-            <FormItem>
+            <FormItem className="w-full">
               <FormLabel>Picture</FormLabel>
               <FormControl>
                 <Input {...form.register("imageFileList")} type="file" />
@@ -64,7 +69,9 @@ export default function ImageUploadForm(props: Props) {
           )}
         />
 
-        <Button type="submit">Upload</Button>
+        <Button type="submit" disabled={uploading}>
+          <Upload />
+        </Button>
       </form>
     </Form>
   );
