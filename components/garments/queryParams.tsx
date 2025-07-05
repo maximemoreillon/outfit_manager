@@ -98,6 +98,7 @@ export default function GarmentsFilters(props: Props) {
     if (props.onUpdate) props.onUpdate(values);
     if (props.useSearchParams) {
       const params = new URLSearchParams(searchParams.toString());
+      params.delete("offset");
 
       for (const [key, value] of Object.entries(values)) {
         if (value) params.set(key, value);
