@@ -12,7 +12,6 @@
     @apply bg-background text-foreground;
   }
 }
-
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -77,7 +76,7 @@
   --popover: oklch(0.269 0 0);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.5198 0.1956 24.7048);
-  --primary-foreground: oklch(0.9706 0.0017 67.8024);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
