@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { createGarment } from "@/lib/garments";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Loader2Icon, Save } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -28,6 +30,8 @@ const formSchema = z.object({
 export default function GarmentCreateForm() {
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,9 +41,11 @@ export default function GarmentCreateForm() {
 
   // TODO: add loading state
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     const { id } = await createGarment(values);
 
     router.push(`/garments/${id}`);
+    setLoading(false);
   }
 
   return (
@@ -60,7 +66,19 @@ export default function GarmentCreateForm() {
           )}
         />
 
-        <Button type="submit">Save item</Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2Icon className="animate-spin" />
+              <span>Saving...</span>
+            </>
+          ) : (
+            <>
+              <Save />
+              <span>Save </span>
+            </>
+          )}
+        </Button>
       </form>
     </Form>
   );
