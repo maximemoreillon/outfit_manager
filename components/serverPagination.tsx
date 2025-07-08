@@ -57,7 +57,14 @@ export default function ServerPagination(props: Props) {
           </PaginationItem>
         )}
 
+        {/* TODO: why the assymetry? */}
         {getCurrentPageNumber() > pageSpan && (
+          <PaginationItem>
+            <PaginationLink href={getPageHref(0)}>{1}</PaginationLink>
+          </PaginationItem>
+        )}
+
+        {getCurrentPageNumber() > pageSpan + 1 && (
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
@@ -74,13 +81,21 @@ export default function ServerPagination(props: Props) {
           </PaginationItem>
         ))}
 
-        {getCurrentPageNumber() < getPagesTotal() - pageSpan - 1 && (
+        {getCurrentPageNumber() < getPagesTotal() - pageSpan - 2 && (
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
         )}
 
-        {getCurrentPageNumber() < getPagesTotal() - 1 && (
+        {getCurrentPageNumber() < getPagesTotal() - pageSpan - 1 && (
+          <PaginationItem>
+            <PaginationLink href={getPageHref(getPagesTotal() - 1)}>
+              {getPagesTotal()}
+            </PaginationLink>
+          </PaginationItem>
+        )}
+
+        {getCurrentPageNumber() < getPagesTotal() && (
           <PaginationItem>
             <PaginationNext href={getPageHref(getCurrentPageNumber() + 1)} />
           </PaginationItem>
