@@ -18,7 +18,7 @@ import { updateGarment } from "@/lib/garments";
 import { garmentsTable } from "@/db/schema";
 import { toast } from "sonner";
 import { useState } from "react";
-import { Save } from "lucide-react";
+import { Loader2Icon, Save } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -167,7 +167,15 @@ export default function GarmentEditForm(props: Props) {
         />
 
         <Button type="submit" disabled={isSubmitting}>
-          <Save /> Save
+          {isSubmitting ? (
+            <>
+              <Loader2Icon className="animate-spin" /> Saving
+            </>
+          ) : (
+            <>
+              <Save /> Save
+            </>
+          )}
         </Button>
       </form>
     </Form>

@@ -20,6 +20,8 @@ import { createGarment } from "@/lib/garments";
 import { useRouter } from "next/navigation";
 import { uploadImage, uploadOutfitImage } from "@/lib/images";
 import { createOutfit } from "@/lib/outfits";
+import { useState } from "react";
+import { Loader2Icon, Save } from "lucide-react";
 
 const formSchema = z.object({
   imageFileList: z.custom<FileList>(),
@@ -27,6 +29,7 @@ const formSchema = z.object({
 
 export default function OutfitCreateForm() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,10 +37,12 @@ export default function OutfitCreateForm() {
 
   async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
     const [imageFile] = imageFileList;
+    setLoading(true);
 
     const { id } = await createOutfit({});
     await uploadOutfitImage(id, imageFile);
     router.push(`/outfits/${id}`);
+    setLoading(false);
   }
 
   return (
@@ -61,7 +66,19 @@ export default function OutfitCreateForm() {
           )}
         />
 
-        <Button type="submit">Upload</Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2Icon className="animate-spin" />
+              <span>Saving...</span>
+            </>
+          ) : (
+            <>
+              <Save />
+              <span>Save </span>
+            </>
+          )}
+        </Button>
       </form>
     </Form>
   );
