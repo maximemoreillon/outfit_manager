@@ -78,6 +78,4 @@ export async function updateGarment(
 
 export async function deleteGarment(id: number) {
   await db.delete(garmentsTable).where(eq(garmentsTable.id, Number(id)));
-
-  return { id };
 }
