@@ -1,5 +1,6 @@
 "use client";
 
+// TODO: this probably did not need to be a dedicated component
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -15,10 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createGarment } from "@/lib/garments";
-
-import { useRouter } from "next/navigation";
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { Loader2Icon, Save } from "lucide-react";
 import { createGarmentAction } from "@/actions/garments";
 
@@ -69,6 +67,9 @@ export default function GarmentCreateForm() {
             </>
           )}
         </Button>
+        {state?.error && (
+          <div className="text-red-700 text-center">{state.error}</div>
+        )}
       </form>
     </Form>
   );
