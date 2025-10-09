@@ -14,11 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { updateGarment } from "@/lib/garments";
 import { garmentsTable } from "@/db/schema";
 import { toast } from "sonner";
-import { useState } from "react";
+import { startTransition, useActionState, useEffect } from "react";
 import { Loader2Icon, Save } from "lucide-react";
+import { updateGarmentAction } from "@/actions/garments";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -35,8 +35,6 @@ const formSchema = z.object({
 type Props = { garment: typeof garmentsTable.$inferSelect };
 
 export default function GarmentEditForm(props: Props) {
-  const [isSubmitting, setSubmitting] = useState(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,12 +49,16 @@ export default function GarmentEditForm(props: Props) {
     },
   });
 
+  const actionWithId = updateGarmentAction.bind(null, props.garment.id);
+  const [state, action, pending] = useActionState(actionWithId, null);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setSubmitting(true);
-    await updateGarment(props.garment.id, values);
-    setSubmitting(false);
-    toast(`Garment saved`);
+    startTransition(() => action(values));
   }
+
+  useEffect(() => {
+    if (state?.success) toast(`Garment saved`);
+  }, [state]);
 
   return (
     <Form {...form}>
@@ -166,8 +168,8 @@ export default function GarmentEditForm(props: Props) {
           )}
         />
 
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? (
+        <Button type="submit" disabled={pending}>
+          {pending ? (
             <>
               <Loader2Icon className="animate-spin" /> Saving
             </>
