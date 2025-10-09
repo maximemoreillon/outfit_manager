@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import { Loader2Icon, Save } from "lucide-react";
 import { createOutfitAction } from "@/actions/outfits";
 
@@ -31,9 +31,16 @@ export default function OutfitCreateForm() {
 
   const [state, action, pending] = useActionState(createOutfitAction, null);
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    startTransition(() => action(values));
+  }
+
   return (
     <Form {...form}>
-      <form action={action} className="flex gap-2 items-end my-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex gap-2 items-end my-4"
+      >
         <FormField
           control={form.control}
           name="imageFileList"

@@ -1,23 +1,21 @@
 "use server";
 
+import { outfitsTable } from "@/db/schema";
 import { uploadOutfitImage } from "@/lib/images";
 import { createOutfit } from "@/lib/outfits";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
-export async function createOutfitAction(state: any, formData: FormData) {
-  const schema = z.object({
-    imageFileList: z.custom<FileList>(),
-  });
-  const { data, error } = schema.safeParse({
-    imageFileList: formData.get("imageFileList"),
-  });
-
-  if (error) return { error: error.message };
-
-  const { id } = await createOutfit({});
-  const [imageFile] = data.imageFileList;
-  await uploadOutfitImage(id, imageFile);
-
-  return redirect(`/outfits/${id}`);
+export async function createOutfitAction(
+  state: any,
+  data: { imageFileList: FileList }
+) {
+  let newOutfit: typeof outfitsTable.$inferSelect;
+  try {
+    newOutfit = await createOutfit({});
+    const [imageFile] = data.imageFileList;
+    await uploadOutfitImage(newOutfit.id, imageFile);
+  } catch (error: any) {
+    return { error: error.message };
+  }
+  return redirect(`/outfits/${newOutfit.id}`);
 }

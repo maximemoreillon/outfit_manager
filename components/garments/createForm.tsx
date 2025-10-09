@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import { Loader2Icon, Save } from "lucide-react";
 import { createGarmentAction } from "@/actions/garments";
 
@@ -36,9 +36,13 @@ export default function GarmentCreateForm() {
 
   const [state, action, pending] = useActionState(createGarmentAction, null);
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    startTransition(() => action(values));
+  }
+
   return (
     <Form {...form}>
-      <form action={action} className="space-y-8">
+      <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
