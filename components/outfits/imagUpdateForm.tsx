@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { uploadOutfitImage } from "@/lib/images";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { outfitsTable } from "@/db/schema";
+import { uploadImageAction } from "@/actions/outfits";
+import { startTransition, useActionState, useEffect } from "react";
+import { toast } from "sonner";
 
 // TODO: refine
 const formSchema = z.object({
@@ -33,15 +35,17 @@ export default function ImageUploadForm(props: Props) {
     resolver: zodResolver(formSchema),
   });
 
-  async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
-    const [imageFile] = imageFileList;
-    const { image: imageKey } = await uploadOutfitImage(
-      props.outfit.id,
-      imageFile
-    );
+  const actionWithId = uploadImageAction.bind(null, props.outfit.id);
+  const [state, action, pending] = useActionState(actionWithId, null);
 
-    props.onUpdate(imageKey);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    startTransition(() => action(values));
   }
+
+  useEffect(() => {
+    if (state?.success) props.onUpdate(state.data?.image);
+    else if (state?.error) toast(state.error);
+  }, [state]);
 
   return (
     <Form {...form}>
@@ -64,7 +68,9 @@ export default function ImageUploadForm(props: Props) {
           )}
         />
 
-        <Button type="submit">Upload</Button>
+        <Button type="submit" disabled={pending}>
+          Upload
+        </Button>
       </form>
     </Form>
   );

@@ -41,3 +41,19 @@ export async function deleteOutfitAction(state: any, id: number) {
   }
   return redirect(`/outfits`);
 }
+
+export async function uploadImageAction(
+  id: number,
+  state: any,
+  values: {
+    imageFileList: FileList;
+  }
+) {
+  try {
+    const [imageFile] = values.imageFileList;
+    const data = await uploadOutfitImage(id, imageFile);
+    return { error: null, success: true, data };
+  } catch (error: any) {
+    return { error: error.message, success: false, data: null };
+  }
+}

@@ -2,6 +2,7 @@
 
 import { garmentsTable } from "@/db/schema";
 import { createGarment, deleteGarment, updateGarment } from "@/lib/garments";
+import { uploadGarmentImage } from "@/lib/images";
 import { redirect } from "next/navigation";
 
 type ItemInsert = typeof garmentsTable.$inferInsert;
@@ -36,4 +37,20 @@ export async function deleteGarmentAction(state: any, id: number) {
     return { error: error.message };
   }
   return redirect(`/outfits`);
+}
+
+export async function uploadImageAction(
+  id: number,
+  state: any,
+  values: {
+    imageFileList: FileList;
+  }
+) {
+  try {
+    const [imageFile] = values.imageFileList;
+    const data = await uploadGarmentImage(id, imageFile);
+    return { error: null, success: true, data };
+  } catch (error: any) {
+    return { error: error.message, success: false, data: null };
+  }
 }
