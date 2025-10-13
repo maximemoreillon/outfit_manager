@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { uploadGarmentImage } from "@/lib/images";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,36 +16,37 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { garmentsTable } from "@/db/schema";
-import { useState } from "react";
+import { startTransition, useActionState, useEffect } from "react";
 import { Upload } from "lucide-react";
-
-// TODO: refine
-const formSchema = z.object({
-  imageFileList: z.custom<FileList>(),
-});
+import { uploadImageAction } from "@/actions/garments";
+import { toast } from "sonner";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
   onUpdate: Function;
 };
 
+// TODO: refine
+const formSchema = z.object({
+  imageFileList: z.custom<FileList>(),
+});
+
 export default function ImageUploadForm(props: Props) {
-  const [uploading, setUploading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
-    setUploading(true);
-    const [imageFile] = imageFileList;
-    const { image: imageKey } = await uploadGarmentImage(
-      props.garment.id,
-      imageFile
-    );
+  const actionWithId = uploadImageAction.bind(null, props.garment.id);
+  const [state, action, pending] = useActionState(actionWithId, null);
 
-    props.onUpdate(imageKey);
-    setUploading(false);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    startTransition(() => action(values));
   }
+
+  useEffect(() => {
+    if (state?.success) props.onUpdate(state.data?.image);
+    else if (state?.error) toast(state.error);
+  }, [state]);
 
   return (
     <Form {...form}>
@@ -69,7 +69,7 @@ export default function ImageUploadForm(props: Props) {
           )}
         />
 
-        <Button type="submit" disabled={uploading}>
+        <Button type="submit" disabled={pending}>
           <Upload />
         </Button>
       </form>

@@ -1,36 +1,30 @@
 "use client";
 
+import { deleteGarmentAction } from "@/actions/garments";
 import { Button } from "@/components/ui/button";
-import { deleteGarment } from "@/lib/garments";
 import { Loader2Icon, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { startTransition, useActionState, useEffect } from "react";
+import { toast } from "sonner";
 
 type Props = {
   id: number;
 };
 
 export default function DeleteGarmentButton(props: Props) {
-  const router = useRouter();
+  const [state, action, pending] = useActionState(deleteGarmentAction, null);
 
-  const [deleting, setDeleting] = useState(false);
-
-  // TODO: loader
-  async function handleDelete() {
-    if (!confirm("Are you sure you want to delete this garment?")) return;
-    setDeleting(true);
-    await deleteGarment(props.id);
-    router.push("/garments");
-    setDeleting(false);
+  async function onClick() {
+    if (!confirm("Are you sure you want to delete this outfit?")) return;
+    startTransition(() => action(props.id));
   }
+
+  useEffect(() => {
+    if (state?.error) toast(state?.error);
+  }, [state]);
+
   return (
-    <Button
-      onClick={handleDelete}
-      variant="outline"
-      size="icon"
-      disabled={deleting}
-    >
-      {deleting ? <Loader2Icon className="animate-spin" /> : <Trash />}
+    <Button onClick={onClick} variant="outline" size="icon" disabled={pending}>
+      {pending ? <Loader2Icon className="animate-spin" /> : <Trash />}
     </Button>
   );
 }

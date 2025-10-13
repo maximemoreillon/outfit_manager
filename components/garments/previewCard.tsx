@@ -11,7 +11,6 @@ import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { garmentsTable } from "@/db/schema";
 import React from "react";
-import { thumbnailFilename } from "@/lib/config";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;

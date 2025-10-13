@@ -15,34 +15,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createGarment } from "@/lib/garments";
 
-import { useRouter } from "next/navigation";
-import { uploadImage, uploadOutfitImage } from "@/lib/images";
-import { createOutfit } from "@/lib/outfits";
-import { useState } from "react";
+import { startTransition, useActionState } from "react";
 import { Loader2Icon, Save } from "lucide-react";
+import { createOutfitAction } from "@/actions/outfits";
 
 const formSchema = z.object({
   imageFileList: z.custom<FileList>(),
 });
 
 export default function OutfitCreateForm() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  async function onSubmit({ imageFileList }: z.infer<typeof formSchema>) {
-    const [imageFile] = imageFileList;
-    setLoading(true);
+  const [state, action, pending] = useActionState(createOutfitAction, null);
 
-    const { id } = await createOutfit({});
-    await uploadOutfitImage(id, imageFile);
-    router.push(`/outfits/${id}`);
-    setLoading(false);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    startTransition(() => action(values));
   }
 
   return (
@@ -66,8 +56,8 @@ export default function OutfitCreateForm() {
           )}
         />
 
-        <Button type="submit" disabled={loading}>
-          {loading ? (
+        <Button type="submit" disabled={pending}>
+          {pending ? (
             <>
               <Loader2Icon className="animate-spin" />
               <span>Saving...</span>
@@ -79,6 +69,9 @@ export default function OutfitCreateForm() {
             </>
           )}
         </Button>
+        {state?.error && (
+          <div className="text-red-700 text-center">{state.error}</div>
+        )}
       </form>
     </Form>
   );

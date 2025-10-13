@@ -58,6 +58,4 @@ export async function updateOutfit(
 
 export async function deleteOutfit(id: number) {
   await db.delete(outfitsTable).where(eq(outfitsTable.id, Number(id)));
-
-  return { id };
 }

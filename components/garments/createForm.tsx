@@ -1,5 +1,6 @@
 "use client";
 
+// TODO: this probably did not need to be a dedicated component
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -15,11 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createGarment } from "@/lib/garments";
-
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { startTransition, useActionState } from "react";
 import { Loader2Icon, Save } from "lucide-react";
+import { createGarmentAction } from "@/actions/garments";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -28,10 +27,6 @@ const formSchema = z.object({
 });
 
 export default function GarmentCreateForm() {
-  const router = useRouter();
-
-  const [loading, setLoading] = useState(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,18 +34,15 @@ export default function GarmentCreateForm() {
     },
   });
 
-  // TODO: add loading state
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    const { id } = await createGarment(values);
+  const [state, action, pending] = useActionState(createGarmentAction, null);
 
-    router.push(`/garments/${id}`);
-    setLoading(false);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    startTransition(() => action(values));
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -66,8 +58,8 @@ export default function GarmentCreateForm() {
           )}
         />
 
-        <Button type="submit" disabled={loading}>
-          {loading ? (
+        <Button type="submit" disabled={pending}>
+          {pending ? (
             <>
               <Loader2Icon className="animate-spin" />
               <span>Saving...</span>
@@ -79,6 +71,9 @@ export default function GarmentCreateForm() {
             </>
           )}
         </Button>
+        {state?.error && (
+          <div className="text-red-700 text-center">{state.error}</div>
+        )}
       </form>
     </Form>
   );
