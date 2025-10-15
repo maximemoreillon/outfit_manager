@@ -23,7 +23,12 @@ export default function DeleteOutfitButton(props: Props) {
   }, [state]);
 
   return (
-    <Button variant="destructive" onClick={onClick}>
+    <Button
+      onClick={onClick}
+      variant="destructive"
+      size="icon"
+      disabled={pending}
+    >
       {pending ? <Loader2Icon className="animate-spin" /> : <Trash />}
     </Button>
   );
