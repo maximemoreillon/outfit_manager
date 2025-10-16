@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
+import LogoutButton from "./logoutButton";
 
 export async function Navbar() {
   const session = await auth();
@@ -29,11 +30,7 @@ export async function Navbar() {
       </div>
 
       <div className="hidden lg:flex gap-4">
-        {session && (
-          <a href="logout">
-            <LogOut />
-          </a>
-        )}
+        <LogoutButton />
       </div>
       <Sheet>
         <SheetTrigger className="lg:hidden">
@@ -56,12 +53,13 @@ export async function Navbar() {
               <Separator />
 
               <div className="flex flex-col gap-3">
-                <Button asChild variant="outline">
+                <LogoutButton />
+                {/* <Button asChild variant="outline">
                   <Link href="logout">
                     <LogOut />
                     Logout
                   </Link>
-                </Button>
+                </Button> */}
               </div>
             </div>
           </SheetHeader>
