@@ -63,6 +63,7 @@ async function generateThumbnail(prefix: string, image: string) {
   const thumbnailBuffer = await sharp(originalImageBuffer, {
     failOnError: true,
   })
+    .rotate()
     .resize({
       width: 800,
       height: 800,
@@ -71,7 +72,6 @@ async function generateThumbnail(prefix: string, image: string) {
     })
     .toFormat("png")
     .withMetadata()
-    .rotate()
     .toBuffer();
 
   await s3Client.putObject(S3_BUCKET, thumbnailKey, thumbnailBuffer);

@@ -1,7 +1,4 @@
 "use client";
-import GarmentPreviewCard from "@/components/garments/previewCard";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { auth } from "@/auth";
 import {
   readOutfitGarments,
   removeGarmentFromOutfit,

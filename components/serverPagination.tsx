@@ -95,7 +95,8 @@ export default function ServerPagination(props: Props) {
           </PaginationItem>
         )}
 
-        {getCurrentPageNumber() < getPagesTotal() && (
+        {/* TODO: fix cases where next button is shown when last page is full */}
+        {getCurrentPageNumber() < getPagesTotal() - 1 && (
           <PaginationItem>
             <PaginationNext href={getPageHref(getCurrentPageNumber() + 1)} />
           </PaginationItem>

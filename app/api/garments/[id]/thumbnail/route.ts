@@ -1,11 +1,12 @@
 import { thumbnailFilename } from "@/lib/config";
 import { generateGarmentThumbnail } from "@/lib/images";
 import { S3_BUCKET, s3Client } from "@/lib/s3";
+import { NextApiRequest } from "next";
 import { Readable } from "stream";
 
-type Params = Promise<{ id: string }>;
+type Options = { params: Promise<{ id: string }> };
 
-export async function GET(_: Request, { params }: { params: Params }) {
+export async function GET(_: NextApiRequest, { params }: Options) {
   const { id } = await params;
 
   const prefix = `garments/${id}`;

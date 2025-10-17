@@ -1,5 +1,5 @@
 import { LogOut, Menu } from "lucide-react";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
 import {
   Sheet,

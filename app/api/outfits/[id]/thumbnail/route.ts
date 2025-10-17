@@ -1,11 +1,14 @@
 import { thumbnailFilename } from "@/lib/config";
 import { generateOutfitThumbnail } from "@/lib/images";
 import { S3_BUCKET, s3Client } from "@/lib/s3";
+import { NextRequest } from "next/server";
 import { Readable } from "stream";
 
-type Params = Promise<{ id: string }>;
+type Options = {
+  params: Promise<{ id: string }>;
+};
 
-export async function GET(_: Request, { params }: { params: Params }) {
+export async function GET(_: NextRequest, { params }: Options) {
   const { id } = await params;
 
   const prefix = `outfits/${id}`;
@@ -13,7 +16,6 @@ export async function GET(_: Request, { params }: { params: Params }) {
   const key = `${prefix}/${thumbnailFilename}`;
 
   let stream: Readable;
-
   try {
     stream = await s3Client.getObject(S3_BUCKET, key);
   } catch (error: any) {
