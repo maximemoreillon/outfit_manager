@@ -36,7 +36,7 @@ export async function deleteGarmentAction(state: any, id: number) {
   } catch (error: any) {
     return { error: error.message };
   }
-  return redirect(`/outfits`);
+  return redirect(`/garments`);
 }
 
 export async function uploadImageAction(

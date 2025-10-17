@@ -14,7 +14,7 @@ export function GarmentImage(props: Props) {
   return (
     <div>
       <img
-        className="w-full"
+        className="w-full rounded-xl"
         src={
           image
             ? `/api/images/garments/${props.garment.id}/${image}`

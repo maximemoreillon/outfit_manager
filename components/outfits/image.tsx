@@ -14,7 +14,7 @@ export function OutfitImage(props: Props) {
   return (
     <div>
       <img
-        className="w-full"
+        className="w-full rounded-xl"
         src={
           image
             ? `/api/images/outfits/${props.outfit.id}/${image}`
