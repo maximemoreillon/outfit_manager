@@ -11,12 +11,14 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { garmentsTable } from "@/db/schema";
 import React from "react";
-import { TrashIcon } from "lucide-react";
+import { PlusIcon, TrashIcon } from "lucide-react";
+import AddOutfitButton from "../outfits/garments/addOutfitButton";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
   onSelect?: (garment: typeof garmentsTable.$inferSelect) => void;
   onRemove?: (garment: typeof garmentsTable.$inferSelect) => void;
+  onAdd?: (garment: typeof garmentsTable.$inferSelect) => void; // Experimental
 };
 
 interface WrapperProps<T> extends Props {
@@ -70,6 +72,17 @@ export default function GarmentPreviewCard(props: Props) {
               >
                 Select
               </Button>
+            )}
+
+            {/* This is experimental */}
+            {props.onAdd && (
+              <AddOutfitButton
+                outfit_id={1} // TODO: get actual value
+                garment_id={props.garment.id}
+                onAdd={() => {
+                  if (props.onAdd) props.onAdd(props.garment);
+                }}
+              />
             )}
 
             {props.onRemove && (
