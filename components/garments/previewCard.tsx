@@ -7,10 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "../ui/button";
 import Link from "next/link";
 import { garmentsTable } from "@/db/schema";
 import React from "react";
+import { TrashIcon } from "lucide-react";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
@@ -61,15 +62,6 @@ export default function GarmentPreviewCard(props: Props) {
 
         {(props.onRemove || props.onSelect) && (
           <CardFooter className="flex gap-2">
-            {(props.onSelect || props.onRemove) && (
-              <Link
-                href={`/garments/${props.garment.id}`}
-                className={buttonVariants({})}
-              >
-                See
-              </Link>
-            )}
-
             {props.onSelect && (
               <Button
                 onClick={() => {
@@ -87,7 +79,12 @@ export default function GarmentPreviewCard(props: Props) {
                   if (props.onRemove) props.onRemove(props.garment);
                 }}
               >
-                Remove
+                <TrashIcon />
+              </Button>
+            )}
+            {(props.onSelect || props.onRemove) && (
+              <Button asChild variant="secondary" className="ml-auto">
+                <Link href={`/garments/${props.garment.id}`}>See</Link>
               </Button>
             )}
           </CardFooter>

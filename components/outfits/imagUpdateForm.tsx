@@ -19,6 +19,7 @@ import { outfitsTable } from "@/db/schema";
 import { uploadImageAction } from "@/actions/outfits";
 import { startTransition, useActionState, useEffect } from "react";
 import { toast } from "sonner";
+import { UploadIcon } from "lucide-react";
 
 // TODO: refine
 const formSchema = z.object({
@@ -57,7 +58,7 @@ export default function ImageUploadForm(props: Props) {
           control={form.control}
           name="imageFileList"
           render={() => (
-            <FormItem>
+            <FormItem className="w-full">
               <FormLabel>Picture</FormLabel>
               <FormControl>
                 <Input {...form.register("imageFileList")} type="file" />
@@ -68,8 +69,8 @@ export default function ImageUploadForm(props: Props) {
           )}
         />
 
-        <Button type="submit" disabled={pending}>
-          Upload
+        <Button type="submit" disabled={pending} size="icon">
+          <UploadIcon />
         </Button>
       </form>
     </Form>

@@ -4,10 +4,11 @@ import { garmentsTable, outfitGarmentsTable, outfitsTable } from "@/db/schema";
 import { db } from "../db";
 import { eq, count, and } from "drizzle-orm";
 
+// TODO: have an action to handle those
+
 export async function addGarmentToOutfit(
   properties: typeof outfitGarmentsTable.$inferInsert
 ) {
-  console.log({ properties });
   const [newRecord] = await db
     .insert(outfitGarmentsTable)
     .values(properties)

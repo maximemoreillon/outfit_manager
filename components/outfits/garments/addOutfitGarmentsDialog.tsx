@@ -16,10 +16,12 @@ import { addGarmentToOutfit } from "@/lib/outfitGarments";
 import GarmentsFilters from "@/components/garments/queryParams";
 import ClientPagination from "@/components/clientPagination";
 import GarmentsList from "@/components/garments/list";
+import { PlusIcon } from "lucide-react";
 
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
   onAdd: Function;
+  added: number[];
 };
 
 export default function AddGarmentOufits(props: Props) {
@@ -46,6 +48,8 @@ export default function AddGarmentOufits(props: Props) {
   }, [fetchParams]);
 
   async function handleSelect(garment: typeof garmentsTable.$inferSelect) {
+    // TODO: not sure if this is better here opr on the parent. probably the parent
+    // TODO: this should be a server action
     await addGarmentToOutfit({
       garment_id: garment.id,
       outfit_id: props.outfit.id,
@@ -62,7 +66,9 @@ export default function AddGarmentOufits(props: Props) {
   return (
     <Dialog onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add garments</Button>
+        <Button>
+          <PlusIcon /> Add
+        </Button>
       </DialogTrigger>
       {/* TODO: Fix alignment problem */}
       <DialogContent className="sm:max-w-[Npx] max-w-5xl">
@@ -78,16 +84,21 @@ export default function AddGarmentOufits(props: Props) {
         <div className="overflow-y-auto max-h-[calc(100vh-300px)] ">
           {data && (
             <>
-              <GarmentsList garments={data.items} onSelect={handleSelect} />
-              {/* <GarmentCards garments={data.items} onSelect={handleSelect} /> */}
-              <ClientPagination
-                total={data.total}
-                limit={data.limit}
-                offset={data.offset}
-                onPageChange={(newParams) => {
-                  setFetchParams({ ...fetchParams, ...newParams });
-                }}
+              <GarmentsList
+                garments={data.items.filter((g) => !props.added.includes(g.id))}
+                onSelect={handleSelect}
               />
+              {/* <GarmentCards garments={data.items} onSelect={handleSelect} /> */}
+              <div className="mt-4">
+                <ClientPagination
+                  total={data.total}
+                  limit={data.limit}
+                  offset={data.offset}
+                  onPageChange={(newParams) => {
+                    setFetchParams({ ...fetchParams, ...newParams });
+                  }}
+                />
+              </div>
             </>
           )}
         </div>

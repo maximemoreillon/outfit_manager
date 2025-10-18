@@ -19,20 +19,12 @@ export default async function Outfit({
     <div>
       <Breadcrumbs />
 
-      <div>
-        <div className="flex justify-between">
-          <h2 className="text-3xl my-4">{outfit.id}</h2>
-          <DeleteOutfitButton id={outfit.id} />
-        </div>
+      <div className="grid gap-6 grid-cols-2 my-4">
+        <OutfitImage outfit={outfit} />
+        <OutfitEditForm outfit={outfit} />
 
-        <div className="grid gap-4 grid-cols-2">
-          <OutfitEditForm outfit={outfit} />
-
-          <OutfitImage outfit={outfit} />
-
-          <div className="col-span-full">
-            <GarmentsOfOutfit outfit={outfit} />
-          </div>
+        <div className="col-span-full">
+          <GarmentsOfOutfit outfit={outfit} />
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { startTransition, useActionState, useEffect } from "react";
 import { Loader2Icon, Save } from "lucide-react";
 import { updateOutfitAction } from "@/actions/outfits";
+import DeleteOutfitButton from "./deleteButton";
 
 const formSchema = z.object({
   description: z.string(),
@@ -80,18 +81,21 @@ export default function OutfitEditForm(props: Props) {
             </FormItem>
           )}
         />
+        <div className="flex justify-between">
+          <Button type="submit" disabled={pending}>
+            {pending ? (
+              <>
+                <Loader2Icon className="animate-spin" /> Saving
+              </>
+            ) : (
+              <>
+                <Save /> Save
+              </>
+            )}
+          </Button>
 
-        <Button type="submit" disabled={pending}>
-          {pending ? (
-            <>
-              <Loader2Icon className="animate-spin" /> Saving
-            </>
-          ) : (
-            <>
-              <Save /> Save
-            </>
-          )}
-        </Button>
+          <DeleteOutfitButton id={props.outfit.id} />
+        </div>
       </form>
     </Form>
   );

@@ -17,6 +17,7 @@ export default function GarmentsOfOutfit(props: Props) {
   const [garments, setGarments] = useState<
     (typeof garmentsTable.$inferSelect)[]
   >([]);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,19 +30,23 @@ export default function GarmentsOfOutfit(props: Props) {
   }, []);
 
   async function removeGarment(garment: typeof garmentsTable.$inferSelect) {
+    // TODO: this should be an action
     await removeGarmentFromOutfit(props.outfit.id, garment.id);
     setGarments(garments.filter((g) => g.id !== garment.id));
   }
 
+  function onAdd(addedGarment: typeof garmentsTable.$inferSelect) {
+    setGarments([...garments, addedGarment]);
+  }
+
   return (
     <div>
-      <div className="flex justify-between my-4">
+      <div className="flex justify-between my-4 items-center">
         <h3 className="my-4 text-2xl">Garments in this outfit</h3>
         <AddGarmentOufits
           outfit={props.outfit}
-          onAdd={(addedGarment: typeof garmentsTable.$inferSelect) => {
-            setGarments([...garments, addedGarment]);
-          }}
+          onAdd={onAdd}
+          added={garments.map((g) => g.id)}
         />
       </div>
       <div>

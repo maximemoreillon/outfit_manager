@@ -11,7 +11,6 @@ import {
 import { garmentsTable } from "@/db/schema";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
-import { thumbnailFilename } from "@/lib/config";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
