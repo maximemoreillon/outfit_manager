@@ -1,5 +1,6 @@
 "use server";
 
+import { outfitGarmentsTable } from "@/db/schema";
 // TODO: this is unused at the moment
 
 import {
@@ -7,7 +8,10 @@ import {
   removeGarmentFromOutfit,
 } from "@/lib/outfitGarments";
 
-export async function addAction(state: any, values: any) {
+export async function addAction(
+  state: any,
+  values: typeof outfitGarmentsTable.$inferInsert
+) {
   try {
     await addGarmentToOutfit(values);
   } catch (error: any) {
@@ -16,10 +20,10 @@ export async function addAction(state: any, values: any) {
 }
 
 export async function removeAction(
-  outfit_id: number,
-  garment_id: number,
-  state: any
+  state: any,
+  values: typeof outfitGarmentsTable.$inferInsert
 ) {
+  const { garment_id, outfit_id } = values;
   try {
     await removeGarmentFromOutfit(outfit_id, garment_id);
   } catch (error: any) {
