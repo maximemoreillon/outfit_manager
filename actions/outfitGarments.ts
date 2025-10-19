@@ -14,8 +14,9 @@ export async function addAction(
 ) {
   try {
     await addGarmentToOutfit(values);
+    return { success: true, error: null };
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.message, success: false };
   }
 }
 
@@ -26,7 +27,8 @@ export async function removeAction(
   const { garment_id, outfit_id } = values;
   try {
     await removeGarmentFromOutfit(outfit_id, garment_id);
+    return { success: true, error: null };
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.message, success: false };
   }
 }

@@ -6,7 +6,7 @@ import { startTransition, useActionState } from "react";
 type Props = {
   outfit_id: number;
   garment_id: number;
-  onAdd?: () => void; // New
+  onAdd?: () => void;
 };
 
 export default function AddOutfitButton({ outfit_id, garment_id }: Props) {
@@ -17,7 +17,7 @@ export default function AddOutfitButton({ outfit_id, garment_id }: Props) {
   }
 
   return (
-    <Button onClick={onClick}>
+    <Button onClick={onClick} disabled={pending}>
       <PlusIcon />
     </Button>
   );

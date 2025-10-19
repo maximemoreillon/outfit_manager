@@ -6,6 +6,7 @@ import { startTransition, useActionState } from "react";
 type Props = {
   outfit_id: number;
   garment_id: number;
+  onRemove?: () => void;
 };
 
 export default function RemoveOutfitButton({ outfit_id, garment_id }: Props) {
@@ -16,7 +17,7 @@ export default function RemoveOutfitButton({ outfit_id, garment_id }: Props) {
   }
 
   return (
-    <Button>
+    <Button disabled={pending} onClick={onClick}>
       <TrashIcon />
     </Button>
   );
