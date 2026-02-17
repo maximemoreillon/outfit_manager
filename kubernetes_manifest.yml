@@ -15,11 +15,26 @@ spec:
       containers:
         - name: outfit-manager
           image: ${CONTAINER_IMAGE_TAGGED}
+          env:
+            # S3
+            - name: S3_REGION
+              value: home
+            - name: S3_BUCKET
+              value: wardrobe-manager
+            - name: S3_USE_SSL
+              value: "false"
+            - name: S3_ENDPOINT
+              value: minio.minio
+            - name: S3_PORT
+              value: "9000"
+            # Auth.js
+            - name: AUTH_TRUST_HOST
+              value: "true"
+            - name: NEXTAUTH_URL
+              value: https://outfits.home.maximemoreillon.com
           envFrom:
             - secretRef:
-                name: auth0-env
-            - secretRef:
-                name: outfit-manager-env
+                name: outfit-manager-env-from-vault
           resources: {}
 ---
 apiVersion: v1
@@ -64,3 +79,19 @@ spec:
                 name: outfit-manager
                 port:
                   number: 3000
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: outfit-manager-env
+spec:
+  refreshInterval: 5m0s
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: outfit-manager-env-from-vault
+    creationPolicy: Orphan
+  dataFrom:
+    - extract:
+        key: outfit-manager
