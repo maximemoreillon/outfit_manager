@@ -27,7 +27,7 @@ export default function Login() {
       </CardHeader>
       <CardContent className="text-center">
         <Button onClick={onClick} disabled={pending}>
-          Login with Auth0
+          Login
         </Button>
       </CardContent>
     </Card>

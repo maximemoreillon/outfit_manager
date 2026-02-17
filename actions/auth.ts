@@ -6,5 +6,6 @@ export async function logoutAction(state: any) {
 }
 
 export async function loginAction(state: any) {
-  await signIn("auth0", { redirectTo: "/" });
+  //await signIn("auth0", { redirectTo: "/" });
+  await signIn("oidc", { redirectTo: "/" });
 }
