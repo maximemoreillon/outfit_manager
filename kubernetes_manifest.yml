@@ -95,3 +95,18 @@ spec:
   dataFrom:
     - extract:
         key: outfit-manager
+    - extract:
+        key: minio-main-access-keys
+  data:
+    - secretKey: AUTH_OIDC_CLIENT_ID
+      remoteRef:
+        key: keycloak-main-client
+        property: CLIENT_ID
+    - secretKey: AUTH_OIDC_CLIENT_SECRET
+      remoteRef:
+        key: keycloak-main-client
+        property: CLIENT_SECRET
+    - secretKey: AUTH_OIDC_ISSUER
+      remoteRef:
+        key: keycloak-main-client
+        property: ISSUER
