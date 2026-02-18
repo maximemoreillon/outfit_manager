@@ -18,7 +18,7 @@ spec:
           env:
             # S3
             - name: S3_REGION
-              value: us-east-1
+              value: home
             - name: S3_BUCKET
               value: wardrobe-manager
             - name: S3_USE_SSL
@@ -95,8 +95,6 @@ spec:
   dataFrom:
     - extract:
         key: outfit-manager
-    - extract:
-        key:
   data:
     # S3
     - secretKey: S3_ACCESS_KEY
