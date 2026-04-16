@@ -16,9 +16,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { garmentsTable } from "@/db/schema";
 import { toast } from "sonner";
-import { startTransition, useActionState, useEffect } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { Loader2Icon, Save } from "lucide-react";
 import { updateGarmentAction } from "@/actions/garments";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+import { readTypes, readBrands } from "@/lib/misc";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -35,6 +44,9 @@ const formSchema = z.object({
 type Props = { garment: typeof garmentsTable.$inferSelect };
 
 export default function GarmentEditForm(props: Props) {
+  const [types, setTypes] = useState<string[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,6 +67,11 @@ export default function GarmentEditForm(props: Props) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(() => action(values));
   }
+
+  useEffect(() => {
+    readTypes().then(setTypes);
+    readBrands().then(setBrands);
+  }, []);
 
   useEffect(() => {
     if (state?.success) toast(`Garment saved`);
@@ -85,9 +102,25 @@ export default function GarmentEditForm(props: Props) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Type</FormLabel>
-              <FormControl>
-                <Input placeholder="Pants" {...field} />
-              </FormControl>
+              <Combobox
+                items={types}
+                inputValue={field.value}
+                onInputValueChange={(val, { reason }) => {
+                  if (reason !== "input-clear") field.onChange(val);
+                }}
+              >
+                <ComboboxInput placeholder="Pants" showClear />
+                <ComboboxContent>
+                  <ComboboxEmpty>No existing types.</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item) => (
+                      <ComboboxItem key={item} value={item}>
+                        {item}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
               <FormDescription>Type of the garment</FormDescription>
               <FormMessage />
             </FormItem>
@@ -100,9 +133,25 @@ export default function GarmentEditForm(props: Props) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Brand</FormLabel>
-              <FormControl>
-                <Input placeholder="Uniqlo" {...field} />
-              </FormControl>
+              <Combobox
+                items={brands}
+                inputValue={field.value}
+                onInputValueChange={(val, { reason }) => {
+                  if (reason !== "input-clear") field.onChange(val);
+                }}
+              >
+                <ComboboxInput placeholder="Uniqlo" showClear />
+                <ComboboxContent>
+                  <ComboboxEmpty>No existing brands.</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item) => (
+                      <ComboboxItem key={item} value={item}>
+                        {item}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
               <FormDescription>Brand of the garment</FormDescription>
               <FormMessage />
             </FormItem>
