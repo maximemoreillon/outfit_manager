@@ -34,6 +34,8 @@ spec:
               value: "true"
             - name: NEXTAUTH_URL
               value: https://outfits.home.maximemoreillon.com
+            - name: AUTH_USER_ID_CLAIM
+              value: email
           envFrom:
             - secretRef:
                 name: outfit-manager-env-from-vault

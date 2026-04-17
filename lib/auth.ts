@@ -1,7 +1,11 @@
 import NextAuth from "next-auth";
 
-const { AUTH_OIDC_CLIENT_ID, AUTH_OIDC_CLIENT_SECRET, AUTH_OIDC_ISSUER } =
-  process.env;
+const {
+  AUTH_OIDC_CLIENT_ID,
+  AUTH_OIDC_CLIENT_SECRET,
+  AUTH_OIDC_ISSUER,
+  AUTH_USER_ID_CLAIM = "sub",
+} = process.env;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -22,7 +26,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     session({ session, token }) {
-      session.user.id = token.sub ?? "";
+      const claim = (token as Record<string, unknown>)[AUTH_USER_ID_CLAIM];
+      session.user.id = typeof claim === "string" ? claim : (token.sub ?? "");
       return session;
     },
   },
