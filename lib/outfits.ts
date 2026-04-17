@@ -36,24 +36,24 @@ export async function readOutfits(queryParams: {
 }
 
 export async function readOutfit(id: number) {
-  const [garment] = await db
+  const [outfit] = await db
     .select()
     .from(outfitsTable)
     .where(eq(outfitsTable.id, id));
-  return garment;
+  return outfit;
 }
 
 export async function updateOutfit(
   id: number,
   values: typeof outfitsTable.$inferInsert
 ) {
-  const [garment] = await db
+  const [outfit] = await db
     .update(outfitsTable)
     .set(values)
     .where(eq(outfitsTable.id, Number(id)))
     .returning();
 
-  return garment;
+  return outfit;
 }
 
 export async function deleteOutfit(id: number) {

@@ -11,21 +11,16 @@ type Options = {
 export async function GET(_: NextRequest, { params }: Options) {
   const { id } = await params;
 
-  const prefix = `outfits/${id}`;
-
-  const key = `${prefix}/${thumbnailFilename}`;
+  const key = `outfits/${id}/${thumbnailFilename}`;
 
   let stream: Readable;
   try {
     stream = await s3Client.getObject(S3_BUCKET, key);
-  } catch (error: any) {
-    if (error.code === "NoSuchKey") {
-      await generateOutfitThumbnail(Number(id));
-      stream = await s3Client.getObject(S3_BUCKET, key);
-    }
+  } catch (error) {
+    if ((error as { code?: string }).code !== "NoSuchKey") throw error;
+    await generateOutfitThumbnail(Number(id));
+    stream = await s3Client.getObject(S3_BUCKET, key);
   }
 
-  // // yeah but it works...
-  // @ts-ignore
-  return new Response(stream);
+  return new Response(Readable.toWeb(stream) as ReadableStream);
 }

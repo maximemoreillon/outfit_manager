@@ -14,39 +14,8 @@ export async function uploadImage(image: File, prefix = uuid()) {
 
   const buffer = await image.arrayBuffer();
 
-  // TODO: create thumbnails
-
   await s3Client.putObject(S3_BUCKET, key, Buffer.from(buffer));
   return key;
-}
-
-// TODO: have one function to replace those two
-export async function uploadGarmentImage(id: number, image: File) {
-  const prefix = `garments/${id}`;
-  await uploadImage(image, prefix);
-  await generateThumbnail(prefix, image.name);
-
-  const [garment] = await db
-    .update(garmentsTable)
-    .set({ image: image.name })
-    .where(eq(garmentsTable.id, id))
-    .returning();
-
-  return garment;
-}
-
-export async function uploadOutfitImage(id: number, image: File) {
-  const prefix = `outfits/${id}`;
-  await uploadImage(image, prefix);
-  await generateThumbnail(prefix, image.name);
-
-  const [outfit] = await db
-    .update(outfitsTable)
-    .set({ image: image.name })
-    .where(eq(outfitsTable.id, id))
-    .returning();
-
-  return outfit;
 }
 
 async function generateThumbnail(prefix: string, image: string) {
@@ -81,31 +50,55 @@ async function generateThumbnail(prefix: string, image: string) {
   return thumbnailKey;
 }
 
-// TODO: have one function to replace those two
-export async function generateGarmentThumbnail(id: number) {
-  const prefix = `garments/${id}`;
+async function uploadEntityImage(
+  table: typeof garmentsTable | typeof outfitsTable,
+  entity: "garments" | "outfits",
+  id: number,
+  image: File
+) {
+  const prefix = `${entity}/${id}`;
+  await uploadImage(image, prefix);
+  await generateThumbnail(prefix, image.name);
+
+  const [result] = await db
+    .update(table as typeof garmentsTable)
+    .set({ image: image.name })
+    .where(eq((table as typeof garmentsTable).id, id))
+    .returning();
+
+  return result;
+}
+
+export async function uploadGarmentImage(id: number, image: File) {
+  return uploadEntityImage(garmentsTable, "garments", id, image);
+}
+
+export async function uploadOutfitImage(id: number, image: File) {
+  return uploadEntityImage(outfitsTable, "outfits", id, image);
+}
+
+async function generateEntityThumbnail(
+  table: typeof garmentsTable | typeof outfitsTable,
+  entity: "garments" | "outfits",
+  id: number
+) {
+  const prefix = `${entity}/${id}`;
 
   const [item] = await db
     .select()
-    .from(garmentsTable)
-    .where(eq(garmentsTable.id, id));
+    .from(table as typeof garmentsTable)
+    .where(eq((table as typeof garmentsTable).id, id));
 
-  if (!item) throw new Error("Garment not found");
-  if (!item.image) throw new Error("Garment does not have an image");
+  if (!item) throw new Error(`${entity} not found`);
+  if (!item.image) throw new Error(`${entity} does not have an image`);
 
-  return await generateThumbnail(prefix, item.image);
+  return generateThumbnail(prefix, item.image);
+}
+
+export async function generateGarmentThumbnail(id: number) {
+  return generateEntityThumbnail(garmentsTable, "garments", id);
 }
 
 export async function generateOutfitThumbnail(id: number) {
-  const prefix = `outfits/${id}`;
-
-  const [item] = await db
-    .select()
-    .from(outfitsTable)
-    .where(eq(outfitsTable.id, id));
-
-  if (!item) throw new Error("Outfit not found");
-  if (!item.image) throw new Error("Outfit does not have an image");
-
-  return await generateThumbnail(prefix, item.image);
+  return generateEntityThumbnail(outfitsTable, "outfits", id);
 }

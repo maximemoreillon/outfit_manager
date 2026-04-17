@@ -27,7 +27,7 @@ export default function ClientPagination(props: Props) {
     return Math.ceil(props.total / props.limit);
   }
   function getCurrentPageNumber() {
-    return Math.floor((props.offset / props.total) * getPagesTotal());
+    return Math.floor(props.offset / props.limit);
   }
 
   function getOffsetForPage(page: number) {

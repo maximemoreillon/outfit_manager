@@ -8,7 +8,7 @@ export async function POST(
   const formData = await req.formData();
   const file = formData.get("image") as File | null;
 
-  if (!file) throw "Missing file";
+  if (!file) throw new Error("Missing file");
 
   await uploadOutfitImage(Number(id), file);
   return Response.json({ id });

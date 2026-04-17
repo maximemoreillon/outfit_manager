@@ -2,87 +2,52 @@
 
 import { garmentsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, count, ilike, and, isNotNull, not } from "drizzle-orm";
+import { eq, and, isNotNull, not } from "drizzle-orm";
 
 export async function readTypes() {
-  const result = (await db
+  const result = await db
     .selectDistinct({ type: garmentsTable.type })
     .from(garmentsTable)
     .where(and(isNotNull(garmentsTable.type), not(eq(garmentsTable.type, ""))))
-    .orderBy(garmentsTable.type)) as { type: string }[];
+    .orderBy(garmentsTable.type);
 
-  return result.map(({ type }) => type);
+  return result.map(({ type }) => type).filter((t): t is string => t !== null);
 }
 
 export async function readBrands() {
-  const result = (await db
+  const result = await db
     .selectDistinct({ brand: garmentsTable.brand })
     .from(garmentsTable)
     .where(
       and(isNotNull(garmentsTable.brand), not(eq(garmentsTable.brand, "")))
     )
-    .orderBy(garmentsTable.brand)) as { brand: string }[];
+    .orderBy(garmentsTable.brand);
 
-  return result.map(({ brand }) => brand);
+  return result
+    .map(({ brand }) => brand)
+    .filter((b): b is string => b !== null);
 }
 
 export async function readColors() {
-  const result = (await db
+  const result = await db
     .selectDistinct({ color: garmentsTable.color })
     .from(garmentsTable)
     .where(
       and(isNotNull(garmentsTable.color), not(eq(garmentsTable.color, "")))
     )
-    .orderBy(garmentsTable.color)) as { color: string }[];
+    .orderBy(garmentsTable.color);
 
-  return result.map(({ color }) => color);
+  return result
+    .map(({ color }) => color)
+    .filter((c): c is string => c !== null);
 }
 
 export async function readFilters() {
-  type Filters = {
-    type: string[];
-    brand: string[];
-    color: string[];
-  };
+  const [types, brands, colors] = await Promise.all([
+    readTypes(),
+    readBrands(),
+    readColors(),
+  ]);
 
-  const filters: Filters = {
-    type: [],
-    brand: [],
-    color: [],
-  };
-
-  const selectDistinctQuery = Object.keys(filters).reduce(
-    (acc, k) => ({
-      ...acc,
-      [k]: garmentsTable[k as keyof Filters],
-    }),
-    {}
-  );
-
-  // TODO: This is probably not the right use of Distinct
-  const result = await db
-    .selectDistinct(selectDistinctQuery)
-    .from(garmentsTable);
-
-  /*
-  Result structure:
-  [
-    { type: null, brand: null, color: null },
-    { type: 'T-shirt', brand: 'H&M', color: null },
-    { type: 'Pants', brand: '', color: null },
-    { type: null, brand: 'Uniqlo', color: null }
-  ]
-  */
-
-  Object.keys(filters).forEach((k) => {
-    filters[k as keyof Filters] = [
-      ...new Set(
-        result
-          .map((r) => (r as { [k: string]: string | null })[k])
-          .filter((e): e is Required<string> => !!e)
-      ),
-    ];
-  });
-
-  return filters;
+  return { type: types, brand: brands, color: colors };
 }

@@ -1,11 +1,10 @@
 "use server";
 import { signIn, signOut } from "@/lib/auth";
 
-export async function logoutAction(state: any) {
+export async function logoutAction(_state: unknown) {
   await signOut({ redirectTo: "/login" });
 }
 
-export async function loginAction(state: any) {
-  //await signIn("auth0", { redirectTo: "/" });
+export async function loginAction(_state: unknown) {
   await signIn("oidc", { redirectTo: "/" });
 }
