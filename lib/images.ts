@@ -24,6 +24,7 @@ export async function uploadImage(image: File, prefix = uuid()) {
 export async function uploadGarmentImage(id: number, image: File) {
   const prefix = `garments/${id}`;
   await uploadImage(image, prefix);
+  await generateThumbnail(prefix, image.name);
 
   const [garment] = await db
     .update(garmentsTable)
@@ -37,6 +38,7 @@ export async function uploadGarmentImage(id: number, image: File) {
 export async function uploadOutfitImage(id: number, image: File) {
   const prefix = `outfits/${id}`;
   await uploadImage(image, prefix);
+  await generateThumbnail(prefix, image.name);
 
   const [outfit] = await db
     .update(outfitsTable)
