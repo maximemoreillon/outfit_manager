@@ -1,34 +1,33 @@
 "use server";
 
 import { outfitGarmentsTable } from "@/db/schema";
-// TODO: this is unused at the moment
-
 import {
   addGarmentToOutfit,
   removeGarmentFromOutfit,
 } from "@/lib/outfitGarments";
+import { errorMessage } from "@/lib/utils";
 
 export async function addAction(
-  state: any,
+  _state: unknown,
   values: typeof outfitGarmentsTable.$inferInsert
 ) {
   try {
     await addGarmentToOutfit(values);
     return { success: true, error: null };
-  } catch (error: any) {
-    return { error: error.message, success: false };
+  } catch (error) {
+    return { error: errorMessage(error), success: false };
   }
 }
 
 export async function removeAction(
-  state: any,
+  _state: unknown,
   values: typeof outfitGarmentsTable.$inferInsert
 ) {
   const { garment_id, outfit_id } = values;
   try {
     await removeGarmentFromOutfit(outfit_id, garment_id);
     return { success: true, error: null };
-  } catch (error: any) {
-    return { error: error.message, success: false };
+  } catch (error) {
+    return { error: errorMessage(error), success: false };
   }
 }

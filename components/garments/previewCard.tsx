@@ -10,15 +10,16 @@ import {
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { garmentsTable } from "@/db/schema";
-import React from "react";
+import React, { useState } from "react";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import AddOutfitButton from "../outfits/garments/addOutfitButton";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
   onSelect?: (garment: typeof garmentsTable.$inferSelect) => void;
-  onRemove?: (garment: typeof garmentsTable.$inferSelect) => void;
+  onRemove?: (garment: typeof garmentsTable.$inferSelect) => void | Promise<void>;
   onAdd?: (garment: typeof garmentsTable.$inferSelect) => void; // Experimental
+  outfit_id?: number; // Required when onAdd is used
 };
 
 interface WrapperProps<T> extends Props {
@@ -41,6 +42,18 @@ const Wrapper = <T extends HTMLElement>({
 };
 
 export default function GarmentPreviewCard(props: Props) {
+  const [removing, setRemoving] = useState(false);
+
+  async function handleRemove() {
+    if (!props.onRemove) return;
+    setRemoving(true);
+    try {
+      await props.onRemove(props.garment);
+    } finally {
+      setRemoving(false);
+    }
+  }
+
   return (
     // TODO: not super clean
     <Wrapper {...props}>
@@ -75,9 +88,9 @@ export default function GarmentPreviewCard(props: Props) {
             )}
 
             {/* This is experimental */}
-            {props.onAdd && (
+            {props.onAdd && props.outfit_id !== undefined && (
               <AddOutfitButton
-                outfit_id={1} // TODO: get actual value
+                outfit_id={props.outfit_id}
                 garment_id={props.garment.id}
                 onAdd={() => {
                   if (props.onAdd) props.onAdd(props.garment);
@@ -88,9 +101,8 @@ export default function GarmentPreviewCard(props: Props) {
             {props.onRemove && (
               <Button
                 variant="destructive"
-                onClick={() => {
-                  if (props.onRemove) props.onRemove(props.garment);
-                }}
+                disabled={removing}
+                onClick={handleRemove}
               >
                 <TrashIcon />
               </Button>

@@ -1,9 +1,6 @@
 "use client";
-import {
-  readOutfitGarments,
-  removeGarmentFromOutfit,
-} from "@/lib/outfitGarments";
-import Link from "next/link";
+import { removeAction } from "@/actions/outfitGarments";
+import { readOutfitGarments } from "@/lib/outfitGarments";
 import { garmentsTable, outfitsTable } from "@/db/schema";
 import AddGarmentOufits from "./addOutfitGarmentsDialog";
 import { useEffect, useState } from "react";
@@ -30,8 +27,10 @@ export default function GarmentsOfOutfit(props: Props) {
   }, []);
 
   async function removeGarment(garment: typeof garmentsTable.$inferSelect) {
-    // TODO: this should be an action
-    await removeGarmentFromOutfit(props.outfit.id, garment.id);
+    await removeAction(null, {
+      outfit_id: props.outfit.id,
+      garment_id: garment.id,
+    });
     setGarments(garments.filter((g) => g.id !== garment.id));
   }
 
