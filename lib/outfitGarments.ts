@@ -2,13 +2,26 @@
 
 import { garmentsTable, outfitGarmentsTable, outfitsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, count, and } from "drizzle-orm";
-
-// TODO: have an action to handle those
+import { eq, and } from "drizzle-orm";
+import { getAuthenticatedUserId } from "./auth";
 
 export async function addGarmentToOutfit(
   properties: typeof outfitGarmentsTable.$inferInsert
 ) {
+  const user_id = await getAuthenticatedUserId();
+
+  const [outfit] = await db
+    .select({ id: outfitsTable.id })
+    .from(outfitsTable)
+    .where(
+      and(
+        eq(outfitsTable.id, properties.outfit_id),
+        eq(outfitsTable.user_id, user_id)
+      )
+    );
+
+  if (!outfit) throw new Error("Outfit not found");
+
   const [newRecord] = await db
     .insert(outfitGarmentsTable)
     .values(properties)
@@ -35,7 +48,16 @@ export async function removeGarmentFromOutfit(
   outfit_id: number,
   garment_id: number
 ) {
-  // TODO: implement
+  const user_id = await getAuthenticatedUserId();
+
+  const [outfit] = await db
+    .select({ id: outfitsTable.id })
+    .from(outfitsTable)
+    .where(
+      and(eq(outfitsTable.id, outfit_id), eq(outfitsTable.user_id, user_id))
+    );
+
+  if (!outfit) throw new Error("Outfit not found");
 
   await db
     .delete(outfitGarmentsTable)

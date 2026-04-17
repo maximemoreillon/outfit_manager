@@ -3,23 +3,38 @@
 import { garmentsTable } from "@/db/schema";
 import { db } from "../db";
 import { eq, and, isNotNull, not } from "drizzle-orm";
+import { getAuthenticatedUserId } from "./auth";
 
 export async function readTypes() {
+  const user_id = await getAuthenticatedUserId();
+
   const result = await db
     .selectDistinct({ type: garmentsTable.type })
     .from(garmentsTable)
-    .where(and(isNotNull(garmentsTable.type), not(eq(garmentsTable.type, ""))))
+    .where(
+      and(
+        eq(garmentsTable.user_id, user_id),
+        isNotNull(garmentsTable.type),
+        not(eq(garmentsTable.type, ""))
+      )
+    )
     .orderBy(garmentsTable.type);
 
   return result.map(({ type }) => type).filter((t): t is string => t !== null);
 }
 
 export async function readBrands() {
+  const user_id = await getAuthenticatedUserId();
+
   const result = await db
     .selectDistinct({ brand: garmentsTable.brand })
     .from(garmentsTable)
     .where(
-      and(isNotNull(garmentsTable.brand), not(eq(garmentsTable.brand, "")))
+      and(
+        eq(garmentsTable.user_id, user_id),
+        isNotNull(garmentsTable.brand),
+        not(eq(garmentsTable.brand, ""))
+      )
     )
     .orderBy(garmentsTable.brand);
 
@@ -29,11 +44,17 @@ export async function readBrands() {
 }
 
 export async function readColors() {
+  const user_id = await getAuthenticatedUserId();
+
   const result = await db
     .selectDistinct({ color: garmentsTable.color })
     .from(garmentsTable)
     .where(
-      and(isNotNull(garmentsTable.color), not(eq(garmentsTable.color, "")))
+      and(
+        eq(garmentsTable.user_id, user_id),
+        isNotNull(garmentsTable.color),
+        not(eq(garmentsTable.color, ""))
+      )
     )
     .orderBy(garmentsTable.color);
 

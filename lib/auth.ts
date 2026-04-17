@@ -17,4 +17,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/login",
   },
+  callbacks: {
+    jwt({ token }) {
+      return token;
+    },
+    session({ session, token }) {
+      session.user.id = token.sub ?? "";
+      return session;
+    },
+  },
 });
+
+export async function getAuthenticatedUserId(): Promise<string> {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+  return session.user.id;
+}
