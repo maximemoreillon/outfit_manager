@@ -28,18 +28,23 @@ import {
   ComboboxList,
 } from "@/components/ui/combobox";
 import { readTypes, readBrands, readColors } from "@/lib/misc";
+import { readAllGenericGarments } from "@/lib/garments";
+import GarmentGenericSelector from "./genericSelector";
 import DeleteGarmentButton from "./deleteButton";
+import { Switch } from "@/components/ui/switch";
+import Link from "next/link";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   description: z.string(),
   comment: z.string(),
   quantity: z.coerce.number(),
   brand: z.string(),
   type: z.string(),
   color: z.string(),
+  size: z.string(),
+  parent_id: z.number().nullable(),
+  is_generic: z.boolean(),
 });
 
 type Props = { garment: typeof garmentsTable.$inferSelect };
@@ -48,6 +53,7 @@ export default function GarmentEditForm(props: Props) {
   const [types, setTypes] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
+  const [generics, setGenerics] = useState<(typeof garmentsTable.$inferSelect)[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,10 +64,16 @@ export default function GarmentEditForm(props: Props) {
       brand: props.garment.brand || "",
       description: props.garment.description || "",
       comment: props.garment.comment || "",
-
+      size: props.garment.size || "",
       quantity: props.garment.quantity,
+      parent_id: props.garment.parent_id ?? null,
+      is_generic: props.garment.is_generic,
     },
   });
+
+  const isGeneric = form.watch("is_generic");
+  const parentId = form.watch("parent_id");
+  const parent = generics.find((g) => g.id === parentId) ?? null;
 
   const actionWithId = updateGarmentAction.bind(null, props.garment.id);
   const [state, action, pending] = useActionState(actionWithId, null);
@@ -74,6 +86,7 @@ export default function GarmentEditForm(props: Props) {
     readTypes().then(setTypes);
     readBrands().then(setBrands);
     readColors().then(setColors);
+    readAllGenericGarments().then(setGenerics);
   }, []);
 
   useEffect(() => {
@@ -88,7 +101,7 @@ export default function GarmentEditForm(props: Props) {
   }, [form, onSubmit]);
 
   useEffect(() => {
-    if (state?.success) toast(`Garment saved`);
+    if (state?.success) toast("Garment saved");
     else if (state?.error) toast(state.error);
   }, [state]);
 
@@ -107,9 +120,19 @@ export default function GarmentEditForm(props: Props) {
               </>
             )}
           </Button>
-
           <DeleteGarmentButton id={props.garment.id} />
         </div>
+
+        <FormField
+          control={form.control}
+          name="is_generic"
+          render={({ field }) => (
+            <FormItem className="flex items-center gap-3">
+              <Switch checked={field.value} onCheckedChange={field.onChange} />
+              <FormLabel className="!mt-0">Generic</FormLabel>
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -120,7 +143,6 @@ export default function GarmentEditForm(props: Props) {
               <FormControl>
                 <Input placeholder="Grey jacket" {...field} />
               </FormControl>
-              <FormDescription>Name of the garment</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -128,96 +150,125 @@ export default function GarmentEditForm(props: Props) {
 
         <FormField
           control={form.control}
-          name="type"
+          name="parent_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type</FormLabel>
-              <Combobox
-                items={types}
-                inputValue={field.value}
-                onInputValueChange={(val, { reason }) => {
-                  if (reason !== "input-clear") field.onChange(val);
-                }}
-              >
-                <ComboboxInput placeholder="Pants" showClear />
-                <ComboboxContent>
-                  <ComboboxEmpty>No existing types.</ComboboxEmpty>
-                  <ComboboxList>
-                    {(item) => (
-                      <ComboboxItem key={item} value={item}>
-                        {item}
-                      </ComboboxItem>
-                    )}
-                  </ComboboxList>
-                </ComboboxContent>
-              </Combobox>
-              <FormDescription>Type of the garment</FormDescription>
+              <FormLabel>{isGeneric ? "Parent generic" : "Generic type"}</FormLabel>
+              <GarmentGenericSelector
+                templates={generics}
+                value={field.value}
+                onChange={field.onChange}
+                excludeId={props.garment.id}
+                placeholder={isGeneric ? "Select a parent generic" : "Link to a generic garment"}
+              />
+              <FormDescription>
+                {isGeneric
+                  ? "A more generic type this one belongs to"
+                  : "The generic garment this is an instance of"}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="brand"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Brand</FormLabel>
-              <Combobox
-                items={brands}
-                inputValue={field.value}
-                onInputValueChange={(val, { reason }) => {
-                  if (reason !== "input-clear") field.onChange(val);
-                }}
+        {parent ? (
+          <div className="space-y-1 rounded-md border px-3 py-2 text-sm">
+            <p className="font-medium text-muted-foreground text-xs mb-2">
+              Inherited from{" "}
+              <Link
+                href={`/garments/${parent.id}`}
+                className="font-semibold text-foreground underline underline-offset-2"
               >
-                <ComboboxInput placeholder="Uniqlo" showClear />
-                <ComboboxContent>
-                  <ComboboxEmpty>No existing brands.</ComboboxEmpty>
-                  <ComboboxList>
-                    {(item) => (
-                      <ComboboxItem key={item} value={item}>
-                        {item}
-                      </ComboboxItem>
-                    )}
-                  </ComboboxList>
-                </ComboboxContent>
-              </Combobox>
-              <FormDescription>Brand of the garment</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                {parent.name}
+              </Link>
+            </p>
+            {parent.type && <p><span className="text-muted-foreground">Type:</span> {parent.type}</p>}
+            {parent.brand && <p><span className="text-muted-foreground">Brand:</span> {parent.brand}</p>}
+            {parent.color && <p><span className="text-muted-foreground">Color:</span> {parent.color}</p>}
+            {parent.size && <p><span className="text-muted-foreground">Size:</span> {parent.size}</p>}
+          </div>
+        ) : (
+          <>
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <Combobox
+                    items={types}
+                    inputValue={field.value}
+                    onInputValueChange={(val, { reason }) => {
+                      if (reason !== "input-clear") field.onChange(val);
+                    }}
+                  >
+                    <ComboboxInput placeholder="Pants" showClear />
+                    <ComboboxContent>
+                      <ComboboxEmpty>No existing types.</ComboboxEmpty>
+                      <ComboboxList>
+                        {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
+                      </ComboboxList>
+                    </ComboboxContent>
+                  </Combobox>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="color"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Color</FormLabel>
-              <Combobox
-                items={colors}
-                inputValue={field.value}
-                onInputValueChange={(val, { reason }) => {
-                  if (reason !== "input-clear") field.onChange(val);
-                }}
-              >
-                <ComboboxInput placeholder="Navy" showClear />
-                <ComboboxContent>
-                  <ComboboxEmpty>No existing colors.</ComboboxEmpty>
-                  <ComboboxList>
-                    {(item) => (
-                      <ComboboxItem key={item} value={item}>
-                        {item}
-                      </ComboboxItem>
-                    )}
-                  </ComboboxList>
-                </ComboboxContent>
-              </Combobox>
-              <FormDescription>Color of the garment</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="brand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Brand</FormLabel>
+                  <Combobox
+                    items={brands}
+                    inputValue={field.value}
+                    onInputValueChange={(val, { reason }) => {
+                      if (reason !== "input-clear") field.onChange(val);
+                    }}
+                  >
+                    <ComboboxInput placeholder="Uniqlo" showClear />
+                    <ComboboxContent>
+                      <ComboboxEmpty>No existing brands.</ComboboxEmpty>
+                      <ComboboxList>
+                        {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
+                      </ComboboxList>
+                    </ComboboxContent>
+                  </Combobox>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <Combobox
+                    items={colors}
+                    inputValue={field.value}
+                    onInputValueChange={(val, { reason }) => {
+                      if (reason !== "input-clear") field.onChange(val);
+                    }}
+                  >
+                    <ComboboxInput placeholder="Navy" showClear />
+                    <ComboboxContent>
+                      <ComboboxEmpty>No existing colors.</ComboboxEmpty>
+                      <ComboboxList>
+                        {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
+                      </ComboboxList>
+                    </ComboboxContent>
+                  </Combobox>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+          </>
+        )}
 
         <FormField
           control={form.control}
@@ -228,7 +279,20 @@ export default function GarmentEditForm(props: Props) {
               <FormControl>
                 <Input placeholder="Slim fit" {...field} />
               </FormControl>
-              <FormDescription>Description of the item</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="size"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Size</FormLabel>
+              <FormControl>
+                <Input placeholder="M" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -243,7 +307,6 @@ export default function GarmentEditForm(props: Props) {
               <FormControl>
                 <Input placeholder="Has inner pockets" {...field} />
               </FormControl>
-              <FormDescription>Comment about item</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -256,9 +319,8 @@ export default function GarmentEditForm(props: Props) {
             <FormItem>
               <FormLabel>Quantity</FormLabel>
               <FormControl>
-                <Input placeholder="2" {...field} type="number" />
+                <Input placeholder="1" {...field} type="number" />
               </FormControl>
-              <FormDescription>Quantity of said item</FormDescription>
               <FormMessage />
             </FormItem>
           )}

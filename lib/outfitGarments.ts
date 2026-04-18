@@ -3,7 +3,16 @@
 import { garmentsTable, outfitGarmentsTable, outfitsTable } from "@/db/schema";
 import { db } from "../db";
 import { eq, and, count } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { getAuthenticatedUserId } from "./auth";
+
+const parentTable = alias(garmentsTable, "parent");
+type Garment = typeof garmentsTable.$inferSelect;
+const INHERITED_FIELDS = ["type", "brand", "color", "description", "size"] as const;
+function resolveInheritance(garment: Garment, parent: Garment | null): Garment {
+  if (!garment.parent_id || !parent) return garment;
+  return { ...garment, ...Object.fromEntries(INHERITED_FIELDS.map((f) => [f, parent[f]])) };
+}
 
 export async function addGarmentToOutfit(
   properties: typeof outfitGarmentsTable.$inferInsert
@@ -51,16 +60,14 @@ export async function addGarmentToOutfit(
 
 export async function readOutfitGarments(outfit_id: number) {
   const result = await db
-    .select()
+    .select({ garment: garmentsTable, parent: parentTable })
     .from(outfitGarmentsTable)
     .where(eq(outfitGarmentsTable.outfit_id, outfit_id))
-    .innerJoin(
-      garmentsTable,
-      eq(outfitGarmentsTable.garment_id, garmentsTable.id)
-    )
+    .innerJoin(garmentsTable, eq(outfitGarmentsTable.garment_id, garmentsTable.id))
+    .leftJoin(parentTable, eq(garmentsTable.parent_id, parentTable.id))
     .limit(50);
 
-  return result.map(({ garments }) => garments);
+  return result.map(({ garment, parent }) => resolveInheritance(garment, parent));
 }
 
 export async function removeGarmentFromOutfit(

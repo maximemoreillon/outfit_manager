@@ -8,15 +8,20 @@ import { redirect } from "next/navigation";
 
 type ItemInsert = typeof garmentsTable.$inferInsert;
 
-export async function createGarmentAction(_state: unknown, values: ItemInsert) {
+export async function createGarmentAction(
+  isGeneric: boolean,
+  _state: unknown,
+  values: ItemInsert
+) {
   let newGarment: typeof garmentsTable.$inferSelect;
   try {
-    newGarment = await createGarment(values);
+    newGarment = await createGarment({ ...values, is_generic: isGeneric });
   } catch (error) {
     return { error: errorMessage(error) };
   }
   return redirect(`/garments/${newGarment.id}`);
 }
+
 
 export async function updateGarmentAction(
   id: number,
@@ -39,6 +44,7 @@ export async function deleteGarmentAction(_state: unknown, id: number) {
   }
   return redirect(`/garments`);
 }
+
 
 export async function uploadImageAction(
   id: number,
