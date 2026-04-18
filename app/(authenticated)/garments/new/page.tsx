@@ -7,19 +7,19 @@ export default async function NewGarment({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = await searchParams;
-  const isTemplate = sp.is_template === "true";
+  const isGeneric = sp.is_generic === "true";
 
   return (
     <div>
       <h2 className="my-4 text-2xl">
-        {isTemplate ? "Add template" : "Create new garment"}
+        {isGeneric ? "Add generic garment" : "Create new garment"}
       </h2>
       <div>
-        <Link href={isTemplate ? "/garments?is_template=true" : "/garments"}>
+        <Link href={isGeneric ? "/garments?is_generic=true" : "/garments"}>
           Back
         </Link>
       </div>
-      <GarmentCreateForm isTemplate={isTemplate} />
+      <GarmentCreateForm isGeneric={isGeneric} />
     </div>
   );
 }

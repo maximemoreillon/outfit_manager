@@ -84,8 +84,8 @@
           "notNull": true,
           "default": 100
         },
-        "is_template": {
-          "name": "is_template",
+        "is_generic": {
+          "name": "is_generic",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,

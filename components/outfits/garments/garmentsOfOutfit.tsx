@@ -57,7 +57,7 @@ export default function GarmentsOfOutfit(props: Props) {
           {garments.map((garment) => (
             <div key={garment.id} className="relative">
               <span className="absolute top-2 left-2 z-10 text-xs bg-black/60 text-white px-2 py-0.5 rounded-full">
-                {garment.is_template ? "Any" : "Specific"}
+                {garment.is_generic ? "Any" : "Specific"}
               </span>
               <GarmentPreviewCard garment={garment} onRemove={removeGarment} />
             </div>

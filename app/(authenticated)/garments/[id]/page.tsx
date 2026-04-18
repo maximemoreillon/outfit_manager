@@ -1,5 +1,4 @@
 import GarmentEditForm from "@/components/garments/editForm";
-import TemplateEditForm from "@/components/garments/templateEditForm";
 import { readGarment, readGarmentsByParent } from "@/lib/garments";
 import { GarmentImage } from "@/components/garments/image";
 import Breadcrumbs from "@/components/breadcrumbs";
@@ -16,7 +15,7 @@ export default async function Garment({
   const garment = await readGarment(Number(id));
   if (!garment) notFound();
 
-  const instances = garment.is_template
+  const instances = garment.is_generic
     ? await readGarmentsByParent(garment.id)
     : [];
 
@@ -25,13 +24,9 @@ export default async function Garment({
       <Breadcrumbs />
       <h2 className="text-3xl my-4">{garment.name}</h2>
       <div className="grid gap-4 grid-cols-2">
-        {garment.is_template ? (
-          <TemplateEditForm garment={garment} />
-        ) : (
-          <GarmentEditForm garment={garment} />
-        )}
+        <GarmentEditForm garment={garment} />
         <GarmentImage garment={garment} />
-        {garment.is_template ? (
+        {garment.is_generic ? (
           instances.length > 0 && (
             <div className="col-span-full">
               <h3 className="text-2xl my-4">Garments of this type</h3>

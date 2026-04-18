@@ -25,17 +25,17 @@ const formSchema = z.object({
   }),
 });
 
-type Props = { isTemplate?: boolean };
+type Props = { isGeneric?: boolean };
 
-export default function GarmentCreateForm({ isTemplate = false }: Props) {
+export default function GarmentCreateForm({ isGeneric = false }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: isTemplate ? "New template" : "New garment",
+      name: isGeneric ? "New generic garment" : "New garment",
     },
   });
 
-  const actionWithTemplate = createGarmentAction.bind(null, isTemplate);
+  const actionWithTemplate = createGarmentAction.bind(null, isGeneric);
   const [state, action, pending] = useActionState(actionWithTemplate, null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

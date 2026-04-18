@@ -19,7 +19,7 @@ type Props = {
   placeholder?: string;
 };
 
-export default function GarmentTemplateSelector({
+export default function GarmentGenericSelector({
   templates,
   value,
   onChange,

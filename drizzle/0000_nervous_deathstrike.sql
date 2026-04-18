@@ -11,7 +11,7 @@ CREATE TABLE "garments" (
 	"quantity" integer DEFAULT 1 NOT NULL,
 	"rating" integer,
 	"condition" integer DEFAULT 100 NOT NULL,
-	"is_template" boolean DEFAULT false NOT NULL,
+	"is_generic" boolean DEFAULT false NOT NULL,
 	"parent_id" integer,
 	"user_id" text
 );

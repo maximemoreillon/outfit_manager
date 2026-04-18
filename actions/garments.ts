@@ -9,13 +9,13 @@ import { redirect } from "next/navigation";
 type ItemInsert = typeof garmentsTable.$inferInsert;
 
 export async function createGarmentAction(
-  isTemplate: boolean,
+  isGeneric: boolean,
   _state: unknown,
   values: ItemInsert
 ) {
   let newGarment: typeof garmentsTable.$inferSelect;
   try {
-    newGarment = await createGarment({ ...values, is_template: isTemplate });
+    newGarment = await createGarment({ ...values, is_generic: isGeneric });
   } catch (error) {
     return { error: errorMessage(error) };
   }

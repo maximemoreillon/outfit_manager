@@ -15,17 +15,17 @@ export default async function Garments({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = await searchParams;
-  const isTemplate = sp.is_template === "true";
-  const params = { ...sp, limit: "9", is_template: isTemplate ? "true" : "false" };
+  const isGeneric = sp.is_generic === "true";
+  const params = { ...sp, limit: "9", is_generic: isGeneric ? "true" : "false" };
   const { items, total, offset, limit } = await readGarments(params);
 
   return (
     <div>
       <Breadcrumbs />
       <div className="my-4 flex justify-between">
-        <h2 className="text-2xl">{isTemplate ? "Templates" : "Garments"}</h2>
+        <h2 className="text-2xl">{isGeneric ? "Generic" : "Garments"}</h2>
         <Link
-          href={`/garments/new${isTemplate ? "?is_template=true" : ""}`}
+          href={`/garments/new${isGeneric ? "?is_generic=true" : ""}`}
           className={buttonVariants({})}
         >
           <Plus /> New
@@ -36,16 +36,16 @@ export default async function Garments({
         <Link
           href="/garments"
           className={buttonVariants({
-            variant: !isTemplate ? "default" : "outline",
+            variant: !isGeneric ? "default" : "outline",
             size: "sm",
           })}
         >
           Physical
         </Link>
         <Link
-          href="/garments?is_template=true"
+          href="/garments?is_generic=true"
           className={buttonVariants({
-            variant: isTemplate ? "default" : "outline",
+            variant: isGeneric ? "default" : "outline",
             size: "sm",
           })}
         >

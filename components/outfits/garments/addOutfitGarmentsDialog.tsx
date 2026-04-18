@@ -17,7 +17,7 @@ import GarmentsList from "@/components/garments/list";
 import CallbackPagination from "@/components/callbackPagination";
 import { PlusIcon } from "lucide-react";
 
-type View = "template" | "specific";
+type View = "generic" | "specific";
 
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
@@ -26,7 +26,7 @@ type Props = {
 };
 
 export default function AddGarmentOufits(props: Props) {
-  const [view, setView] = useState<View>("template");
+  const [view, setView] = useState<View>("generic");
   const [fetchParams, setFetchParams] = useState<Record<string, unknown>>({});
   const [data, setData] = useState<Awaited<ReturnType<typeof readGarments>> | null>(null);
   const [isLoading, setLoading] = useState(true);
@@ -37,7 +37,7 @@ export default function AddGarmentOufits(props: Props) {
 
   useEffect(() => {
     setLoading(true);
-    readGarments({ ...fetchParams, is_template: view === "template" ? "true" : "false" })
+    readGarments({ ...fetchParams, is_generic: view === "generic" ? "true" : "false" })
       .then(setData)
       .catch((e) => toast.error(e instanceof Error ? e.message : String(e)))
       .finally(() => setLoading(false));
@@ -70,10 +70,10 @@ export default function AddGarmentOufits(props: Props) {
 
         <div className="flex gap-2">
           <Button
-            variant={view === "template" ? "default" : "outline"}
-            onClick={() => setView("template")}
+            variant={view === "generic" ? "default" : "outline"}
+            onClick={() => setView("generic")}
           >
-            Any (catalog type)
+            Any (generic type)
           </Button>
           <Button
             variant={view === "specific" ? "default" : "outline"}
