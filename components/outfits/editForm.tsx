@@ -52,6 +52,22 @@ export default function OutfitEditForm(props: Props) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="flex justify-between">
+          <Button type="submit" disabled={pending}>
+            {pending ? (
+              <>
+                <Loader2Icon className="animate-spin" /> Saving
+              </>
+            ) : (
+              <>
+                <Save /> Save
+              </>
+            )}
+          </Button>
+
+          <DeleteOutfitButton id={props.outfit.id} />
+        </div>
+
         <FormField
           control={form.control}
           name="description"
@@ -81,21 +97,6 @@ export default function OutfitEditForm(props: Props) {
             </FormItem>
           )}
         />
-        <div className="flex justify-between">
-          <Button type="submit" disabled={pending}>
-            {pending ? (
-              <>
-                <Loader2Icon className="animate-spin" /> Saving
-              </>
-            ) : (
-              <>
-                <Save /> Save
-              </>
-            )}
-          </Button>
-
-          <DeleteOutfitButton id={props.outfit.id} />
-        </div>
       </form>
     </Form>
   );

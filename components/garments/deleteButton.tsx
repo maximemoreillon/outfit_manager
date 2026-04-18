@@ -23,13 +23,14 @@ export default function DeleteGarmentButton(props: Props) {
   }, [state]);
 
   return (
-    <Button
-      onClick={onClick}
-      variant="destructive"
-      size="icon"
-      disabled={pending}
-    >
-      {pending ? <Loader2Icon className="animate-spin" /> : <Trash />}
+    <Button onClick={onClick} variant="destructive" disabled={pending}>
+      {pending ? (
+        <Loader2Icon className="animate-spin" />
+      ) : (
+        <>
+          <Trash /> Delete
+        </>
+      )}
     </Button>
   );
 }

@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { garmentsTable } from "@/db/schema";
 import { toast } from "sonner";
 import { startTransition, useActionState, useEffect, useState } from "react";
-import { Loader2Icon, Save } from "lucide-react";
+import { Loader2Icon, SaveIcon } from "lucide-react";
 import { updateGarmentAction } from "@/actions/garments";
 import {
   Combobox,
@@ -27,7 +27,8 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
-import { readTypes, readBrands } from "@/lib/misc";
+import { readTypes, readBrands, readColors } from "@/lib/misc";
+import DeleteGarmentButton from "./deleteButton";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -46,6 +47,7 @@ type Props = { garment: typeof garmentsTable.$inferSelect };
 export default function GarmentEditForm(props: Props) {
   const [types, setTypes] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
+  const [colors, setColors] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,7 +73,19 @@ export default function GarmentEditForm(props: Props) {
   useEffect(() => {
     readTypes().then(setTypes);
     readBrands().then(setBrands);
+    readColors().then(setColors);
   }, []);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        form.handleSubmit(onSubmit)();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [form, onSubmit]);
 
   useEffect(() => {
     if (state?.success) toast(`Garment saved`);
@@ -81,6 +95,22 @@ export default function GarmentEditForm(props: Props) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="flex justify-between">
+          <Button type="submit" disabled={pending}>
+            {pending ? (
+              <>
+                <Loader2Icon className="animate-spin" /> Saving
+              </>
+            ) : (
+              <>
+                <SaveIcon /> Save
+              </>
+            )}
+          </Button>
+
+          <DeleteGarmentButton id={props.garment.id} />
+        </div>
+
         <FormField
           control={form.control}
           name="name"
@@ -164,9 +194,25 @@ export default function GarmentEditForm(props: Props) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Color</FormLabel>
-              <FormControl>
-                <Input placeholder="Navy" {...field} />
-              </FormControl>
+              <Combobox
+                items={colors}
+                inputValue={field.value}
+                onInputValueChange={(val, { reason }) => {
+                  if (reason !== "input-clear") field.onChange(val);
+                }}
+              >
+                <ComboboxInput placeholder="Navy" showClear />
+                <ComboboxContent>
+                  <ComboboxEmpty>No existing colors.</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item) => (
+                      <ComboboxItem key={item} value={item}>
+                        {item}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
               <FormDescription>Color of the garment</FormDescription>
               <FormMessage />
             </FormItem>
@@ -217,18 +263,6 @@ export default function GarmentEditForm(props: Props) {
             </FormItem>
           )}
         />
-
-        <Button type="submit" disabled={pending}>
-          {pending ? (
-            <>
-              <Loader2Icon className="animate-spin" /> Saving
-            </>
-          ) : (
-            <>
-              <Save /> Save
-            </>
-          )}
-        </Button>
       </form>
     </Form>
   );

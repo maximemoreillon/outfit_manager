@@ -19,7 +19,6 @@ export default async function Garment({
         <div>
           <div className="flex justify-between items-center">
             <h2 className="text-3xl my-4">{garment.name}</h2>
-            <DeleteGarmentButton id={garment.id} />
           </div>
 
           <div className="grid gap-4 grid-cols-2">
