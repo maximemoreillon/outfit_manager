@@ -70,10 +70,12 @@ export default function GarmentPreviewCard(props: Props) {
         )}
         <CardHeader>
           <CardTitle className="truncate">{props.garment.name}</CardTitle>
-          <CardDescription className="flex justify-between">
-            <span>{props.garment.brand}</span>
-            <span>{props.garment.color}</span>
-          </CardDescription>
+          {(props.garment.brand || props.garment.color) && (
+            <CardDescription className="flex justify-between">
+              <span>{props.garment.brand}</span>
+              <span>{props.garment.color}</span>
+            </CardDescription>
+          )}
         </CardHeader>
 
         {(props.onRemove || props.onSelect) && (

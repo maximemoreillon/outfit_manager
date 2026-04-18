@@ -5,24 +5,26 @@ import { garmentsTable, outfitsTable } from "@/db/schema";
 import AddGarmentOufits from "./addOutfitGarmentsDialog";
 import { useEffect, useState } from "react";
 import GarmentsList from "@/components/garments/list";
+import { Loader2Icon } from "lucide-react";
 
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
 };
 
 export default function GarmentsOfOutfit(props: Props) {
-  const [garments, setGarments] = useState<
-    (typeof garmentsTable.$inferSelect)[]
-  >([]);
+  const [garments, setGarments] = useState<(typeof garmentsTable.$inferSelect)[]>([]);
+  const [loading, setLoading] = useState(true);
 
   async function fetchGarments() {
+    setLoading(true);
     const items = await readOutfitGarments(Number(props.outfit.id));
     setGarments(items);
+    setLoading(false);
   }
 
   useEffect(() => {
     fetchGarments();
-  }, []);
+  }, [props.outfit.id]);
 
   async function removeGarment(garment: typeof garmentsTable.$inferSelect) {
     await removeAction(null, {
@@ -46,7 +48,11 @@ export default function GarmentsOfOutfit(props: Props) {
           added={garments.map((g) => g.id)}
         />
       </div>
-      <GarmentsList garments={garments} onRemove={removeGarment} />
+      {loading ? (
+        <Loader2Icon className="animate-spin" />
+      ) : (
+        <GarmentsList garments={garments} onRemove={removeGarment} />
+      )}
     </div>
   );
 }

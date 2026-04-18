@@ -4,6 +4,7 @@ import DeleteGarmentButton from "@/components/garments/deleteButton";
 import { GarmentImage } from "@/components/garments/image";
 import Breadcrumbs from "@/components/breadcrumbs";
 import OutfitsOfGarment from "@/components/garments/outfits/outfitsOfGarments";
+import { notFound } from "next/navigation";
 
 export default async function Garment({
   params,
@@ -12,24 +13,19 @@ export default async function Garment({
 }) {
   const { id } = await params;
   const garment = await readGarment(Number(id));
+  if (!garment) notFound();
+
   return (
     <div>
       <Breadcrumbs />
-      {garment && (
-        <div>
-          <div className="flex justify-between items-center">
-            <h2 className="text-3xl my-4">{garment.name}</h2>
-          </div>
-
-          <div className="grid gap-4 grid-cols-2">
-            <GarmentEditForm garment={garment} />
-
-            <GarmentImage garment={garment} />
-
-            <OutfitsOfGarment garment={garment} className="col-span-2" />
-          </div>
-        </div>
-      )}
+      <div className="flex justify-between items-center">
+        <h2 className="text-3xl my-4">{garment.name}</h2>
+      </div>
+      <div className="grid gap-4 grid-cols-2">
+        <GarmentEditForm garment={garment} />
+        <GarmentImage garment={garment} />
+        <OutfitsOfGarment garment={garment} className="col-span-2" />
+      </div>
     </div>
   );
 }
