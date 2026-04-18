@@ -16,6 +16,7 @@ type Props = {
   limit: number;
   offset: number;
   onPageChange: ({ offset }: { offset: number }) => void;
+  className?: string;
 };
 export default function ClientPagination(props: Props) {
   const pageSpan = 2;
@@ -47,7 +48,7 @@ export default function ClientPagination(props: Props) {
   }
 
   return (
-    <Pagination>
+    <Pagination className={props.className}>
       <PaginationContent>
         {getCurrentPageNumber() > 0 && (
           <PaginationItem>

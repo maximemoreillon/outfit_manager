@@ -3,7 +3,7 @@ import ServerPagination from "@/components/serverPagination";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { readOutfits } from "@/lib/outfits";
-
+import OutfitsSearch from "@/components/outfits/search";
 import Breadcrumbs from "@/components/breadcrumbs";
 import { Plus } from "lucide-react";
 
@@ -25,6 +25,7 @@ export default async function Outfits({
           <Plus /> New
         </Link>
       </div>
+      <OutfitsSearch />
       <div className="grid gap-4 grid-cols-3">
         {outfits.map((outfit) => (
           <OutfitPreviewCard outfit={outfit} key={outfit.id} />

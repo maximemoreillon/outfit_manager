@@ -9,13 +9,22 @@ import { stream2Buffer } from "./utils";
 import sharp from "sharp";
 import { thumbnailFilename } from "./config";
 
+const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
 export async function uploadImage(image: File, prefix = uuid()) {
-  const key = `${prefix}/${image.name}`;
+  if (!image.type.startsWith("image/"))
+    throw new Error(`Invalid file type "${image.type}". Only images are allowed`);
+
+  if (image.size > MAX_SIZE)
+    throw new Error("File too large. Maximum size is 10MB");
+
+  const safeName = image.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const key = `${prefix}/${safeName}`;
 
   const buffer = await image.arrayBuffer();
 
   await s3Client.putObject(S3_BUCKET, key, Buffer.from(buffer));
-  return key;
+  return { key, safeName };
 }
 
 async function generateThumbnail(prefix: string, image: string) {
@@ -57,12 +66,12 @@ async function uploadEntityImage(
   image: File
 ) {
   const prefix = `${entity}/${id}`;
-  await uploadImage(image, prefix);
-  await generateThumbnail(prefix, image.name);
+  const { safeName } = await uploadImage(image, prefix);
+  await generateThumbnail(prefix, safeName);
 
   const [result] = await db
     .update(table as typeof garmentsTable)
-    .set({ image: image.name })
+    .set({ image: safeName })
     .where(eq((table as typeof garmentsTable).id, id))
     .returning();
 

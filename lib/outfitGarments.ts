@@ -2,7 +2,7 @@
 
 import { garmentsTable, outfitGarmentsTable, outfitsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, count } from "drizzle-orm";
 import { getAuthenticatedUserId } from "./auth";
 
 export async function addGarmentToOutfit(
@@ -30,18 +30,30 @@ export async function addGarmentToOutfit(
   return newRecord;
 }
 
-export async function readOutfitGarments(outfit_id: number) {
-  // TODO: pagination
+export async function readOutfitGarments(
+  outfit_id: number,
+  limit = 9,
+  offset = 0
+) {
+  const where = eq(outfitGarmentsTable.outfit_id, outfit_id);
+
+  const [{ count: total }] = await db
+    .select({ count: count() })
+    .from(outfitGarmentsTable)
+    .where(where);
+
   const result = await db
     .select()
     .from(outfitGarmentsTable)
-    .where(eq(outfitGarmentsTable.outfit_id, outfit_id))
+    .where(where)
     .innerJoin(
       garmentsTable,
       eq(outfitGarmentsTable.garment_id, garmentsTable.id)
-    );
+    )
+    .limit(limit)
+    .offset(offset);
 
-  return { items: result.map(({ garments }) => garments) };
+  return { items: result.map(({ garments }) => garments), total, limit, offset };
 }
 
 export async function removeGarmentFromOutfit(

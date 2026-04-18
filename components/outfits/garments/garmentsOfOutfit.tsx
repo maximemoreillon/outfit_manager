@@ -5,25 +5,36 @@ import { garmentsTable, outfitsTable } from "@/db/schema";
 import AddGarmentOufits from "./addOutfitGarmentsDialog";
 import { useEffect, useState } from "react";
 import GarmentsList from "@/components/garments/list";
+import ClientPagination from "@/components/clientPagination";
 
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
 };
 
+const LIMIT = 9;
+
 export default function GarmentsOfOutfit(props: Props) {
   const [garments, setGarments] = useState<
     (typeof garmentsTable.$inferSelect)[]
   >([]);
-
+  const [total, setTotal] = useState(0);
+  const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  async function fetchGarments(newOffset = offset) {
+    setLoading(true);
+    const { items, total } = await readOutfitGarments(
+      Number(props.outfit.id),
+      LIMIT,
+      newOffset
+    );
+    setGarments(items);
+    setTotal(total);
+    setLoading(false);
+  }
+
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const { items } = await readOutfitGarments(Number(props.outfit.id));
-      setGarments(items);
-      setLoading(false);
-    })();
+    fetchGarments(0);
   }, []);
 
   async function removeGarment(garment: typeof garmentsTable.$inferSelect) {
@@ -31,11 +42,12 @@ export default function GarmentsOfOutfit(props: Props) {
       outfit_id: props.outfit.id,
       garment_id: garment.id,
     });
-    setGarments(garments.filter((g) => g.id !== garment.id));
+    await fetchGarments(offset);
   }
 
   function onAdd(addedGarment: typeof garmentsTable.$inferSelect) {
-    setGarments([...garments, addedGarment]);
+    setGarments((prev) => [...prev, addedGarment]);
+    setTotal((prev) => prev + 1);
   }
 
   return (
@@ -48,11 +60,17 @@ export default function GarmentsOfOutfit(props: Props) {
           added={garments.map((g) => g.id)}
         />
       </div>
-      <div>
-        <GarmentsList garments={garments} onRemove={removeGarment} />
-      </div>
-
-      {/* TODO: pagination */}
+      <GarmentsList garments={garments} onRemove={removeGarment} />
+      <ClientPagination
+        className="my-4"
+        total={total}
+        limit={LIMIT}
+        offset={offset}
+        onPageChange={({ offset: newOffset }) => {
+          setOffset(newOffset);
+          fetchGarments(newOffset);
+        }}
+      />
     </div>
   );
 }

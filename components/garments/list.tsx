@@ -32,22 +32,26 @@ export default function GarmentsList(props: Props) {
         </ToggleGroupItem>
       </ToggleGroup>
 
-      <div>
-        {mode === "cards" && (
-          <GarmentCards
-            garments={props.garments}
-            onSelect={props.onSelect}
-            onRemove={props.onRemove}
-          />
-        )}
-        {mode === "table" && (
-          <GarmentsTable
-            garments={props.garments}
-            onSelect={props.onSelect}
-            onRemove={props.onRemove}
-          />
-        )}
-      </div>
+      {props.garments.length === 0 ? (
+        <p className="text-muted-foreground text-center py-8">No garments found.</p>
+      ) : (
+        <div>
+          {mode === "cards" && (
+            <GarmentCards
+              garments={props.garments}
+              onSelect={props.onSelect}
+              onRemove={props.onRemove}
+            />
+          )}
+          {mode === "table" && (
+            <GarmentsTable
+              garments={props.garments}
+              onSelect={props.onSelect}
+              onRemove={props.onRemove}
+            />
+          )}
+        </div>
+      )}
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 import { outfitsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, count, and, desc } from "drizzle-orm";
+import { eq, count, and, desc, ilike } from "drizzle-orm";
 import { getAuthenticatedUserId } from "./auth";
 
 export async function createOutfit(
@@ -25,8 +25,12 @@ export async function readOutfits(queryParams: {
 
   const limit = Number(queryParams.limit || "10");
   const offset = Number(queryParams.offset || "0");
+  const search = typeof queryParams.search === "string" ? queryParams.search : undefined;
 
-  const where = eq(outfitsTable.user_id, user_id);
+  const where = and(
+    eq(outfitsTable.user_id, user_id),
+    search ? ilike(outfitsTable.description, `%${search}%`) : undefined
+  );
 
   const [{ count: total }] = await db
     .select({ count: count() })

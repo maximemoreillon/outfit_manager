@@ -26,15 +26,18 @@ export default function GarmentsTable(props: Props) {
         <TableRow>
           <TableHead></TableHead>
           <TableHead>Name</TableHead>
+          <TableHead>Brand</TableHead>
+          <TableHead>Type</TableHead>
+          <TableHead>Color</TableHead>
           <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {props.garments.map((garment: any) => (
+        {props.garments.map((garment) => (
           <TableRow key={garment.id}>
             <TableCell>
               <img
-                className="size-32 object-contain"
+                className="size-16 object-cover rounded-md"
                 src={
                   garment.image
                     ? `/api/garments/${garment.id}/thumbnail`
@@ -44,20 +47,12 @@ export default function GarmentsTable(props: Props) {
               />
             </TableCell>
             <TableCell>{garment.name}</TableCell>
+            <TableCell>{garment.brand ?? "—"}</TableCell>
+            <TableCell>{garment.type ?? "—"}</TableCell>
+            <TableCell>{garment.color ?? "—"}</TableCell>
             <TableCell>
-              {/* <Link
-                href={`/garments/${garment.id}`}
-                className={buttonVariants({})}
-              >
-                See
-              </Link> */}
-
               {props.onSelect && (
-                <Button
-                  onClick={() => {
-                    if (props.onSelect) props.onSelect(garment);
-                  }}
-                >
+                <Button onClick={() => props.onSelect!(garment)}>
                   Select
                 </Button>
               )}
@@ -65,9 +60,7 @@ export default function GarmentsTable(props: Props) {
               {props.onRemove && (
                 <Button
                   variant="destructive"
-                  onClick={() => {
-                    if (props.onRemove) props.onRemove(garment);
-                  }}
+                  onClick={() => props.onRemove!(garment)}
                 >
                   Remove
                 </Button>
