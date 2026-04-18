@@ -69,7 +69,10 @@ export default function ImageUploadForm(props: Props) {
           )}
         />
 
-        <Button type="submit" disabled={pending}>
+        <Button
+          type="submit"
+          disabled={pending || !form.watch("imageFileList")?.length}
+        >
           <Upload />
         </Button>
       </form>

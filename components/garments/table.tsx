@@ -11,6 +11,7 @@ import {
 import { garmentsTable } from "@/db/schema";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
+import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
@@ -36,15 +37,15 @@ export default function GarmentsTable(props: Props) {
         {props.garments.map((garment) => (
           <TableRow key={garment.id}>
             <TableCell>
-              <img
-                className="size-16 object-cover rounded-md"
-                src={
-                  garment.image
-                    ? `/api/garments/${garment.id}/thumbnail`
-                    : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
-                }
-                alt=""
-              />
+              {garment.image ? (
+                <img
+                  className="size-16 object-cover rounded-md"
+                  src={`/api/garments/${garment.id}/thumbnail`}
+                  alt=""
+                />
+              ) : (
+                <ImagePlaceholder className="size-16 rounded-md" />
+              )}
             </TableCell>
             <TableCell>{garment.name}</TableCell>
             <TableCell>{garment.brand ?? "—"}</TableCell>

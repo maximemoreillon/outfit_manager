@@ -53,11 +53,13 @@ export default function ClientPagination(props: Props) {
         {getCurrentPageNumber() > 0 && (
           <PaginationItem>
             <PaginationPrevious
-              onClick={() =>
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
                 props.onPageChange({
                   offset: getOffsetForPage(getCurrentPageNumber() - 1),
-                })
-              }
+                });
+              }}
             />
           </PaginationItem>
         )}
@@ -88,11 +90,13 @@ export default function ClientPagination(props: Props) {
         {getCurrentPageNumber() < getPagesTotal() - 1 && (
           <PaginationItem>
             <PaginationNext
-              onClick={() =>
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
                 props.onPageChange({
                   offset: getOffsetForPage(getCurrentPageNumber() + 1),
-                })
-              }
+                });
+              }}
             />
           </PaginationItem>
         )}

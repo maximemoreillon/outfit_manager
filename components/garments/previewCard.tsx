@@ -13,6 +13,7 @@ import { garmentsTable } from "@/db/schema";
 import React, { useState } from "react";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import AddOutfitButton from "../outfits/garments/addOutfitButton";
+import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
@@ -58,15 +59,15 @@ export default function GarmentPreviewCard(props: Props) {
     // TODO: not super clean
     <Wrapper {...props}>
       <Card className="pt-0 overflow-hidden">
-        <img
-          className="w-full aspect-2/3  object-cover"
-          src={
-            props.garment.image
-              ? `/api/garments/${props.garment.id}/thumbnail`
-              : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
-          }
-          alt=""
-        />
+        {props.garment.image ? (
+          <img
+            className="w-full aspect-2/3 object-cover"
+            src={`/api/garments/${props.garment.id}/thumbnail`}
+            alt=""
+          />
+        ) : (
+          <ImagePlaceholder className="w-full aspect-2/3" />
+        )}
         <CardHeader>
           <CardTitle className="truncate">{props.garment.name}</CardTitle>
           <CardDescription className="flex justify-between">

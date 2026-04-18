@@ -3,6 +3,7 @@
 import { garmentsTable } from "@/db/schema";
 import { useState } from "react";
 import ImageUploadForm from "./imageUploadForm";
+import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
@@ -13,15 +14,15 @@ export function GarmentImage(props: Props) {
 
   return (
     <div>
-      <img
-        className="w-full rounded-xl"
-        src={
-          image
-            ? `/api/images/garments/${props.garment.id}/${image}`
-            : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
-        }
-        alt=""
-      />
+      {image ? (
+        <img
+          className="w-full rounded-xl"
+          src={`/api/images/garments/${props.garment.id}/${image}`}
+          alt=""
+        />
+      ) : (
+        <ImagePlaceholder className="w-full aspect-2/3 rounded-xl" />
+      )}
       <ImageUploadForm garment={props.garment} onUpdate={setImage} />
     </div>
   );
