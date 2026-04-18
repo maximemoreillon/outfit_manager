@@ -1,3 +1,5 @@
+// Pagination for client-managed lists (e.g. inside dialogs): page changes invoke a
+// callback so the parent can update its local fetch state without touching the URL.
 "use client";
 import {
   Pagination,
@@ -14,14 +16,14 @@ type Props = {
   onPageChange: ({ offset }: { offset: number }) => void;
   className?: string;
 };
-export default function ClientPagination(props: Props) {
+
+export default function CallbackPagination(props: Props) {
   function getPagesTotal() {
     return Math.ceil(props.total / props.limit);
   }
   function getCurrentPageNumber() {
     return Math.floor(props.offset / props.limit);
   }
-
   function getOffsetForPage(page: number) {
     return page * props.limit;
   }
@@ -42,7 +44,6 @@ export default function ClientPagination(props: Props) {
             />
           </PaginationItem>
         )}
-
         {getCurrentPageNumber() < getPagesTotal() - 1 && (
           <PaginationItem>
             <PaginationNext

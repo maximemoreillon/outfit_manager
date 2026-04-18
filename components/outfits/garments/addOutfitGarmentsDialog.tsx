@@ -13,8 +13,8 @@ import { readGarments } from "@/lib/garments";
 import { addAction } from "@/actions/outfitGarments";
 import { garmentsTable, outfitsTable } from "@/db/schema";
 import GarmentsFilters from "@/components/garments/queryParams";
-import ClientPagination from "@/components/clientPagination";
 import GarmentsList from "@/components/garments/list";
+import CallbackPagination from "@/components/callbackPagination";
 import { PlusIcon } from "lucide-react";
 
 type Props = {
@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function AddGarmentOufits(props: Props) {
-  const [fetchParams, setFetchParams] = useState({});
+  const [fetchParams, setFetchParams] = useState<Record<string, unknown>>({});
 
   const [data, setData] = useState<Awaited<
     ReturnType<typeof readGarments>
@@ -74,7 +74,7 @@ export default function AddGarmentOufits(props: Props) {
         </DialogHeader>
 
         <GarmentsFilters
-          onUpdate={setFetchParams}
+          onUpdate={(values) => setFetchParams({ ...values, offset: 0 })}
           defaultValues={fetchParams}
         />
         <div className="overflow-y-auto max-h-[calc(100vh-300px)]">
@@ -84,16 +84,15 @@ export default function AddGarmentOufits(props: Props) {
                 garments={data.items.filter((g) => !props.added.includes(g.id))}
                 onSelect={handleSelect}
               />
-              <div className="mt-4">
-                <ClientPagination
-                  total={data.total}
-                  limit={data.limit}
-                  offset={data.offset}
-                  onPageChange={(newParams) => {
-                    setFetchParams({ ...fetchParams, ...newParams });
-                  }}
-                />
-              </div>
+              <CallbackPagination
+                className="mt-4"
+                total={data.total}
+                limit={data.limit}
+                offset={data.offset}
+                onPageChange={(newParams) =>
+                  setFetchParams({ ...fetchParams, ...newParams })
+                }
+              />
             </>
           )}
         </div>

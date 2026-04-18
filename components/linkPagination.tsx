@@ -1,3 +1,5 @@
+// Pagination for top-level list pages: page changes update the URL (via href links),
+// which triggers a full server-side re-render with the new offset as a search param.
 "use client";
 import {
   Pagination,
@@ -17,7 +19,7 @@ type Props = {
   offset: number;
   className?: string;
 };
-export default function ServerPagination(props: Props) {
+export default function LinkPagination(props: Props) {
   const pageSpan = 2;
 
   const searchParams = useSearchParams();

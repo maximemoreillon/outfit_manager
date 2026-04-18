@@ -1,4 +1,4 @@
-import ServerPagination from "@/components/serverPagination";
+import LinkPagination from "@/components/linkPagination";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { readGarments } from "@/lib/garments";
 import Link from "next/link";
@@ -31,7 +31,7 @@ export default async function Garments({
 
       <GarmentsList garments={items} />
 
-      <ServerPagination
+      <LinkPagination
         className="my-4"
         total={total}
         limit={limit}

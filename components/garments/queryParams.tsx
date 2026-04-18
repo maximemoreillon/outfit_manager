@@ -25,6 +25,8 @@ import { useEffect, useState } from "react";
 import { readFilters } from "@/lib/misc";
 import { Search } from "lucide-react";
 
+const ANY = "__any__";
+
 const filterSchemaProperties = {
   color: z.string().nullable(),
   brand: z.string().nullable(),
@@ -125,9 +127,9 @@ export default function GarmentsFilters(props: Props) {
                   <FormLabel>{f}</FormLabel>
                   <FormControl>
                     <Select
-                      value={field.value || ""}
+                      value={field.value || ANY}
                       onValueChange={(e) => {
-                        field.onChange(e || null);
+                        field.onChange(e === ANY ? null : e);
                         form.handleSubmit(onSubmit)();
                       }}
                     >
@@ -135,7 +137,7 @@ export default function GarmentsFilters(props: Props) {
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Any</SelectItem>
+                        <SelectItem value={ANY}>Any</SelectItem>
                         {availableFilters[
                           f as keyof typeof availableFilters
                         ].map((e, i) => (

@@ -1,5 +1,5 @@
 import OutfitPreviewCard from "@/components/outfits/previewCard";
-import ServerPagination from "@/components/serverPagination";
+import LinkPagination from "@/components/linkPagination";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { readOutfits } from "@/lib/outfits";
@@ -32,7 +32,7 @@ export default async function Outfits({
         ))}
       </div>
       <div className="my-4">
-        <ServerPagination total={total} limit={limit} offset={offset} />
+        <LinkPagination total={total} limit={limit} offset={offset} />
       </div>
     </div>
   );

@@ -34,6 +34,13 @@ export async function addGarmentToOutfit(
 
   if (!garment) throw new Error("Garment not found");
 
+  const [{ count: garmentCount }] = await db
+    .select({ count: count() })
+    .from(outfitGarmentsTable)
+    .where(eq(outfitGarmentsTable.outfit_id, properties.outfit_id));
+
+  if (garmentCount >= 50) throw new Error("Outfit cannot have more than 50 garments");
+
   const [newRecord] = await db
     .insert(outfitGarmentsTable)
     .values(properties)
@@ -42,30 +49,18 @@ export async function addGarmentToOutfit(
   return newRecord;
 }
 
-export async function readOutfitGarments(
-  outfit_id: number,
-  limit = 9,
-  offset = 0
-) {
-  const where = eq(outfitGarmentsTable.outfit_id, outfit_id);
-
-  const [{ count: total }] = await db
-    .select({ count: count() })
-    .from(outfitGarmentsTable)
-    .where(where);
-
+export async function readOutfitGarments(outfit_id: number) {
   const result = await db
     .select()
     .from(outfitGarmentsTable)
-    .where(where)
+    .where(eq(outfitGarmentsTable.outfit_id, outfit_id))
     .innerJoin(
       garmentsTable,
       eq(outfitGarmentsTable.garment_id, garmentsTable.id)
     )
-    .limit(limit)
-    .offset(offset);
+    .limit(50);
 
-  return { items: result.map(({ garments }) => garments), total, limit, offset };
+  return result.map(({ garments }) => garments);
 }
 
 export async function removeGarmentFromOutfit(
