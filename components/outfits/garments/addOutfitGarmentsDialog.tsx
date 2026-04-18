@@ -34,9 +34,14 @@ export default function AddGarmentOufits(props: Props) {
 
   async function fetchGarments() {
     setLoading(true);
-    const d = await readGarments(fetchParams);
-    setData(d);
-    setLoading(false);
+    try {
+      const d = await readGarments(fetchParams);
+      setData(d);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error));
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {

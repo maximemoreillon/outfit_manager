@@ -1,23 +1,16 @@
-import { LogOut, Menu } from "lucide-react";
-import { auth } from "@/lib/auth";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import {
-  Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  Sheet,
 } from "@/components/ui/sheet";
-import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import LogoutButton from "./logoutButton";
 
-export async function Navbar() {
-  const session = await auth();
-
+export function Navbar() {
   return (
     <header className="flex justify-between px-6 py-4 border-b items-baseline">
       <div className="flex items-baseline gap-8">
@@ -39,10 +32,6 @@ export async function Navbar() {
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Wardrobe manager</SheetTitle>
-            {/* <SheetDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </SheetDescription> */}
             <div className="flex flex-col gap-6 p-4">
               <nav className="flex flex-col gap-6">
                 <Link href="/outfits">Outfits</Link>
@@ -54,12 +43,6 @@ export async function Navbar() {
 
               <div className="flex flex-col gap-3">
                 <LogoutButton />
-                {/* <Button asChild variant="outline">
-                  <Link href="logout">
-                    <LogOut />
-                    Logout
-                  </Link>
-                </Button> */}
               </div>
             </div>
           </SheetHeader>

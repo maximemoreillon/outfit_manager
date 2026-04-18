@@ -6,7 +6,6 @@ import { startTransition, useActionState } from "react";
 type Props = {
   outfit_id: number;
   garment_id: number;
-  onAdd?: () => void;
 };
 
 export default function AddOutfitButton({ outfit_id, garment_id }: Props) {

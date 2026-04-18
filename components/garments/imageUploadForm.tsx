@@ -3,13 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,10 +21,9 @@ import { toast } from "sonner";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
-  onUpdate: Function;
+  onUpdate: (image: string | null) => void;
 };
 
-// TODO: refine
 const formSchema = z.object({
   imageFileList: z.custom<FileList>(),
 });
@@ -44,7 +41,7 @@ export default function ImageUploadForm(props: Props) {
   }
 
   useEffect(() => {
-    if (state?.success) props.onUpdate(state.data?.image);
+    if (state?.success && state.data) props.onUpdate(state.data.image);
     else if (state?.error) toast(state.error);
   }, [state]);
 
@@ -63,7 +60,6 @@ export default function ImageUploadForm(props: Props) {
               <FormControl>
                 <Input {...form.register("imageFileList")} type="file" />
               </FormControl>
-              {/* <FormDescription>Picture of the garment</FormDescription> */}
               <FormMessage />
             </FormItem>
           )}

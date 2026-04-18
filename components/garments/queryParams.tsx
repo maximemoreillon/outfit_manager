@@ -10,7 +10,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -127,9 +126,8 @@ export default function GarmentsFilters(props: Props) {
                   <FormControl>
                     <Select
                       value={field.value || ""}
-                      // Not super clan by does the job simply
                       onValueChange={(e) => {
-                        field.onChange(e);
+                        field.onChange(e || null);
                         form.handleSubmit(onSubmit)();
                       }}
                     >
@@ -137,7 +135,7 @@ export default function GarmentsFilters(props: Props) {
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={null!}>Any</SelectItem>
+                        <SelectItem value="">Any</SelectItem>
                         {availableFilters[
                           f as keyof typeof availableFilters
                         ].map((e, i) => (
@@ -148,7 +146,7 @@ export default function GarmentsFilters(props: Props) {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  {/* <FormDescription>Search</FormDescription> */}
+
                   <FormMessage />
                 </FormItem>
               )}

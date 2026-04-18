@@ -36,9 +36,6 @@ export default function OutfitsOfGarment(props: Props) {
         ))}
       </div>
 
-      {/* <div className="my-4">
-        <ServerPagination total={total} limit={limit} offset={offset} />
-      </div> */}
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function DeleteGarmentButton(props: Props) {
   const [state, action, pending] = useActionState(deleteGarmentAction, null);
 
   async function onClick() {
-    if (!confirm("Are you sure you want to delete this outfit?")) return;
+    if (!confirm("Are you sure you want to delete this garment?")) return;
     startTransition(() => action(props.id));
   }
 

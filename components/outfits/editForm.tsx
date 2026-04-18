@@ -45,7 +45,7 @@ export default function OutfitEditForm(props: Props) {
   }
 
   useEffect(() => {
-    if (state?.success) toast(`Garment saved`);
+    if (state?.success) toast(`Outfit saved`);
     else if (state?.error) toast(state.error);
   }, [state]);
 

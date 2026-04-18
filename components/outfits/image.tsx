@@ -2,7 +2,7 @@
 
 import { outfitsTable } from "@/db/schema";
 import { useState } from "react";
-import ImageUploadForm from "./imagUpdateForm";
+import ImageUploadForm from "./imageUpdateForm";
 import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 
 type Props = {

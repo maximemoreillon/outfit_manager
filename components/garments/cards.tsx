@@ -11,7 +11,7 @@ type Props = {
 export default function GarmentCards(props: Props) {
   return (
     <div className="grid gap-4 md:grid-cols-3 grid-cols-2">
-      {props.garments.map((garment: any) => (
+      {props.garments.map((garment) => (
         <GarmentPreviewCard
           garment={garment}
           key={garment.id}

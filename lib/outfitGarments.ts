@@ -22,6 +22,18 @@ export async function addGarmentToOutfit(
 
   if (!outfit) throw new Error("Outfit not found");
 
+  const [garment] = await db
+    .select({ id: garmentsTable.id })
+    .from(garmentsTable)
+    .where(
+      and(
+        eq(garmentsTable.id, properties.garment_id),
+        eq(garmentsTable.user_id, user_id)
+      )
+    );
+
+  if (!garment) throw new Error("Garment not found");
+
   const [newRecord] = await db
     .insert(outfitGarmentsTable)
     .values(properties)
@@ -84,6 +96,17 @@ export async function removeGarmentFromOutfit(
 }
 
 export async function readGarmentOutfits(garment_id: number) {
+  const user_id = await getAuthenticatedUserId();
+
+  const [garment] = await db
+    .select({ id: garmentsTable.id })
+    .from(garmentsTable)
+    .where(
+      and(eq(garmentsTable.id, garment_id), eq(garmentsTable.user_id, user_id))
+    );
+
+  if (!garment) throw new Error("Garment not found");
+
   // TODO: pagination
   const result = await db
     .select()

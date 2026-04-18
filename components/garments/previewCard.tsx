@@ -10,7 +10,7 @@ import {
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { garmentsTable } from "@/db/schema";
-import React, { useState } from "react";
+import { ReactNode, useState } from "react";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import AddOutfitButton from "../outfits/garments/addOutfitButton";
 import ImagePlaceholder from "@/components/ui/imagePlaceholder";
@@ -24,7 +24,7 @@ type Props = {
 };
 
 interface WrapperProps<T> extends Props {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const Wrapper = <T extends HTMLElement>({
@@ -93,9 +93,6 @@ export default function GarmentPreviewCard(props: Props) {
               <AddOutfitButton
                 outfit_id={props.outfit_id}
                 garment_id={props.garment.id}
-                onAdd={() => {
-                  if (props.onAdd) props.onAdd(props.garment);
-                }}
               />
             )}
 
