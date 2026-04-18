@@ -36,18 +36,17 @@ import { Switch } from "@/components/ui/switch";
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   description: z.string(),
-  comment: z.string(),
-  quantity: z.coerce.number(),
   brand: z.string(),
   type: z.string(),
   color: z.string(),
+  size: z.string(),
   parent_id: z.number().nullable(),
   is_template: z.boolean(),
 });
 
 type Props = { garment: typeof garmentsTable.$inferSelect };
 
-export default function GarmentEditForm(props: Props) {
+export default function TemplateEditForm(props: Props) {
   const [types, setTypes] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
@@ -63,8 +62,7 @@ export default function GarmentEditForm(props: Props) {
       color: props.garment.color || "",
       brand: props.garment.brand || "",
       description: props.garment.description || "",
-      comment: props.garment.comment || "",
-      quantity: props.garment.quantity,
+      size: props.garment.size || "",
       parent_id: props.garment.parent_id ?? null,
       is_template: props.garment.is_template,
     },
@@ -96,7 +94,7 @@ export default function GarmentEditForm(props: Props) {
   }, [form, onSubmit]);
 
   useEffect(() => {
-    if (state?.success) toast(`Garment saved`);
+    if (state?.success) toast("Template saved");
     else if (state?.error) toast(state.error);
   }, [state]);
 
@@ -136,9 +134,9 @@ export default function GarmentEditForm(props: Props) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Grey jacket" {...field} />
+                <Input placeholder="White dress shirt" {...field} />
               </FormControl>
-              <FormDescription>Name of the garment</FormDescription>
+              <FormDescription>Name of this garment type</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -149,14 +147,15 @@ export default function GarmentEditForm(props: Props) {
           name="parent_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type (catalog)</FormLabel>
+              <FormLabel>Parent type</FormLabel>
               <GarmentTemplateSelector
                 templates={templates}
                 value={field.value}
                 onChange={field.onChange}
-                placeholder="Link to a catalog template"
+                excludeId={props.garment.id}
+                placeholder="Select a parent type"
               />
-              <FormDescription>The catalog entry this garment is an instance of</FormDescription>
+              <FormDescription>A more generic type this one belongs to</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -175,7 +174,7 @@ export default function GarmentEditForm(props: Props) {
                   if (reason !== "input-clear") field.onChange(val);
                 }}
               >
-                <ComboboxInput placeholder="Pants" showClear />
+                <ComboboxInput placeholder="Shirt" showClear />
                 <ComboboxContent>
                   <ComboboxEmpty>No existing types.</ComboboxEmpty>
                   <ComboboxList>
@@ -187,7 +186,6 @@ export default function GarmentEditForm(props: Props) {
                   </ComboboxList>
                 </ComboboxContent>
               </Combobox>
-              <FormDescription>Type of the garment</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -218,7 +216,6 @@ export default function GarmentEditForm(props: Props) {
                   </ComboboxList>
                 </ComboboxContent>
               </Combobox>
-              <FormDescription>Brand of the garment</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -237,7 +234,7 @@ export default function GarmentEditForm(props: Props) {
                   if (reason !== "input-clear") field.onChange(val);
                 }}
               >
-                <ComboboxInput placeholder="Navy" showClear />
+                <ComboboxInput placeholder="White" showClear />
                 <ComboboxContent>
                   <ComboboxEmpty>No existing colors.</ComboboxEmpty>
                   <ComboboxList>
@@ -249,7 +246,6 @@ export default function GarmentEditForm(props: Props) {
                   </ComboboxList>
                 </ComboboxContent>
               </Combobox>
-              <FormDescription>Color of the garment</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -262,9 +258,8 @@ export default function GarmentEditForm(props: Props) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="Slim fit" {...field} />
+                <Input placeholder="Slim fit, French cuffs" {...field} />
               </FormControl>
-              <FormDescription>Description of the item</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -272,29 +267,13 @@ export default function GarmentEditForm(props: Props) {
 
         <FormField
           control={form.control}
-          name="comment"
+          name="size"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Comment</FormLabel>
+              <FormLabel>Size</FormLabel>
               <FormControl>
-                <Input placeholder="Has inner pockets" {...field} />
+                <Input placeholder="M" {...field} />
               </FormControl>
-              <FormDescription>Comment about item</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Quantity</FormLabel>
-              <FormControl>
-                <Input placeholder="2" {...field} type="number" />
-              </FormControl>
-              <FormDescription>Quantity of said item</FormDescription>
               <FormMessage />
             </FormItem>
           )}

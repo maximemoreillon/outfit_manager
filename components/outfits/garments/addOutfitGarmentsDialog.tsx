@@ -17,6 +17,8 @@ import GarmentsList from "@/components/garments/list";
 import CallbackPagination from "@/components/callbackPagination";
 import { PlusIcon } from "lucide-react";
 
+type View = "template" | "specific";
+
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
   onAdd: (garment: typeof garmentsTable.$inferSelect) => void;
@@ -24,29 +26,22 @@ type Props = {
 };
 
 export default function AddGarmentOufits(props: Props) {
+  const [view, setView] = useState<View>("template");
   const [fetchParams, setFetchParams] = useState<Record<string, unknown>>({});
-
-  const [data, setData] = useState<Awaited<
-    ReturnType<typeof readGarments>
-  > | null>(null);
-
+  const [data, setData] = useState<Awaited<ReturnType<typeof readGarments>> | null>(null);
   const [isLoading, setLoading] = useState(true);
 
-  async function fetchGarments() {
-    setLoading(true);
-    try {
-      const d = await readGarments(fetchParams);
-      setData(d);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : String(error));
-    } finally {
-      setLoading(false);
-    }
-  }
+  useEffect(() => {
+    setFetchParams({});
+  }, [view]);
 
   useEffect(() => {
-    fetchGarments();
-  }, [fetchParams]);
+    setLoading(true);
+    readGarments({ ...fetchParams, is_template: view === "template" ? "true" : "false" })
+      .then(setData)
+      .catch((e) => toast.error(e instanceof Error ? e.message : String(e)))
+      .finally(() => setLoading(false));
+  }, [fetchParams, view]);
 
   async function handleSelect(garment: typeof garmentsTable.$inferSelect) {
     const result = await addAction(null, {
@@ -68,16 +63,32 @@ export default function AddGarmentOufits(props: Props) {
           <PlusIcon /> Add
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[Npx] max-w-5xl">
+      <DialogContent className="max-w-5xl">
         <DialogHeader>
           <DialogTitle>Add garments</DialogTitle>
         </DialogHeader>
+
+        <div className="flex gap-2">
+          <Button
+            variant={view === "template" ? "default" : "outline"}
+            onClick={() => setView("template")}
+          >
+            Any (catalog type)
+          </Button>
+          <Button
+            variant={view === "specific" ? "default" : "outline"}
+            onClick={() => setView("specific")}
+          >
+            Specific garment
+          </Button>
+        </div>
 
         <GarmentsFilters
           onUpdate={(values) => setFetchParams({ ...values, offset: 0 })}
           defaultValues={fetchParams}
         />
-        <div className="overflow-y-auto max-h-[calc(100vh-300px)]">
+
+        <div className="overflow-y-auto max-h-[calc(100vh-380px)]">
           {data && (
             <>
               <GarmentsList

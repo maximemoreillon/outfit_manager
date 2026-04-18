@@ -2,7 +2,7 @@
 
 import { garmentsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, count, ilike, and } from "drizzle-orm";
+import { eq, count, ilike, and, isNotNull, not } from "drizzle-orm";
 import { getAuthenticatedUserId } from "./auth";
 
 // TODO: make it more specific
@@ -14,6 +14,7 @@ type ReadGarmentsParams = {
   brand?: string | null;
   type?: string | null;
   color?: string | null;
+  is_template?: string; // "true" | "false" | undefined (no filter)
 };
 
 export async function createGarment(
@@ -35,10 +36,17 @@ export async function readGarments(queryParams: ReadGarmentsParams) {
   const limit = Number(queryParams.limit || "10");
   const offset = Number(queryParams.offset || "0");
 
-  const { search, brand, type, color } = queryParams;
+  const { search, brand, type, color, is_template } = queryParams;
+  const templateFilter =
+    is_template === "true"
+      ? eq(garmentsTable.is_template, true)
+      : is_template === "false"
+        ? eq(garmentsTable.is_template, false)
+        : undefined;
 
   const where = and(
     eq(garmentsTable.user_id, user_id),
+    templateFilter,
     search ? ilike(garmentsTable.name, `%${search}%`) : undefined,
     brand ? eq(garmentsTable.brand, brand) : undefined,
     type ? eq(garmentsTable.type, type) : undefined,
@@ -86,6 +94,33 @@ export async function updateGarment(
     .returning();
 
   return garment;
+}
+
+export async function readAllGarmentTemplates() {
+  const user_id = await getAuthenticatedUserId();
+  return db
+    .select()
+    .from(garmentsTable)
+    .where(
+      and(
+        eq(garmentsTable.user_id, user_id),
+        eq(garmentsTable.is_template, true)
+      )
+    )
+    .orderBy(garmentsTable.name);
+}
+
+export async function readGarmentsByParent(parent_id: number) {
+  const user_id = await getAuthenticatedUserId();
+  return db
+    .select()
+    .from(garmentsTable)
+    .where(
+      and(
+        eq(garmentsTable.user_id, user_id),
+        eq(garmentsTable.parent_id, parent_id)
+      )
+    );
 }
 
 export async function deleteGarment(id: number) {

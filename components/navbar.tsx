@@ -34,9 +34,8 @@ export function Navbar() {
             <SheetTitle>Wardrobe manager</SheetTitle>
             <div className="flex flex-col gap-6 p-4">
               <nav className="flex flex-col gap-6">
-                <Link href="/outfits">Outfits</Link>
-
                 <Link href="/garments">Garments</Link>
+                <Link href="/outfits">Outfits</Link>
               </nav>
 
               <Separator />

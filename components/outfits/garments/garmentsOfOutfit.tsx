@@ -4,7 +4,7 @@ import { readOutfitGarments } from "@/lib/outfitGarments";
 import { garmentsTable, outfitsTable } from "@/db/schema";
 import AddGarmentOufits from "./addOutfitGarmentsDialog";
 import { useEffect, useState } from "react";
-import GarmentsList from "@/components/garments/list";
+import GarmentPreviewCard from "@/components/garments/previewCard";
 import { Loader2Icon } from "lucide-react";
 
 type Props = {
@@ -50,8 +50,19 @@ export default function GarmentsOfOutfit(props: Props) {
       </div>
       {loading ? (
         <Loader2Icon className="animate-spin" />
+      ) : garments.length === 0 ? (
+        <p className="text-muted-foreground">No garments added yet.</p>
       ) : (
-        <GarmentsList garments={garments} onRemove={removeGarment} />
+        <div className="grid gap-4 md:grid-cols-3 grid-cols-2">
+          {garments.map((garment) => (
+            <div key={garment.id} className="relative">
+              <span className="absolute top-2 left-2 z-10 text-xs bg-black/60 text-white px-2 py-0.5 rounded-full">
+                {garment.is_template ? "Any" : "Specific"}
+              </span>
+              <GarmentPreviewCard garment={garment} onRemove={removeGarment} />
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
