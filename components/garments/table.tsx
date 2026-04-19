@@ -15,7 +15,6 @@ import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
-  basePath?: string;
   onSelect?: (garment: typeof garmentsTable.$inferSelect) => void;
   onRemove?: (garment: typeof garmentsTable.$inferSelect) => void;
 };
@@ -70,7 +69,7 @@ export default function GarmentsTable(props: Props) {
 
               {!props.onRemove && !props.onSelect && (
                 <Link
-                  href={`${props.basePath ?? "/garments"}/${garment.id}`}
+                  href={`/garments/${garment.id}`}
                   className={buttonVariants({})}
                 >
                   See

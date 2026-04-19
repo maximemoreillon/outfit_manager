@@ -8,7 +8,6 @@ import { List, Grid2X2 } from "lucide-react";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
-  basePath?: string;
   onSelect?: (garment: typeof garmentsTable.$inferSelect) => void;
   onRemove?: (garment: typeof garmentsTable.$inferSelect) => void;
 };
@@ -40,7 +39,6 @@ export default function GarmentsList(props: Props) {
           {mode === "cards" && (
             <GarmentCards
               garments={props.garments}
-              basePath={props.basePath}
               onSelect={props.onSelect}
               onRemove={props.onRemove}
             />
@@ -48,7 +46,6 @@ export default function GarmentsList(props: Props) {
           {mode === "table" && (
             <GarmentsTable
               garments={props.garments}
-              basePath={props.basePath}
               onSelect={props.onSelect}
               onRemove={props.onRemove}
             />

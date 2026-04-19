@@ -16,7 +16,6 @@ import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
-  basePath?: string;
   showGenericBadge?: boolean;
   onSelect?: (garment: typeof garmentsTable.$inferSelect) => void;
   onRemove?: (garment: typeof garmentsTable.$inferSelect) => void | Promise<void>;
@@ -24,8 +23,7 @@ type Props = {
 
 export default function GarmentPreviewCard(props: Props) {
   const [removing, setRemoving] = useState(false);
-  const basePath = props.basePath ?? "/garments";
-  const href = `${basePath}/${props.garment.id}`;
+  const href = `/garments/${props.garment.id}`;
 
   async function handleRemove() {
     if (!props.onRemove) return;
