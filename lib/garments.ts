@@ -2,7 +2,7 @@
 
 import { garmentsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, count, ilike, and } from "drizzle-orm";
+import { eq, count, ilike, and, or, isNull } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { getAuthenticatedUserId } from "./auth";
 
@@ -56,18 +56,26 @@ export async function readGarments(queryParams: ReadGarmentsParams) {
         ? eq(garmentsTable.is_generic, false)
         : undefined;
 
+  const isBlank = (col: Parameters<typeof isNull>[0]) => or(isNull(col), eq(col as Parameters<typeof eq>[0], ""));
+  const inheritedField = (
+    col: Parameters<typeof isNull>[0],
+    parentCol: Parameters<typeof eq>[0],
+    val: string
+  ) => or(eq(col as Parameters<typeof eq>[0], val), and(isBlank(col), eq(parentCol, val)));
+
   const where = and(
     eq(garmentsTable.user_id, user_id),
     templateFilter,
     search ? ilike(garmentsTable.name, `%${search}%`) : undefined,
-    brand ? eq(garmentsTable.brand, brand) : undefined,
-    type ? eq(garmentsTable.type, type) : undefined,
-    color ? eq(garmentsTable.color, color) : undefined
+    brand ? inheritedField(garmentsTable.brand, parentTable.brand, brand) : undefined,
+    type ? inheritedField(garmentsTable.type, parentTable.type, type) : undefined,
+    color ? inheritedField(garmentsTable.color, parentTable.color, color) : undefined
   );
 
   const [{ count: total }] = await db
     .select({ count: count() })
     .from(garmentsTable)
+    .leftJoin(parentTable, eq(garmentsTable.parent_id, parentTable.id))
     .where(where);
 
   const rows = await db
@@ -103,7 +111,11 @@ export async function updateGarment(
   values: typeof garmentsTable.$inferInsert
 ) {
   const user_id = await getAuthenticatedUserId();
-  const { user_id: _uid, ...updateValues } = values;
+  const { user_id: _uid, ...rest } = values;
+  const updateValues = { ...rest };
+  for (const f of INHERITED_FIELDS) {
+    if (updateValues[f] === "") updateValues[f] = null;
+  }
   const [garment] = await db
     .update(garmentsTable)
     .set(updateValues)

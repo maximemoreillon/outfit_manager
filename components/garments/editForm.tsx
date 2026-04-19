@@ -148,30 +148,28 @@ export default function GarmentEditForm(props: Props) {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="parent_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{isGeneric ? "Parent generic" : "Generic type"}</FormLabel>
-              <GarmentGenericSelector
-                templates={generics}
-                value={field.value}
-                onChange={field.onChange}
-                excludeId={props.garment.id}
-                placeholder={isGeneric ? "Select a parent generic" : "Link to a generic garment"}
-              />
-              <FormDescription>
-                {isGeneric
-                  ? "A more generic type this one belongs to"
-                  : "The generic garment this is an instance of"}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {!isGeneric && (
+          <FormField
+            control={form.control}
+            name="parent_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Generic type</FormLabel>
+                <GarmentGenericSelector
+                  templates={generics}
+                  value={field.value}
+                  onChange={field.onChange}
+                  excludeId={props.garment.id}
+                  placeholder="Link to a generic garment"
+                />
+                <FormDescription>The generic garment this is an instance of</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
-        {parent ? (
+        {parent && (
           <div className="space-y-1 rounded-md border px-3 py-2 text-sm">
             <p className="font-medium text-muted-foreground text-xs mb-2">
               Inherited from{" "}
@@ -187,87 +185,90 @@ export default function GarmentEditForm(props: Props) {
             {parent.color && <p><span className="text-muted-foreground">Color:</span> {parent.color}</p>}
             {parent.size && <p><span className="text-muted-foreground">Size:</span> {parent.size}</p>}
           </div>
-        ) : (
-          <>
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type</FormLabel>
-                  <Combobox
-                    items={types}
-                    inputValue={field.value}
-                    onInputValueChange={(val, { reason }) => {
-                      if (reason !== "input-clear") field.onChange(val);
-                    }}
-                  >
-                    <ComboboxInput placeholder="Pants" showClear />
-                    <ComboboxContent>
-                      <ComboboxEmpty>No existing types.</ComboboxEmpty>
-                      <ComboboxList>
-                        {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        )}
 
-            <FormField
-              control={form.control}
-              name="brand"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Brand</FormLabel>
-                  <Combobox
-                    items={brands}
-                    inputValue={field.value}
-                    onInputValueChange={(val, { reason }) => {
-                      if (reason !== "input-clear") field.onChange(val);
-                    }}
-                  >
-                    <ComboboxInput placeholder="Uniqlo" showClear />
-                    <ComboboxContent>
-                      <ComboboxEmpty>No existing brands.</ComboboxEmpty>
-                      <ComboboxList>
-                        {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {!parent?.type && (
+          <FormField
+            control={form.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Type</FormLabel>
+                <Combobox
+                  items={types}
+                  inputValue={field.value}
+                  onInputValueChange={(val, { reason }) => {
+                    if (reason !== "input-clear") field.onChange(val);
+                  }}
+                >
+                  <ComboboxInput placeholder="Pants" showClear />
+                  <ComboboxContent>
+                    <ComboboxEmpty>No existing types.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
-            <FormField
-              control={form.control}
-              name="color"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <Combobox
-                    items={colors}
-                    inputValue={field.value}
-                    onInputValueChange={(val, { reason }) => {
-                      if (reason !== "input-clear") field.onChange(val);
-                    }}
-                  >
-                    <ComboboxInput placeholder="Navy" showClear />
-                    <ComboboxContent>
-                      <ComboboxEmpty>No existing colors.</ComboboxEmpty>
-                      <ComboboxList>
-                        {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {!parent?.brand && (
+          <FormField
+            control={form.control}
+            name="brand"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Brand</FormLabel>
+                <Combobox
+                  items={brands}
+                  inputValue={field.value}
+                  onInputValueChange={(val, { reason }) => {
+                    if (reason !== "input-clear") field.onChange(val);
+                  }}
+                >
+                  <ComboboxInput placeholder="Uniqlo" showClear />
+                  <ComboboxContent>
+                    <ComboboxEmpty>No existing brands.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
-          </>
+        {!parent?.color && (
+          <FormField
+            control={form.control}
+            name="color"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Color</FormLabel>
+                <Combobox
+                  items={colors}
+                  inputValue={field.value}
+                  onInputValueChange={(val, { reason }) => {
+                    if (reason !== "input-clear") field.onChange(val);
+                  }}
+                >
+                  <ComboboxInput placeholder="Navy" showClear />
+                  <ComboboxContent>
+                    <ComboboxEmpty>No existing colors.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         )}
 
         <FormField

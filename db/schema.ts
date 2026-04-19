@@ -11,7 +11,7 @@ import { type AnyPgColumn } from "drizzle-orm/pg-core";
 export const garmentsTable = pgTable("garments", {
   id: serial().primaryKey(),
   name: text().notNull().default("Unnnamed garment"),
-  description: text().default("No description"),
+  description: text().default(""),
   image: text(),
   color: text(),
   brand: text(),
@@ -33,7 +33,7 @@ export const garmentsTable = pgTable("garments", {
 export const outfitsTable = pgTable("outfits", {
   id: serial().primaryKey(),
   image: text(),
-  description: text().default("No description"),
+  description: text().default(""),
   comment: text(),
   rating: integer(),
   user_id: text(),
@@ -50,5 +50,5 @@ export const outfitGarmentsTable = pgTable(
       .notNull()
       .references(() => garmentsTable.id, { onDelete: "cascade" }),
   },
-  (table) => [unique().on(table.outfit_id, table.garment_id)]
+  (table) => [unique().on(table.outfit_id, table.garment_id)],
 );

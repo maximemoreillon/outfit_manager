@@ -7,7 +7,6 @@ import GarmentsList from "@/components/garments/list";
 import Breadcrumbs from "@/components/breadcrumbs";
 import { Plus } from "lucide-react";
 import { Suspense } from "react";
-import { cn } from "@/lib/utils";
 
 export default async function Garments({
   searchParams,
@@ -29,27 +28,6 @@ export default async function Garments({
           className={buttonVariants({})}
         >
           <Plus /> New
-        </Link>
-      </div>
-
-      <div className="flex gap-2 mb-4">
-        <Link
-          href="/garments"
-          className={buttonVariants({
-            variant: !isGeneric ? "default" : "outline",
-            size: "sm",
-          })}
-        >
-          Physical
-        </Link>
-        <Link
-          href="/garments?is_generic=true"
-          className={buttonVariants({
-            variant: isGeneric ? "default" : "outline",
-            size: "sm",
-          })}
-        >
-          Templates
         </Link>
       </div>
 
