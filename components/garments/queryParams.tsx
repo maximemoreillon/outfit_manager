@@ -20,10 +20,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { readFilters } from "@/lib/misc";
 import { Search } from "lucide-react";
+import { ButtonGroup } from "@/components/ui/button-group";
 
 const ANY = "__any__";
 
@@ -35,6 +37,7 @@ const filterSchemaProperties = {
 
 const formSchema = z.object({
   search: z.string(),
+  is_generic: z.string(),
   ...filterSchemaProperties,
 });
 
@@ -43,6 +46,7 @@ type Filters = {
   type?: string;
   brand?: string;
   color?: string;
+  is_generic?: string;
 };
 
 type Props = {
@@ -68,6 +72,7 @@ export default function GarmentsFilters(props: Props) {
 
   const defaultValues = {
     search: "",
+    is_generic: "false",
     type: "",
     brand: "",
     color: "",
@@ -79,7 +84,7 @@ export default function GarmentsFilters(props: Props) {
     (Object.keys(defaultValues) as Array<keyof typeof defaultValues>).forEach(
       (k) => {
         defaultValues[k] = searchParams.get(k) || "";
-      }
+      },
     );
   }
 
@@ -116,6 +121,49 @@ export default function GarmentsFilters(props: Props) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-2"
       >
+        <div className="flex gap-4 items-center">
+          <FormField
+            control={form.control}
+            name="search"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Search</FormLabel>
+                <ButtonGroup className="w-full">
+                  <Input placeholder="Grey jacket" {...field} />
+                  {/* <Button variant="outline">Search</Button> */}
+                  <Button
+                    type="submit"
+                    // className="size-8"
+                    variant="outline"
+                  >
+                    <Search />
+                  </Button>
+                </ButtonGroup>
+                {/* <FormControl></FormControl> */}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {props.useSearchParams && (
+            <FormField
+              control={form.control}
+              name="is_generic"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center gap-2 mt-6">
+                  <Switch
+                    checked={field.value === "true"}
+                    onCheckedChange={(checked) => {
+                      field.onChange(checked ? "true" : "false");
+                      form.handleSubmit(onSubmit)();
+                    }}
+                  />
+                  <FormLabel className="!mt-0">Generic</FormLabel>
+                </FormItem>
+              )}
+            />
+          )}
+        </div>
         <div className="flex gap-4">
           {Object.keys(availableFilters).map((f) => (
             <FormField
@@ -123,7 +171,7 @@ export default function GarmentsFilters(props: Props) {
               control={form.control}
               name={f as keyof typeof availableFilters}
               render={({ field }) => (
-                <FormItem className="grow-1">
+                <FormItem className="flex-1">
                   <FormLabel>{f}</FormLabel>
                   <FormControl>
                     <Select
@@ -154,26 +202,6 @@ export default function GarmentsFilters(props: Props) {
               )}
             />
           ))}
-        </div>
-
-        <div className="flex gap-4 items-end">
-          <FormField
-            control={form.control}
-            name="search"
-            render={({ field }) => (
-              <FormItem className="grow-1">
-                <FormLabel>Search</FormLabel>
-                <FormControl>
-                  <Input placeholder="Grey jacket" {...field} />
-                </FormControl>
-                {/* <FormDescription>Search</FormDescription> */}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" size="icon" className="size-8">
-            <Search />
-          </Button>
         </div>
       </form>
     </Form>

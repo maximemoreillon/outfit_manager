@@ -29,7 +29,8 @@ export async function updateGarmentAction(
   values: ItemInsert
 ) {
   try {
-    await updateGarment(id, values);
+    const sanitized = values.is_generic ? { ...values, parent_id: null } : values;
+    await updateGarment(id, sanitized);
   } catch (error) {
     return { error: errorMessage(error), success: false };
   }
