@@ -16,7 +16,7 @@ type Garment = typeof garmentsTable.$inferSelect;
 function resolveInheritance(garment: Garment, parent: Garment | null): Garment {
   if (!garment.parent_id || !parent) return garment;
   const overrides = Object.fromEntries(
-    INHERITED_FIELDS.map((f) => [f, parent[f]])
+    INHERITED_FIELDS.filter((f) => parent[f] !== null && parent[f] !== "").map((f) => [f, parent[f]])
   ) as Pick<Garment, (typeof INHERITED_FIELDS)[number]>;
   return { ...garment, ...overrides };
 }
