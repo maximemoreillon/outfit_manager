@@ -129,8 +129,10 @@ export default function GarmentsFilters(props: Props) {
               <FormItem className="flex-1">
                 <FormLabel>Search</FormLabel>
                 <ButtonGroup className="w-full">
-                  <Input placeholder="Grey jacket" {...field} />
-                  {/* <Button variant="outline">Search</Button> */}
+                  <FormControl>
+                    <Input placeholder="Grey jacket" {...field} />
+                    {/* <Button variant="outline">Search</Button> */}
+                  </FormControl>
                   <Button
                     type="submit"
                     // className="size-8"
