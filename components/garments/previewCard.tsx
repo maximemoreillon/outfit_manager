@@ -17,6 +17,7 @@ import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 type Props = {
   garment: typeof garmentsTable.$inferSelect;
   basePath?: string;
+  showGenericBadge?: boolean;
   onSelect?: (garment: typeof garmentsTable.$inferSelect) => void;
   onRemove?: (garment: typeof garmentsTable.$inferSelect) => void | Promise<void>;
 };
@@ -37,7 +38,12 @@ export default function GarmentPreviewCard(props: Props) {
   }
 
   const card = (
-    <Card className="pt-0 overflow-hidden">
+    <Card className="pt-0 overflow-hidden relative">
+      {props.showGenericBadge && props.garment.is_generic && (
+        <span className="absolute top-2 left-2 z-10 text-xs bg-black/60 text-white px-2 py-0.5 rounded-full">
+          Generic
+        </span>
+      )}
       {props.garment.image ? (
         <img
           className="w-full aspect-2/3 object-cover"

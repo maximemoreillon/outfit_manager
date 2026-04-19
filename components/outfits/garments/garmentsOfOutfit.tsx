@@ -55,12 +55,12 @@ export default function GarmentsOfOutfit(props: Props) {
       ) : (
         <div className="grid gap-4 md:grid-cols-3 grid-cols-2">
           {garments.map((garment) => (
-            <div key={garment.id} className="relative">
-              <span className="absolute top-2 left-2 z-10 text-xs bg-black/60 text-white px-2 py-0.5 rounded-full">
-                {garment.is_generic ? "Any" : "Specific"}
-              </span>
-              <GarmentPreviewCard garment={garment} onRemove={removeGarment} />
-            </div>
+            <GarmentPreviewCard
+              key={garment.id}
+              garment={garment}
+              onRemove={removeGarment}
+              showGenericBadge
+            />
           ))}
         </div>
       )}

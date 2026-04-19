@@ -145,24 +145,22 @@ export default function GarmentsFilters(props: Props) {
             )}
           />
 
-          {props.useSearchParams && (
-            <FormField
-              control={form.control}
-              name="is_generic"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center gap-2 mt-6">
-                  <Switch
-                    checked={field.value === "true"}
-                    onCheckedChange={(checked) => {
-                      field.onChange(checked ? "true" : "false");
-                      form.handleSubmit(onSubmit)();
-                    }}
-                  />
-                  <FormLabel className="!mt-0">Generic</FormLabel>
-                </FormItem>
-              )}
-            />
-          )}
+          <FormField
+            control={form.control}
+            name="is_generic"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center gap-2 mt-6">
+                <Switch
+                  checked={field.value === "true"}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked ? "true" : "false");
+                    form.handleSubmit(onSubmit)();
+                  }}
+                />
+                <FormLabel className="!mt-0">Generic</FormLabel>
+              </FormItem>
+            )}
+          />
         </div>
         <div className="flex gap-4">
           {Object.keys(availableFilters).map((f) => (

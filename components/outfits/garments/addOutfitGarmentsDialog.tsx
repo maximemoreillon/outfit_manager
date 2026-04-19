@@ -17,8 +17,6 @@ import GarmentsList from "@/components/garments/list";
 import CallbackPagination from "@/components/callbackPagination";
 import { PlusIcon } from "lucide-react";
 
-type View = "generic" | "specific";
-
 type Props = {
   outfit: typeof outfitsTable.$inferSelect;
   onAdd: (garment: typeof garmentsTable.$inferSelect) => void;
@@ -26,22 +24,21 @@ type Props = {
 };
 
 export default function AddGarmentOufits(props: Props) {
-  const [view, setView] = useState<View>("generic");
-  const [fetchParams, setFetchParams] = useState<Record<string, unknown>>({});
-  const [data, setData] = useState<Awaited<ReturnType<typeof readGarments>> | null>(null);
+  const [fetchParams, setFetchParams] = useState<Record<string, unknown>>({
+    is_generic: "false",
+  });
+  const [data, setData] = useState<Awaited<
+    ReturnType<typeof readGarments>
+  > | null>(null);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    setFetchParams({});
-  }, [view]);
-
-  useEffect(() => {
     setLoading(true);
-    readGarments({ ...fetchParams, is_generic: view === "generic" ? "true" : "false" })
+    readGarments(fetchParams)
       .then(setData)
       .catch((e) => toast.error(e instanceof Error ? e.message : String(e)))
       .finally(() => setLoading(false));
-  }, [fetchParams, view]);
+  }, [fetchParams]);
 
   async function handleSelect(garment: typeof garmentsTable.$inferSelect) {
     const result = await addAction(null, {
@@ -63,29 +60,14 @@ export default function AddGarmentOufits(props: Props) {
           <PlusIcon /> Add
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-5xl">
+      <DialogContent className="sm:max-w-5xl w-full">
         <DialogHeader>
           <DialogTitle>Add garments</DialogTitle>
         </DialogHeader>
 
-        <div className="flex gap-2">
-          <Button
-            variant={view === "generic" ? "default" : "outline"}
-            onClick={() => setView("generic")}
-          >
-            Any (generic type)
-          </Button>
-          <Button
-            variant={view === "specific" ? "default" : "outline"}
-            onClick={() => setView("specific")}
-          >
-            Specific garment
-          </Button>
-        </div>
-
         <GarmentsFilters
           onUpdate={(values) => setFetchParams({ ...values, offset: 0 })}
-          defaultValues={fetchParams}
+          defaultValues={fetchParams as Record<string, string>}
         />
 
         <div className="overflow-y-auto max-h-[calc(100vh-380px)]">
