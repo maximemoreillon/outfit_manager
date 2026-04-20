@@ -45,6 +45,17 @@ export default function OutfitEditForm(props: Props) {
   }
 
   useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        form.handleSubmit(onSubmit)();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [form, onSubmit]);
+
+  useEffect(() => {
     if (state?.success) toast(`Outfit saved`);
     else if (state?.error) toast(state.error);
   }, [state]);
