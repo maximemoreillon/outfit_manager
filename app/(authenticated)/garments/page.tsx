@@ -15,7 +15,11 @@ export default async function Garments({
 }) {
   const sp = await searchParams;
   const isGeneric = sp.is_generic === "true";
-  const params = { ...sp, limit: "9", is_generic: isGeneric ? "true" : "false" };
+  const params = {
+    ...sp,
+    limit: "12",
+    is_generic: isGeneric ? "true" : "false",
+  };
   const { items, total, offset, limit } = await readGarments(params);
 
   return (
@@ -37,7 +41,12 @@ export default async function Garments({
 
       <GarmentsList garments={items} />
 
-      <LinkPagination className="my-4" total={total} limit={limit} offset={offset} />
+      <LinkPagination
+        className="my-4"
+        total={total}
+        limit={limit}
+        offset={offset}
+      />
     </div>
   );
 }

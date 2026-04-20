@@ -12,7 +12,7 @@ export default async function Outfits({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const params = { ...(await searchParams), limit: "9" };
+  const params = { ...(await searchParams), limit: "12" };
   const { items: outfits, total, offset, limit } = await readOutfits(params);
 
   return (
