@@ -2,7 +2,7 @@
 
 import { garmentsTable } from "@/db/schema";
 import { db } from "../db";
-import { eq, count, ilike, and, or, isNull } from "drizzle-orm";
+import { eq, count, ilike, and, or, isNull, ne } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { getAuthenticatedUserId } from "./auth";
 
@@ -29,6 +29,7 @@ type ReadGarmentsParams = {
   type?: string | null;
   color?: string | null;
   is_generic?: string;
+  show_hidden?: string;
 };
 
 export async function createGarment(
@@ -48,7 +49,8 @@ export async function readGarments(queryParams: ReadGarmentsParams) {
   const limit = Number(queryParams.limit || "10");
   const offset = Number(queryParams.offset || "0");
 
-  const { search, brand, type, color, is_generic } = queryParams;
+  const { search, brand, type, color, is_generic, show_hidden } = queryParams;
+  const hiddenFilter = show_hidden === "true" ? undefined : ne(garmentsTable.hidden, true);
   const templateFilter =
     is_generic === "true"
       ? eq(garmentsTable.is_generic, true)
@@ -65,6 +67,7 @@ export async function readGarments(queryParams: ReadGarmentsParams) {
 
   const where = and(
     eq(garmentsTable.user_id, user_id),
+    hiddenFilter,
     templateFilter,
     search ? ilike(garmentsTable.name, `%${search}%`) : undefined,
     brand ? inheritedField(garmentsTable.brand, parentTable.brand, brand) : undefined,

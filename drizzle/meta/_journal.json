@@ -8,6 +8,13 @@
       "when": 1776488006667,
       "tag": "0000_nervous_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776762248224,
+      "tag": "0001_add_hidden_to_garments",
+      "breakpoints": true
     }
   ]
 }

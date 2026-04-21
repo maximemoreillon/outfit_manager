@@ -38,6 +38,7 @@ const filterSchemaProperties = {
 const formSchema = z.object({
   search: z.string(),
   is_generic: z.string(),
+  show_hidden: z.string(),
   ...filterSchemaProperties,
 });
 
@@ -47,6 +48,7 @@ type Filters = {
   brand?: string;
   color?: string;
   is_generic?: string;
+  show_hidden?: string;
 };
 
 type Props = {
@@ -73,6 +75,7 @@ export default function GarmentsFilters(props: Props) {
   const defaultValues = {
     search: "",
     is_generic: "false",
+    show_hidden: "false",
     type: "",
     brand: "",
     color: "",
@@ -147,22 +150,41 @@ export default function GarmentsFilters(props: Props) {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="is_generic"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center gap-2 mt-6">
-                <Switch
-                  checked={field.value === "true"}
-                  onCheckedChange={(checked) => {
-                    field.onChange(checked ? "true" : "false");
-                    form.handleSubmit(onSubmit)();
-                  }}
-                />
-                <FormLabel className="!mt-0">Generic</FormLabel>
-              </FormItem>
-            )}
-          />
+          <div className="flex gap-4 mt-6">
+            <FormField
+              control={form.control}
+              name="is_generic"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center gap-2">
+                  <Switch
+                    checked={field.value === "true"}
+                    onCheckedChange={(checked) => {
+                      field.onChange(checked ? "true" : "false");
+                      form.handleSubmit(onSubmit)();
+                    }}
+                  />
+                  <FormLabel className="!mt-0">Generic</FormLabel>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="show_hidden"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center gap-2">
+                  <Switch
+                    checked={field.value === "true"}
+                    onCheckedChange={(checked) => {
+                      field.onChange(checked ? "true" : "false");
+                      form.handleSubmit(onSubmit)();
+                    }}
+                  />
+                  <FormLabel className="!mt-0">Hidden</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
         <div className="flex gap-4">
           {Object.keys(availableFilters).map((f) => (

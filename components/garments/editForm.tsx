@@ -45,6 +45,7 @@ const formSchema = z.object({
   size: z.string(),
   parent_id: z.number().nullable(),
   is_generic: z.boolean(),
+  hidden: z.boolean(),
 });
 
 type Props = { garment: typeof garmentsTable.$inferSelect };
@@ -68,6 +69,7 @@ export default function GarmentEditForm(props: Props) {
       quantity: props.garment.quantity,
       parent_id: props.garment.parent_id ?? null,
       is_generic: props.garment.is_generic,
+      hidden: props.garment.hidden,
     },
   });
 
@@ -123,16 +125,29 @@ export default function GarmentEditForm(props: Props) {
           <DeleteGarmentButton id={props.garment.id} />
         </div>
 
-        <FormField
-          control={form.control}
-          name="is_generic"
-          render={({ field }) => (
-            <FormItem className="flex items-center gap-3">
-              <Switch checked={field.value} onCheckedChange={field.onChange} />
-              <FormLabel className="!mt-0">Generic</FormLabel>
-            </FormItem>
-          )}
-        />
+        <div className="flex gap-6">
+          <FormField
+            control={form.control}
+            name="is_generic"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-3">
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                <FormLabel className="!mt-0">Generic</FormLabel>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="hidden"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-3">
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                <FormLabel className="!mt-0">Hidden</FormLabel>
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}

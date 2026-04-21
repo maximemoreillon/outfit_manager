@@ -23,6 +23,7 @@ export const garmentsTable = pgTable("garments", {
   condition: integer().notNull().default(100),
   // true = generic type definition; false = specific physical item
   is_generic: boolean().notNull().default(false),
+  hidden: boolean().notNull().default(false),
   // For templates: a more generic parent template. For items: the template they instantiate.
   parent_id: integer().references((): AnyPgColumn => garmentsTable.id, {
     onDelete: "set null",
