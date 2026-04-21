@@ -26,14 +26,16 @@ export default function GarmentGenericSelector({
   excludeId,
   placeholder = "Select a template",
 }: Props) {
-  const filtered = excludeId ? templates.filter((t) => t.id !== excludeId) : templates;
+  const filtered = excludeId
+    ? templates.filter((t) => t.id !== excludeId)
+    : templates;
 
   return (
     <Select
       value={value !== null ? String(value) : NONE}
       onValueChange={(v) => onChange(v === NONE ? null : Number(v))}
     >
-      <SelectTrigger>
+      <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

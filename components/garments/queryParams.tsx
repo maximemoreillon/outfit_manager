@@ -181,7 +181,7 @@ export default function GarmentsFilters(props: Props) {
                         form.handleSubmit(onSubmit)();
                       }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
