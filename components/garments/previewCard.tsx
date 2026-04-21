@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { garmentsTable } from "@/db/schema";
 import { ReactNode, useState } from "react";
-import { TrashIcon } from "lucide-react";
+import { EyeOffIcon, TrashIcon } from "lucide-react";
 import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 
 type Props = {
@@ -40,6 +40,11 @@ export default function GarmentPreviewCard(props: Props) {
       {props.showGenericBadge && props.garment.is_generic && (
         <span className="absolute top-2 left-2 z-10 text-xs bg-black/60 text-white px-2 py-0.5 rounded-full">
           Generic
+        </span>
+      )}
+      {props.garment.hidden && (
+        <span className="absolute top-2 right-2 z-10 bg-black/60 text-white p-1 rounded-full">
+          <EyeOffIcon size={12} />
         </span>
       )}
       {props.garment.image ? (

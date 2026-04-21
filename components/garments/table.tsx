@@ -11,6 +11,7 @@ import {
 import { garmentsTable } from "@/db/schema";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
+import { EyeOffIcon } from "lucide-react";
 import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 
 type Props = {
@@ -47,7 +48,12 @@ export default function GarmentsTable(props: Props) {
                 <ImagePlaceholder className="size-16 rounded-md" />
               )}
             </TableCell>
-            <TableCell>{garment.name}</TableCell>
+            <TableCell>
+              <span className="flex items-center gap-2">
+                {garment.name}
+                {garment.hidden && <EyeOffIcon size={14} className="text-muted-foreground shrink-0" />}
+              </span>
+            </TableCell>
             <TableCell>{garment.brand ?? "—"}</TableCell>
             <TableCell>{garment.type ?? "—"}</TableCell>
             <TableCell>{garment.color ?? "—"}</TableCell>

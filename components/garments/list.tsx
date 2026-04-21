@@ -16,24 +16,29 @@ export default function GarmentsList(props: Props) {
   const [mode, setMode] = useState<"cards" | "table">("cards");
   return (
     <>
-      <ToggleGroup
-        className="my-4"
-        type="single"
-        value={mode}
-        onValueChange={(a: "table" | "cards") => {
-          setMode(a);
-        }}
-      >
-        <ToggleGroupItem value="table">
-          <List />
-        </ToggleGroupItem>
-        <ToggleGroupItem value="cards">
-          <Grid2X2 />
-        </ToggleGroupItem>
-      </ToggleGroup>
+      <div className="flex justify-between items-center">
+        <ToggleGroup
+          className="my-4"
+          type="single"
+          value={mode}
+          onValueChange={(a: "table" | "cards") => {
+            setMode(a);
+          }}
+        >
+          <ToggleGroupItem value="table">
+            <List />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="cards">
+            <Grid2X2 />
+          </ToggleGroupItem>
+        </ToggleGroup>
+        {/* Slot for something on the right */}
+      </div>
 
       {props.garments.length === 0 ? (
-        <p className="text-muted-foreground text-center py-8">No garments found.</p>
+        <p className="text-muted-foreground text-center py-8">
+          No garments found.
+        </p>
       ) : (
         <div>
           {mode === "cards" && (
