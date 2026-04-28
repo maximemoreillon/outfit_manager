@@ -11,5 +11,7 @@ export async function GET(_: Request, { params }: { params: Params }) {
 
   if (!stream) throw new Error("No stream available");
 
-  return new Response(Readable.toWeb(stream) as ReadableStream);
+  return new Response(Readable.toWeb(stream) as ReadableStream, {
+    headers: { "Cache-Control": "public, max-age=86400" },
+  });
 }

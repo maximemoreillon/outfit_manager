@@ -50,8 +50,9 @@ export default function GarmentPreviewCard(props: Props) {
       {props.garment.image ? (
         <img
           className="w-full aspect-2/3 object-cover"
-          src={`/api/garments/${props.garment.id}/thumbnail`}
+          src={`/api/garments/${props.garment.id}/thumbnail?size=sm`}
           alt=""
+          loading="lazy"
         />
       ) : (
         <ImagePlaceholder className="w-full aspect-2/3" />

@@ -12,8 +12,9 @@ export default function OutfitPreviewCard(props: Props) {
       {props.outfit.image ? (
         <img
           className="w-full aspect-2/3 object-cover rounded-xl shadow-sm"
-          src={`/api/outfits/${props.outfit.id}/thumbnail`}
+          src={`/api/outfits/${props.outfit.id}/thumbnail?size=sm`}
           alt=""
+          loading="lazy"
         />
       ) : (
         <ImagePlaceholder className="w-full aspect-2/3 rounded-xl" />

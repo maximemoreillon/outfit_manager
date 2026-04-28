@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { stream2Buffer } from "./utils";
 import sharp from "sharp";
-import { thumbnailFilename } from "./config";
+import { thumbnailFilename, thumbnailSmFilename } from "./config";
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -27,7 +27,7 @@ export async function uploadImage(image: File, prefix = uuid()) {
   return { key, safeName };
 }
 
-async function generateThumbnail(prefix: string, image: string) {
+async function generateThumbnail(prefix: string, image: string, small = false) {
   const originalImageKey = `${prefix}/${image}`;
 
   const originalImageStream = await s3Client.getObject(
@@ -37,16 +37,17 @@ async function generateThumbnail(prefix: string, image: string) {
 
   const originalImageBuffer = await stream2Buffer(originalImageStream);
 
-  const thumbnailKey = `${prefix}/${thumbnailFilename}`;
+  const filename = small ? thumbnailSmFilename : thumbnailFilename;
+  const thumbnailKey = `${prefix}/${filename}`;
+  const size = small ? 400 : 800;
 
-  // TODO: find way to keep rotation
   const thumbnailBuffer = await sharp(originalImageBuffer, {
     failOnError: true,
   })
     .rotate()
     .resize({
-      width: 800,
-      height: 800,
+      width: size,
+      height: size,
       fit: sharp.fit.inside,
       withoutEnlargement: true,
     })
@@ -68,6 +69,7 @@ async function uploadEntityImage(
   const prefix = `${entity}/${id}`;
   const { safeName } = await uploadImage(image, prefix);
   await generateThumbnail(prefix, safeName);
+  await generateThumbnail(prefix, safeName, true);
 
   const [result] = await db
     .update(table as typeof garmentsTable)
@@ -89,7 +91,8 @@ export async function uploadOutfitImage(id: number, image: File) {
 async function generateEntityThumbnail(
   table: typeof garmentsTable | typeof outfitsTable,
   entity: "garments" | "outfits",
-  id: number
+  id: number,
+  small = false
 ) {
   const prefix = `${entity}/${id}`;
 
@@ -101,13 +104,13 @@ async function generateEntityThumbnail(
   if (!item) throw new Error(`${entity} not found`);
   if (!item.image) throw new Error(`${entity} does not have an image`);
 
-  return generateThumbnail(prefix, item.image);
+  return generateThumbnail(prefix, item.image, small);
 }
 
-export async function generateGarmentThumbnail(id: number) {
-  return generateEntityThumbnail(garmentsTable, "garments", id);
+export async function generateGarmentThumbnail(id: number, small = false) {
+  return generateEntityThumbnail(garmentsTable, "garments", id, small);
 }
 
-export async function generateOutfitThumbnail(id: number) {
-  return generateEntityThumbnail(outfitsTable, "outfits", id);
+export async function generateOutfitThumbnail(id: number, small = false) {
+  return generateEntityThumbnail(outfitsTable, "outfits", id, small);
 }
