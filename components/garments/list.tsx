@@ -8,6 +8,7 @@ import { List, Grid2X2 } from "lucide-react";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
+  total?: number;
   onSelect?: (garment: typeof garmentsTable.$inferSelect) => void;
   onRemove?: (garment: typeof garmentsTable.$inferSelect) => void;
 };
@@ -32,7 +33,11 @@ export default function GarmentsList(props: Props) {
             <Grid2X2 />
           </ToggleGroupItem>
         </ToggleGroup>
-        {/* Slot for something on the right */}
+        {props.total !== undefined && (
+          <span className="text-sm text-muted-foreground">
+            {props.total} garments
+          </span>
+        )}
       </div>
 
       {props.garments.length === 0 ? (

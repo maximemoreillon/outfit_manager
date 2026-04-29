@@ -39,7 +39,7 @@ export default async function Garments({
         <GarmentsFilters useSearchParams />
       </Suspense>
 
-      <GarmentsList garments={items} />
+      <GarmentsList garments={items} total={total} />
 
       <LinkPagination
         className="my-4"
