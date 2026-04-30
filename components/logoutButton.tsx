@@ -13,8 +13,9 @@ export default function LogoutButton() {
   }
 
   return (
-    <Button onClick={onClick} disabled={pending} variant="ghost" size="icon">
+    <Button onClick={onClick} disabled={pending} variant="ghost">
       <LogOut />
+      Logout
     </Button>
   );
 }

@@ -22,15 +22,9 @@ export default function Breadcrumbs() {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="/">Home</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-
         {pathnameSplit.map((p, i) => (
           <React.Fragment key={i}>
-            <BreadcrumbSeparator />
+            {i > 0 && <BreadcrumbSeparator />}
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link href={`/${pathnameSplit.slice(0, i + 1).join("/")}`}>
@@ -41,10 +35,14 @@ export default function Breadcrumbs() {
           </React.Fragment>
         ))}
 
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>{pathnameLast}</BreadcrumbPage>
-        </BreadcrumbItem>
+        {pathnameLast && (
+          <>
+            {pathnameSplit.length > 0 && <BreadcrumbSeparator />}
+            <BreadcrumbItem>
+              <BreadcrumbPage>{pathnameLast}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </>
+        )}
       </BreadcrumbList>
     </Breadcrumb>
   );
