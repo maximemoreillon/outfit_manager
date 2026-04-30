@@ -57,12 +57,23 @@ export default function GarmentPreviewCard(props: Props) {
       ) : (
         <ImagePlaceholder className="w-full aspect-2/3" />
       )}
+      {props.garment.quantity > 1 && (
+        <span className="absolute bottom-2 right-2 z-10 text-xs bg-black/60 text-white px-2 py-0.5 rounded-full">
+          ×{props.garment.quantity}
+        </span>
+      )}
       <CardHeader>
         <CardTitle className="truncate">{props.garment.name}</CardTitle>
-        {(props.garment.brand || props.garment.color) && (
+        {(props.garment.type || props.garment.brand) && (
           <CardDescription className="flex justify-between">
-            <span>{props.garment.brand}</span>
-            <span>{props.garment.color}</span>
+            <span>{props.garment.type ?? "—"}</span>
+            <span>{props.garment.brand ?? "—"}</span>
+          </CardDescription>
+        )}
+        {(props.garment.size || props.garment.color) && (
+          <CardDescription className="flex justify-between">
+            <span>{props.garment.size ?? "—"}</span>
+            <span>{props.garment.color ?? "—"}</span>
           </CardDescription>
         )}
       </CardHeader>

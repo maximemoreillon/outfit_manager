@@ -1,10 +1,9 @@
 "use client";
 import { garmentsTable } from "@/db/schema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GarmentsTable from "./table";
 import GarmentCards from "./cards";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { List, Grid2X2 } from "lucide-react";
+import DisplayModeToggle from "./display-mode-toggle";
 
 type Props = {
   garments: (typeof garmentsTable.$inferSelect)[];
@@ -15,24 +14,20 @@ type Props = {
 
 export default function GarmentsList(props: Props) {
   const [mode, setMode] = useState<"cards" | "table">("cards");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("garments-display-mode") as "cards" | "table" | null;
+    if (saved) setMode(saved);
+  }, []);
+
+  const handleModeChange = (value: "cards" | "table") => {
+    setMode(value);
+    localStorage.setItem("garments-display-mode", value);
+  };
   return (
     <>
       <div className="flex justify-between items-center">
-        <ToggleGroup
-          className="my-4"
-          type="single"
-          value={mode}
-          onValueChange={(a: "table" | "cards") => {
-            setMode(a);
-          }}
-        >
-          <ToggleGroupItem value="table">
-            <List />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="cards">
-            <Grid2X2 />
-          </ToggleGroupItem>
-        </ToggleGroup>
+        <DisplayModeToggle value={mode} onValueChange={handleModeChange} />
         {props.total !== undefined && (
           <span className="text-sm text-muted-foreground">
             {props.total} garments

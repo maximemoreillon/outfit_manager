@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { garmentsTable } from "@/db/schema";
 import Link from "next/link";
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "../ui/button";
 import { EyeOffIcon } from "lucide-react";
 import ImagePlaceholder from "@/components/ui/imagePlaceholder";
 
@@ -26,18 +26,20 @@ export default function GarmentsTable(props: Props) {
       <TableCaption>Garments</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead></TableHead>
+          <TableHead className="hidden sm:table-cell"></TableHead>
           <TableHead>Name</TableHead>
-          <TableHead>Brand</TableHead>
           <TableHead>Type</TableHead>
-          <TableHead>Color</TableHead>
-          <TableHead>Action</TableHead>
+          <TableHead className="hidden md:table-cell">Brand</TableHead>
+          <TableHead className="hidden md:table-cell">Size</TableHead>
+          <TableHead className="hidden lg:table-cell">Color</TableHead>
+          <TableHead className="hidden md:table-cell">Qty</TableHead>
+          {(props.onSelect || props.onRemove) && <TableHead>Action</TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
         {props.garments.map((garment) => (
           <TableRow key={garment.id}>
-            <TableCell>
+            <TableCell className="hidden sm:table-cell">
               {garment.image ? (
                 <img
                   className="size-16 object-cover rounded-md"
@@ -49,39 +51,33 @@ export default function GarmentsTable(props: Props) {
               )}
             </TableCell>
             <TableCell>
-              <span className="flex items-center gap-2">
+              <Link href={`/garments/${garment.id}`} className="flex items-center gap-2 hover:underline">
                 {garment.name}
                 {garment.hidden && <EyeOffIcon size={14} className="text-muted-foreground shrink-0" />}
-              </span>
+              </Link>
             </TableCell>
-            <TableCell>{garment.brand ?? "—"}</TableCell>
             <TableCell>{garment.type ?? "—"}</TableCell>
-            <TableCell>{garment.color ?? "—"}</TableCell>
-            <TableCell>
-              {props.onSelect && (
-                <Button onClick={() => props.onSelect!(garment)}>
-                  Select
-                </Button>
-              )}
-
-              {props.onRemove && (
-                <Button
-                  variant="destructive"
-                  onClick={() => props.onRemove!(garment)}
-                >
-                  Remove
-                </Button>
-              )}
-
-              {!props.onRemove && !props.onSelect && (
-                <Link
-                  href={`/garments/${garment.id}`}
-                  className={buttonVariants({})}
-                >
-                  See
-                </Link>
-              )}
-            </TableCell>
+            <TableCell className="hidden md:table-cell">{garment.brand ?? "—"}</TableCell>
+            <TableCell className="hidden md:table-cell">{garment.size ?? "—"}</TableCell>
+            <TableCell className="hidden lg:table-cell">{garment.color ?? "—"}</TableCell>
+            <TableCell className="hidden md:table-cell">{garment.quantity}</TableCell>
+            {(props.onSelect || props.onRemove) && (
+              <TableCell>
+                {props.onSelect && (
+                  <Button onClick={() => props.onSelect!(garment)}>
+                    Select
+                  </Button>
+                )}
+                {props.onRemove && (
+                  <Button
+                    variant="destructive"
+                    onClick={() => props.onRemove!(garment)}
+                  >
+                    Remove
+                  </Button>
+                )}
+              </TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>
