@@ -54,7 +54,9 @@ export default function GarmentEditForm(props: Props) {
   const [types, setTypes] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
-  const [generics, setGenerics] = useState<(typeof garmentsTable.$inferSelect)[]>([]);
+  const [generics, setGenerics] = useState<
+    (typeof garmentsTable.$inferSelect)[]
+  >([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -110,7 +112,7 @@ export default function GarmentEditForm(props: Props) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex justify-between">
+        <div className="flex justify-between ">
           <Button type="submit" disabled={pending}>
             {pending ? (
               <>
@@ -125,13 +127,16 @@ export default function GarmentEditForm(props: Props) {
           <DeleteGarmentButton id={props.garment.id} />
         </div>
 
-        <div className="flex gap-6">
+        <div className="flex flex-col sm:flex-row gap-6">
           <FormField
             control={form.control}
             name="is_generic"
             render={({ field }) => (
               <FormItem className="flex items-center gap-3">
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
                 <FormLabel className="!mt-0">Generic</FormLabel>
               </FormItem>
             )}
@@ -142,7 +147,10 @@ export default function GarmentEditForm(props: Props) {
             name="hidden"
             render={({ field }) => (
               <FormItem className="flex items-center gap-3">
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
                 <FormLabel className="!mt-0">Hidden</FormLabel>
               </FormItem>
             )}
@@ -177,7 +185,9 @@ export default function GarmentEditForm(props: Props) {
                   excludeId={props.garment.id}
                   placeholder="Link to a generic garment"
                 />
-                <FormDescription>The generic garment this is an instance of</FormDescription>
+                <FormDescription>
+                  The generic garment this is an instance of
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -195,10 +205,30 @@ export default function GarmentEditForm(props: Props) {
                 {parent.name}
               </Link>
             </p>
-            {parent.type && <p><span className="text-muted-foreground">Type:</span> {parent.type}</p>}
-            {parent.brand && <p><span className="text-muted-foreground">Brand:</span> {parent.brand}</p>}
-            {parent.color && <p><span className="text-muted-foreground">Color:</span> {parent.color}</p>}
-            {parent.size && <p><span className="text-muted-foreground">Size:</span> {parent.size}</p>}
+            {parent.type && (
+              <p>
+                <span className="text-muted-foreground">Type:</span>{" "}
+                {parent.type}
+              </p>
+            )}
+            {parent.brand && (
+              <p>
+                <span className="text-muted-foreground">Brand:</span>{" "}
+                {parent.brand}
+              </p>
+            )}
+            {parent.color && (
+              <p>
+                <span className="text-muted-foreground">Color:</span>{" "}
+                {parent.color}
+              </p>
+            )}
+            {parent.size && (
+              <p>
+                <span className="text-muted-foreground">Size:</span>{" "}
+                {parent.size}
+              </p>
+            )}
           </div>
         )}
 
@@ -220,7 +250,11 @@ export default function GarmentEditForm(props: Props) {
                   <ComboboxContent>
                     <ComboboxEmpty>No existing types.</ComboboxEmpty>
                     <ComboboxList>
-                      {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
+                      {(item) => (
+                        <ComboboxItem key={item} value={item}>
+                          {item}
+                        </ComboboxItem>
+                      )}
                     </ComboboxList>
                   </ComboboxContent>
                 </Combobox>
@@ -248,7 +282,11 @@ export default function GarmentEditForm(props: Props) {
                   <ComboboxContent>
                     <ComboboxEmpty>No existing brands.</ComboboxEmpty>
                     <ComboboxList>
-                      {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
+                      {(item) => (
+                        <ComboboxItem key={item} value={item}>
+                          {item}
+                        </ComboboxItem>
+                      )}
                     </ComboboxList>
                   </ComboboxContent>
                 </Combobox>
@@ -276,7 +314,11 @@ export default function GarmentEditForm(props: Props) {
                   <ComboboxContent>
                     <ComboboxEmpty>No existing colors.</ComboboxEmpty>
                     <ComboboxList>
-                      {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}
+                      {(item) => (
+                        <ComboboxItem key={item} value={item}>
+                          {item}
+                        </ComboboxItem>
+                      )}
                     </ComboboxList>
                   </ComboboxContent>
                 </Combobox>
