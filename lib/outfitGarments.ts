@@ -11,7 +11,10 @@ type Garment = typeof garmentsTable.$inferSelect;
 const INHERITED_FIELDS = ["type", "brand", "color", "description", "size"] as const;
 function resolveInheritance(garment: Garment, parent: Garment | null): Garment {
   if (!garment.parent_id || !parent) return garment;
-  return { ...garment, ...Object.fromEntries(INHERITED_FIELDS.map((f) => [f, parent[f]])) };
+  const overrides = Object.fromEntries(
+    INHERITED_FIELDS.filter((f) => parent[f] !== null && parent[f] !== "").map((f) => [f, parent[f]])
+  );
+  return { ...garment, ...overrides };
 }
 
 export async function addGarmentToOutfit(
