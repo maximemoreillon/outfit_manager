@@ -51,38 +51,7 @@ spec:
   selector:
     app.kubernetes.io/name: outfit-manager
   type: ClusterIP
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: outfit-manager
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
 
-    nginx.ingress.kubernetes.io/proxy-body-size: 5g
-    nginx/client_max_body_size: 5g
-
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/name: Wardrobe manager
-    gethomepage.dev/icon: mdi-hanger
-    gethomepage.dev/group: 1P
-
-spec:
-  tls:
-    - hosts:
-        - outfits.home.maximemoreillon.com
-      secretName: outfit-manager-tls
-  rules:
-    - host: outfits.home.maximemoreillon.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: outfit-manager
-                port:
-                  number: 3000
 ---
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
