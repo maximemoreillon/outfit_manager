@@ -134,7 +134,7 @@ metadata:
     gethomepage.dev/group: 1P
 spec:
   hostnames:
-    - outfit.home.maximemoreillon.com
+    - outfits.home.maximemoreillon.com
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
