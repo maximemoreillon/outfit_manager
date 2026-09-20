@@ -51,7 +51,6 @@ spec:
   selector:
     app.kubernetes.io/name: outfit-manager
   type: ClusterIP
-
 ---
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
@@ -98,24 +97,19 @@ metadata:
   name: outfit-manager
   annotations:
     gethomepage.dev/enabled: "true"
-    gethomepage.dev/name: outfit manager
+    gethomepage.dev/name: Wardrobe manager
     gethomepage.dev/icon: mdi-outfit
     gethomepage.dev/group: 1P
 spec:
   hostnames:
     - outfits.home.maximemoreillon.com
   parentRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: eg
+    - name: eg
       namespace: envoy-gateway-system
   rules:
     - backendRefs:
-        - group: ""
-          kind: Service
-          name: outfit-manager
+        - name: outfit-manager
           port: 3000
-          weight: 1
       matches:
         - path:
             type: PathPrefix
