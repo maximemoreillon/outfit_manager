@@ -98,7 +98,7 @@ metadata:
   annotations:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/name: Wardrobe manager
-    gethomepage.dev/icon: mdi-outfit
+    gethomepage.dev/icon: mdi-hanger
     gethomepage.dev/group: 1P
 spec:
   hostnames:
