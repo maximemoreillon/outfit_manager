@@ -22,7 +22,7 @@ spec:
             - name: S3_REGION
               value: home
             - name: S3_BUCKET
-              value: wardrobe-manager
+              value: outfit-manager
             - name: S3_USE_SSL
               value: "false"
             - name: S3_ENDPOINT
