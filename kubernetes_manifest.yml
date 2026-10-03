@@ -26,9 +26,9 @@ spec:
             - name: S3_USE_SSL
               value: "false"
             - name: S3_ENDPOINT
-              value: rustfs.rustfs
+              value: versitygw.versitygw
             - name: S3_PORT
-              value: "9000"
+              value: "7070"
             # Auth.js
             - name: AUTH_TRUST_HOST
               value: "true"
