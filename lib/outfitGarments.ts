@@ -62,10 +62,17 @@ export async function addGarmentToOutfit(
 }
 
 export async function readOutfitGarments(outfit_id: number) {
+  const user_id = await getAuthenticatedUserId();
+
   const result = await db
     .select({ garment: garmentsTable, parent: parentTable })
     .from(outfitGarmentsTable)
-    .where(eq(outfitGarmentsTable.outfit_id, outfit_id))
+    .where(
+      and(
+        eq(outfitGarmentsTable.outfit_id, outfit_id),
+        eq(garmentsTable.user_id, user_id)
+      )
+    )
     .innerJoin(garmentsTable, eq(outfitGarmentsTable.garment_id, garmentsTable.id))
     .leftJoin(parentTable, eq(garmentsTable.parent_id, parentTable.id))
     .limit(50);

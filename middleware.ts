@@ -17,5 +17,7 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/((?!api/auth|_next|.*\\..*).*)"],
+  // API routes are always checked (even when the path contains a dot, e.g. image
+  // filenames). Pages skip Next internals and static files from /public.
+  matcher: ["/api/((?!auth/).*)", "/((?!api/|_next/|.*\\..*).*)"],
 };

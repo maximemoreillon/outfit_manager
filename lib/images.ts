@@ -3,15 +3,16 @@
 import { db } from "@/db";
 import { S3_BUCKET, s3Client } from "./s3";
 import { garmentsTable, outfitsTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { stream2Buffer } from "./utils";
 import sharp from "sharp";
 import { thumbnailFilename, thumbnailSmFilename } from "./config";
+import { getAuthenticatedUserId } from "./auth";
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
-export async function uploadImage(image: File, prefix = uuid()) {
+async function uploadImage(image: File, prefix = uuid()) {
   if (!image.type.startsWith("image/"))
     throw new Error(`Invalid file type "${image.type}". Only images are allowed`);
 
@@ -66,6 +67,14 @@ async function uploadEntityImage(
   id: number,
   image: File
 ) {
+  const t = table as typeof garmentsTable;
+  const user_id = await getAuthenticatedUserId();
+  const [owned] = await db
+    .select({ id: t.id })
+    .from(t)
+    .where(and(eq(t.id, id), eq(t.user_id, user_id)));
+  if (!owned) throw new Error(`${entity} not found`);
+
   const prefix = `${entity}/${id}`;
   const { safeName } = await uploadImage(image, prefix);
   await generateThumbnail(prefix, safeName);
@@ -74,7 +83,7 @@ async function uploadEntityImage(
   const [result] = await db
     .update(table as typeof garmentsTable)
     .set({ image: safeName })
-    .where(eq((table as typeof garmentsTable).id, id))
+    .where(and(eq(t.id, id), eq(t.user_id, user_id)))
     .returning();
 
   return result;

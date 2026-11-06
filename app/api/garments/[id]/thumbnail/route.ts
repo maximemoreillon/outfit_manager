@@ -1,6 +1,7 @@
 import { thumbnailFilename, thumbnailSmFilename } from "@/lib/config";
 import { generateGarmentThumbnail } from "@/lib/images";
 import { S3_BUCKET, s3Client } from "@/lib/s3";
+import { readGarment } from "@/lib/garments";
 import { NextRequest } from "next/server";
 import { Readable } from "stream";
 
@@ -8,6 +9,10 @@ type Options = { params: Promise<{ id: string }> };
 
 export async function GET(req: NextRequest, { params }: Options) {
   const { id } = await params;
+  const item = Number.isInteger(Number(id)) ? await readGarment(Number(id)) : undefined;
+  if (!item?.image)
+    return Response.json({ message: "Not found" }, { status: 404 });
+
   const small = new URL(req.url).searchParams.get("size") === "sm";
   const key = `garments/${id}/${small ? thumbnailSmFilename : thumbnailFilename}`;
 
@@ -21,6 +26,6 @@ export async function GET(req: NextRequest, { params }: Options) {
   }
 
   return new Response(Readable.toWeb(stream) as ReadableStream, {
-    headers: { "Cache-Control": "public, max-age=86400" },
+    headers: { "Cache-Control": "private, max-age=86400" },
   });
 }
